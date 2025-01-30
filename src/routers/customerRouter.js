@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.post('/',CustomerController.getCustomerByID);
 
-module.exports = router;
+module.exports = router; 
