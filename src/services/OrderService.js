@@ -6,6 +6,13 @@ const OrderServices = {
     },
     getOrderByCusID:async(cusID)=>{
         return await Orders.getOrderByCusId(cusID)
+    },
+    addOrder:async (products,voucher,totalPayment,cusID)=>{
+        try {
+            const addOrder = Orderds.addOrder(cusID,totalPayment)
+        } catch (error) {
+            
+        }
     }
 }
 module.exports = OrderServices;

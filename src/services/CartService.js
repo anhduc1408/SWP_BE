@@ -11,7 +11,8 @@ const Cart = {
         await Promise.all( CartDetail.map( async(item)=>{
             const product = await ProductModel.getProductForCart(item.ProductID);
             const tmp = {
-                productImg :"https://mtv.vn/uploads/2023/02/25/meo-gg.jpg",
+                CartID: item.CartDetailID,
+                productImg :product[0].ProductImg,
                 productName : product[0].ProductName,
                 productCategory: product[0].Category,
                 productPrice:product[0].ProductPrice,
