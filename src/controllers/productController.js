@@ -1,13 +1,25 @@
-const productServices = require('../services/productServices');
+const productServices = require("../services/productServices");
 
 const productControllers = {
-    getAllProducts:async(req,res)=>{
-            console.log(req.body);
-            const option = req.body.option;
-            const type = req.body.type;
-            console.log(option,type);
-            const result = await productServices.getAllProducts(option, type);
-            res.status(200).json(result)
+  getAllProductsNew: async (req, res) => {
+    try {
+      const option = req.query.option;
+      const type = req.query.type;
+      console.log(option, type);
+      const result = await productServices.getAllProductsNew(option, type);
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
     }
-}
+  },
+
+  getAllCategory: async (req, res) => {
+    try {
+      const result = await productServices.getAllCategory();
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+};
 module.exports = productControllers;

@@ -1,10 +1,15 @@
 const Products = require('../models/productModel');
 
 const productServices = {
-    getAllProducts: async (option, type)=>{
+    getAllProductsNew: async (option, type)=>{
         console.log(123);
-        const result = await Products.getAllProducts(option, type);
-         console.log(result);
+        const result = await Products.getAllProductsNew(option, type);
+        console.log(result);
+        return result;
+    },
+
+    getAllCategory: async ()=>{
+        const result = await Products.getAllCategory();
         return result;
     }
 }
