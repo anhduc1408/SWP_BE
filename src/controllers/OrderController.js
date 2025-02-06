@@ -20,13 +20,15 @@ const OrderControllers = {
     },
     addOrder: async(req,res)=>{
         try {
-            const products = req.body.products;
-            const voucher = req.body.voucher;   
+            const OrderInfor = req.body.OrderInfor;
+            const voucher = req.body.voucherChoose;   
             const totalPayment = req.body.totalPayment;
             const cusID = req.body.cusID;
-            const result = await OrderServices.addOrder(products,voucher,totalPayment,cusID);
-            res.status(200).json(result[0]);
+            await OrderServices.addOrder(OrderInfor,voucher,totalPayment,cusID);
+            const result = 'success';
+            res.status(200).json(result);
         } catch (error) {
+            console.log(error)
             res.status(500).json(error);
         }
     }

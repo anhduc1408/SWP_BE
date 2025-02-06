@@ -11,17 +11,21 @@ const Cart = {
         await Promise.all( CartDetail.map( async(item)=>{
             const product = await ProductModel.getProductForCart(item.ProductID);
             const tmp = {
-                CartID: item.CartDetailID,
+                cartID: item.CartDetailID,
+                productID: product[0].ProductID,
                 productImg :product[0].ProductImg,
                 productName : product[0].ProductName,
                 productCategory: product[0].Category,
                 productPrice:product[0].ProductPrice,
                 Quantity:item.Quantity,
-                totalAmount: item.TotalAmount
+                totalAmount: item.Quantity * product[0].ProductPrice
             }
             result.push(tmp);
         }))
         return result;
+    },
+    removeCartDetail:async(OrderInfor)=>{
+        await CartModel.removeCartDetail(OrderInfor);
     }
 }
 module.exports = Cart;

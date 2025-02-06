@@ -9,9 +9,12 @@ const port = 3001;
 app.use(express.json());
 app.use(cors());
 
+
+//http://localhost:3001/api/Order/CheckOut
 app.use('/api/Order',orderRouter)
 app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
+
 
 app.listen(port,() => {
     console.log(`Example app listening on port ${port}`)
