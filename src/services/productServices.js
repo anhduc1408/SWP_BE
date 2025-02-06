@@ -7,6 +7,12 @@ const productServices = {
         return result;
     },
 
+    getAllProducts: async (option)=>{
+        const result = await Products.getAllProducts(option);
+        console.log(result);
+        return result;
+    },
+
     getAllCategory: async ()=>{
         const result = await Products.getAllCategory();
         return result;

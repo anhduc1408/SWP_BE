@@ -13,6 +13,16 @@ const productControllers = {
     }
   },
 
+  getAllProducts: async (req, res) => {
+    try {
+      const option = req.query.option;
+      const result = await productServices.getAllProducts(option);
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
   getAllCategory: async (req, res) => {
     try {
       const result = await productServices.getAllCategory();
