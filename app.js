@@ -1,14 +1,21 @@
 const express = require('express');
-const Order = require('./src/routers/OrderRouter')
 const Products = require('./src/routers/productRouter')
-const cors = require('cors');
+const orderRouter = require('./src/routers/OrderRouter')
+const cartRouter = require('./src/routers/CartRouter')
+const VoucherRouter = require('./src/routers/VoucherRouter')
 const app = express();
+const cors = require('cors');
+
 const port = 3001;
-
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-app.get('/',Order)
+
+//http://localhost:3001/api/Order/CheckOut
+app.use('/api/Order',orderRouter)
+app.use('/api/Cart',cartRouter)
+app.use('/api/Voucher',VoucherRouter)
+
 app.use('/api/Products', Products)
 app.listen(port,() => {
     console.log(`Example app listening on port ${port}`)
