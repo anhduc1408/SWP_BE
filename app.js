@@ -1,4 +1,5 @@
 const express = require('express');
+const Products = require('./src/routers/productRouter')
 const orderRouter = require('./src/routers/OrderRouter')
 const cartRouter = require('./src/routers/CartRouter')
 const VoucherRouter = require('./src/routers/VoucherRouter')
@@ -15,7 +16,7 @@ app.use('/api/Order',orderRouter)
 app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
 
-
+app.use('/api/Products', Products)
 app.listen(port,() => {
     console.log(`Example app listening on port ${port}`)
   });
