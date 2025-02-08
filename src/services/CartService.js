@@ -1,29 +1,41 @@
 const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
-const { get } = require('../routers/CartRouter');
 
 const Cart = {
-    getAllCart: async () => {
-        const result = await CartModel.getAllCarts();
+    getAllCarts: async () => {
+        return await CartModel.getAllCarts();
     },
-    
-    getCartByCustomerId: async (cusID) => {
+
+    getCartByCusID: async (cusID) => {
         let result = [];
-        const CartDetail = await CartModel.getCartByCustomerId(cusID);
-        await Promise.all(CartDetail.map(async (item) => {
-            const product = await ProductModel.getProductById(item.proID);
+        const cartDetail = await CartModel.getCartDetailByCusID(cusID);
+        await Promise.all(cartDetail.map(async (item) => {
+            const product = await ProductModel.getProductForCart(item.ProductID);
             const tmp = {
-                CartID: item.CartID,
-                productImg: product[0].productImg,
-                productName: product[0].productName,
-                productCategory: product[0].productCategory,
-                productPrice: product[0].productPrice,
+                cartID: item.CartID,
+                productID: product[0].ProductID,
+                productImg: product[0].ProductImg,
+                productName: product[0].ProductName,
+                productCategory: product[0].Category,
+                productPrice: product[0].Price,
                 Quantity: item.Quantity,
-                totalAmount: item.TotalAmount
+                totalAmount: item.Quantity * product[0].Price
             }
             result.push(tmp);
         }))
         return result;
+    },
+
+    addProductToCart: async (cartID, productID, quantity) => {
+        return await CartModel.addProductToCart(cartID, productID, quantity);
+    },
+
+    removeProductFromCart: async (cartDetailID) => {
+        return await CartModel.removeProductFromCart(cartDetailID);
+    },
+
+    updateProductQuantity: async (cartDetailID, quantity) => {
+        return await CartModel.updateProductQuantity(cartDetailID, quantity);
     }
 }
 

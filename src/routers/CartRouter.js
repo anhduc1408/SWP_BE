@@ -3,7 +3,7 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/',CartController.getAllCart);
-router.get('/cusID',CartController.getCartByCustomerId);
+router.get('/', CartController.getAllCarts);
+router.get('/cusID', CartController.getCartByCusID);
 
 module.exports = router;
