@@ -7,5 +7,7 @@ const router = express.Router();
 router.get('/All',productControllers.getAllProducts);
 router.get('/All/New',productControllers.getAllProductsNew);
 router.get('/Category',productControllers.getAllCategory);
+router.post('/Search',productControllers.searchProduct);
+
 
 module.exports = router;

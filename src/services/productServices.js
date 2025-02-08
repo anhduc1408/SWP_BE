@@ -16,6 +16,11 @@ const productServices = {
     getAllCategory: async ()=>{
         const result = await Products.getAllCategory();
         return result;
+    },
+    searchProduct: async (categoryName, pageIndex)=>{
+        const result = await Products.searchProduct(categoryName, pageIndex);
+
+        return result;
     }
 }
 module.exports = productServices;
