@@ -7,7 +7,7 @@ const port = 3001;
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/Cart', cartRouter)
+app.use('/api/Cart',cartRouter)
 
 app.listen(port,() => {
     console.log(`Example app listening on port ${port}`)
