@@ -89,6 +89,28 @@ const Products = {
         );
         return result;
       }
+    }else if (option === "Đồ Tươi Sống") {
+      if (type === "Mới Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY ProductID DESC LIMIT 15"
+        );
+        return result;
+      } else if (type === "Rẻ Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price ASC LIMIT 15"
+        );
+        return result;
+      } else if (type === "Đắt Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price DESC LIMIT 15"
+        );
+        return result;
+      } else if (type === "Bán Chạy Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY SoldQuantity DESC LIMIT 15"
+        );
+        return result;
+      }
     }
   },
 
@@ -104,6 +126,9 @@ const Products = {
       return result;
     }else if(option === "Đồ Uống"){
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Uống' ORDER BY RAND()");
+      return result;
+    }else if(option === "Đồ Tươi Sống"){
+      const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Tươi Sống' ORDER BY RAND()");
       return result;
     }
   },
