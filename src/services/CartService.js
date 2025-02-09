@@ -16,9 +16,9 @@ const Cart = {
                 productImg :product[0].ProductImg,
                 productName : product[0].ProductName,
                 productCategory: product[0].Category,
-                productPrice:product[0].ProductPrice,
+                productPrice:product[0].Price,
                 Quantity:item.Quantity,
-                totalAmount: item.Quantity * product[0].ProductPrice
+                totalAmount: item.Quantity * product[0].Price
             }
             result.push(tmp);
         }))

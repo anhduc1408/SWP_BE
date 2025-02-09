@@ -3,13 +3,11 @@ const Products = require('../models/productModel');
 const productServices = {
     getAllProductsNew: async (option, type)=>{
         const result = await Products.getAllProductsNew(option, type);
-        console.log(result);
         return result;
     },
 
     getAllProducts: async (option)=>{
         const result = await Products.getAllProducts(option);
-        console.log(result);
         return result;
     },
 
