@@ -1,8 +1,17 @@
-const CustomerModels = require('../models/CustomerModel')
+const Customers = require('../models/CustomerModel');
 
-const Customer = {
-    getCustomerByID: async(cusID)=>{
-        return await CustomerModels.getCustomerByID(cusID);
+const CustomerServices = {
+    getAllCustomers: async () => {
+        return await Customers.getAllCustomers();
+    },
+
+    getCustomerById: async (CustomerID) => {
+        return await Customers.getCustomerById(CustomerID);
+    },
+
+    updateCustomerById: async (CustomerID, customerData) => {
+        return await Customers.updateCustomerById(CustomerID, customerData);
     }
-}
-module.exports = Customer;
+};
+
+module.exports = CustomerServices;
