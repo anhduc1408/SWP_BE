@@ -136,5 +136,13 @@ const Products = {
     const result = await pool.query("SELECT DISTINCT Category FROM Product");
     return result;
   },
+
+  getProductForCart: async (ProductID) => {
+    const result = await pool.query(
+      "SELECT * FROM Product WHERE ProductID = ?",
+      [ProductID]
+    );
+    return result[0];
+  },
 };
 module.exports = Products;
