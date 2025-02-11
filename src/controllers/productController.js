@@ -31,5 +31,15 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  searchProduct: async (req, res) => {
+    const {categoryName, pageIndex,keyword} = req.body
+    try {
+      const result = await productServices.searchProduct(categoryName, pageIndex, keyword);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;

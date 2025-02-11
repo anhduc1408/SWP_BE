@@ -96,13 +96,13 @@ const Products = {
     if (option === "Tất Cả") {
       const result = await pool.query("SELECT * FROM Product ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Ăn"){
+    } else if (option === "Đồ Ăn") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Ăn' ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Ăn Chay"){
+    } else if (option === "Đồ Ăn Chay") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Ăn Chay' ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Uống"){
+    } else if (option === "Đồ Uống") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Uống' ORDER BY RAND()");
       return result;
     }
@@ -120,5 +120,56 @@ const Products = {
     );
     return result[0];
   },
+  searchProduct: async (categoryName, pageIndex, keyword) => {
+    const pageSize = 12;
+    const offset = (pageIndex - 1) * pageSize;
+
+    let whereClause = "";
+    let params = [];
+
+    if (categoryName) {
+        whereClause = " WHERE Category = ?";
+        params.push(categoryName);
+    }
+
+    if (keyword) {
+        if (whereClause) {
+            whereClause += " AND";
+        } else {
+            whereClause = " WHERE";
+        }
+        whereClause += " (Category LIKE ? OR ProductName LIKE ?)";
+        params.push(`%${keyword}%`, `%${keyword}%`);
+    }
+
+    // Truy vấn danh sách sản phẩm với phân trang
+    const queryDocs = `
+        SELECT * FROM Product
+        ${whereClause}
+        LIMIT ? OFFSET ?;
+    `;
+
+    // Truy vấn tổng số bản ghi thỏa mãn điều kiện
+    const queryCount = `
+        SELECT COUNT(*) AS total FROM Product
+        ${whereClause};
+    `;
+
+    params.push(pageSize, offset);
+
+    // Thực thi cả hai truy vấn đồng thời
+    const [docs, countResult] = await Promise.all([
+        pool.query(queryDocs, params),
+        pool.query(queryCount, params.slice(0, params.length - 2)) // Cắt pageSize & offset cho queryCount
+    ]);
+
+    return {
+        docs: docs, // Danh sách sản phẩm
+        counts: countResult[0][0].total // Tổng số bản ghi thỏa mãn điều kiện
+    };
+}
+
+
+
 };
 module.exports = Products;
