@@ -118,13 +118,13 @@ const Products = {
     if (option === "Tất Cả") {
       const result = await pool.query("SELECT * FROM Product ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Ăn"){
+    } else if (option === "Đồ Ăn") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Ăn' ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Ăn Chay"){
+    } else if (option === "Đồ Ăn Chay") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Ăn Chay' ORDER BY RAND()");
       return result;
-    }else if(option === "Đồ Uống"){
+    } else if (option === "Đồ Uống") {
       const result = await pool.query("SELECT * FROM Product  Where Category ='Đồ Uống' ORDER BY RAND()");
       return result;
     }else if(option === "Đồ Tươi Sống"){
@@ -137,6 +137,7 @@ const Products = {
     const result = await pool.query("SELECT DISTINCT Category FROM Product");
     return result;
   },
+
   getProductForCart: async (ProductID) => {
     const result = await pool.query(
       "SELECT * FROM Product WHERE ProductID = ?",
@@ -144,5 +145,53 @@ const Products = {
     );
     return result[0];
   },
+  searchProduct: async (categoryName, pageIndex, keyword) => {
+    const pageSize = 12;
+    const offset = (pageIndex - 1) * pageSize;
+
+    let whereClause = "";
+    let params = [];
+
+    if (categoryName) {
+        whereClause = " WHERE Category = ?";
+        params.push(categoryName);
+    }
+
+    if (keyword) {
+        if (whereClause) {
+            whereClause += " AND";
+        } else {
+            whereClause = " WHERE";
+        }
+        whereClause += " (Category LIKE ? OR ProductName LIKE ?)";
+        params.push(`%${keyword}%`, `%${keyword}%`);
+    }
+
+    const queryDocs = `
+        SELECT * FROM Product
+        ${whereClause}
+        LIMIT ? OFFSET ?;
+    `;
+
+    const queryCount = `
+        SELECT COUNT(*) AS total FROM Product
+        ${whereClause};
+    `;
+
+    params.push(pageSize, offset);
+
+    const [docs, countResult] = await Promise.all([
+        pool.query(queryDocs, params),
+        pool.query(queryCount, params.slice(0, params.length - 2)) 
+    ]);
+
+    return {
+        docs: docs, 
+        counts: countResult[0][0].total 
+    };
+}
+
+
+
 };
 module.exports = Products;
