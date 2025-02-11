@@ -17,8 +17,8 @@ const productServices = {
         const result = await Products.getAllCategory();
         return result;
     },
-    searchProduct: async (categoryName, pageIndex)=>{
-        const result = await Products.searchProduct(categoryName, pageIndex);
+    searchProduct: async (categoryName, pageIndex,keyword)=>{
+        const result = await Products.searchProduct(categoryName, pageIndex,keyword);
 
         return result;
     }

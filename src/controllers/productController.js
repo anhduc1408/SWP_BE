@@ -33,9 +33,9 @@ const productControllers = {
   },
 
   searchProduct: async (req, res) => {
-    const {categoryName, pageIndex} = req.body
+    const {categoryName, pageIndex,keyword} = req.body
     try {
-      const result = await productServices.searchProduct(categoryName, pageIndex);      
+      const result = await productServices.searchProduct(categoryName, pageIndex, keyword);      
       res.status(200).json(result);
     } catch (err) {
       console.log(err);

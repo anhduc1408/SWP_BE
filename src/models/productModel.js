@@ -137,7 +137,7 @@ const Products = {
     return result;
   },
 
-  searchProduct: async (categoryName, pageIndex) => {
+  searchProduct: async (categoryName, pageIndex, keyword) => {
     const pageSize = 12;
     const offset = (pageIndex - 1) * pageSize;
 
@@ -145,8 +145,18 @@ const Products = {
     let params = [];
 
     if (categoryName) {
-      whereClause = " WHERE Category = ?";
-      params.push(categoryName);
+        whereClause = " WHERE Category = ?";
+        params.push(categoryName);
+    }
+
+    if (keyword) {
+        if (whereClause) {
+            whereClause += " AND";
+        } else {
+            whereClause = " WHERE";
+        }
+        whereClause += " (Category LIKE ? OR ProductName LIKE ?)";
+        params.push(`%${keyword}%`, `%${keyword}%`);
     }
 
     // Truy vấn danh sách sản phẩm với phân trang
@@ -166,16 +176,16 @@ const Products = {
 
     // Thực thi cả hai truy vấn đồng thời
     const [docs, countResult] = await Promise.all([
-      pool.query(queryDocs, params),
-      pool.query(queryCount, params.slice(0, whereClause ? 1 : 0))
+        pool.query(queryDocs, params),
+        pool.query(queryCount, params.slice(0, params.length - 2)) // Cắt pageSize & offset cho queryCount
     ]);
-    const a = countResult[0]
 
     return {
-      docs: docs, // Danh sách sản phẩm
-      counts: a[0].total // Tổng số bản ghi thỏa mãn điều kiện
+        docs: docs, // Danh sách sản phẩm
+        counts: countResult[0][0].total // Tổng số bản ghi thỏa mãn điều kiện
     };
-  }
+}
+
 
 
 };
