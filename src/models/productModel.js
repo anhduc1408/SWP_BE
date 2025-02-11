@@ -142,14 +142,12 @@ const Products = {
         params.push(`%${keyword}%`, `%${keyword}%`);
     }
 
-    // Truy vấn danh sách sản phẩm với phân trang
     const queryDocs = `
         SELECT * FROM Product
         ${whereClause}
         LIMIT ? OFFSET ?;
     `;
 
-    // Truy vấn tổng số bản ghi thỏa mãn điều kiện
     const queryCount = `
         SELECT COUNT(*) AS total FROM Product
         ${whereClause};
@@ -157,15 +155,14 @@ const Products = {
 
     params.push(pageSize, offset);
 
-    // Thực thi cả hai truy vấn đồng thời
     const [docs, countResult] = await Promise.all([
         pool.query(queryDocs, params),
-        pool.query(queryCount, params.slice(0, params.length - 2)) // Cắt pageSize & offset cho queryCount
+        pool.query(queryCount, params.slice(0, params.length - 2)) 
     ]);
 
     return {
-        docs: docs, // Danh sách sản phẩm
-        counts: countResult[0][0].total // Tổng số bản ghi thỏa mãn điều kiện
+        docs: docs, 
+        counts: countResult[0][0].total 
     };
 }
 
