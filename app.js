@@ -18,14 +18,11 @@ app.use(express.json());
 app.use(cors());
 
 
-//http://localhost:3001/api/Order/CheckOut
 app.use('/api/Order',orderRouter)
 app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
-
 app.use('/api/Products', Products)
 
-//http://localhost:3001/customers
 app.use(
   cors({
     origin: function (origin, callback) {

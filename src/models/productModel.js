@@ -113,7 +113,7 @@ const Products = {
     return result;
   },
 
-  getProductForCart: async (ProductID) => {
+  getProductByProID: async (ProductID) => {
     const result = await pool.query(
       "SELECT * FROM Product WHERE ProductID = ?",
       [ProductID]

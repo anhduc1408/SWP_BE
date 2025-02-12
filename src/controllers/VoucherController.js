@@ -10,6 +10,15 @@ const Voucher = {
         } catch (error) {
             console.log(error)
         }
+    },
+    getVoucherByShopID: async(req,res)=>{
+        try {
+            const shop = req.body.shop;
+            const result = await VoucherService.getVoucherByShopID(shop);
+            res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 
