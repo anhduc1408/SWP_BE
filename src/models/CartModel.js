@@ -1,13 +1,12 @@
 const pool = require('../config/Database');
 
 const Carts = {
-    getAllCarts: async () => {
-        const result = await pool.query(`SELECT * FROM Cart`);
+    getAllCart:async()=>{
+        const result = await pool.query('select * from Cart');
         return result[0];
     },
-
-    getCartDetailByCusID: async (cusID) => {
-        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ?)', [cusID]);
+    getCartDetailByCusID: async(cusID)=>{
+        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartDetailID)',[cusID])
         return result[0];
     },
     removeCartDetail: async (OrderInfor)=>{
