@@ -1,4 +1,4 @@
-const productServices = require("../services/productServices");
+const productServices = require("../services/ProductServices");
 
 const productControllers = {
   getAllProductsNew: async (req, res) => {
@@ -26,6 +26,16 @@ const productControllers = {
   getAllCategory: async (req, res) => {
     try {
       const result = await productServices.getAllCategory();
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  searchProduct: async (req, res) => {
+    const {categoryName, pageIndex,keyword} = req.body
+    try {
+      const result = await productServices.searchProduct(categoryName, pageIndex, keyword);      
       res.status(200).json(result);
     } catch (err) {
       console.log(err);
