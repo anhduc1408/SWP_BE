@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "npx concurrently \".\\cloud-sql-proxy.exe --credentials-file=E:\\download\\aerial-venture-447414-c6-62dea8aa7ad3.json aerial-venture-447414-c6:us-central1:g5-customer-db\" \"nodemon app.js\""
   },
   "keywords": [],
   "author": "",
