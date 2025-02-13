@@ -4,6 +4,7 @@ const orderRouter = require('./src/routers/OrderRouter')
 const cartRouter = require('./src/routers/CartRouter')
 const VoucherRouter = require('./src/routers/VoucherRouter')
 const CustomerRouter = require('./src/routers/CustomerRouter')
+const AddressRouter = require('./src/routers/AddressRouter')
 
 const app = express();
 const cors = require('cors');
@@ -22,8 +23,10 @@ app.use(cors());
 app.use('/api/Order',orderRouter)
 app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
-
 app.use('/api/Products', Products)
+
+http://localhost:3001/api/address/customer/:AddressID
+app.use('/api/address', AddressRouter);
 
 //http://localhost:3001/customers
 app.use(
@@ -45,6 +48,7 @@ app.use(express.json());
 
 app.use("/uploads", express.static("src/uploads"));
 app.use("/customers", CustomerRouter);
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
-    host:'34.56.84.253',
-    user:'anhduc',
-    password:'anhduc1408',
+    host:'127.0.0.1',
+    user:'root',
+    password:'123456',
     database:'G5_Customer',
     port :3306
 })
