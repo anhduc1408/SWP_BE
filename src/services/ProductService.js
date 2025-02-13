@@ -1,5 +1,4 @@
 const Products = require('../models/ProductModel');
-
 const productServices = {
     getAllProductsNew: async (option, type)=>{
         const result = await Products.getAllProductsNew(option, type);
