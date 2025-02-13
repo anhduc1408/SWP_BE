@@ -25,17 +25,11 @@ const Cart = {
         }))
         return result;
     },
-
-    addProductToCart: async (cartID, productID, quantity) => {
-        return await CartModel.addProductToCart(cartID, productID, quantity);
+    removeCartDetail:async(OrderInfor)=>{
+        await CartModel.removeCartDetail(OrderInfor);
     },
-
-    removeProductFromCart: async (cartDetailID) => {
-        return await CartModel.removeProductFromCart(cartDetailID);
-    },
-
-    updateProductQuantity: async (cartDetailID, quantity) => {
-        return await CartModel.updateProductQuantity(cartDetailID, quantity);
+    updateCartDetailQuantity: async (cartDetailID, quantity) => {
+        await CartModel.updateCartDetailQuantity(cartDetailID, quantity);
     }
 }
 
