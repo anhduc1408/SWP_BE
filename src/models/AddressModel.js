@@ -7,12 +7,23 @@ const AddressModel = {
     },
 
     addAddress: async (customerID, houseAddress, area) => {
-        const [result] = await pool.query(
-            "INSERT INTO address (CustomerID, HouseAddress, Area) VALUES (?, ?, ?)",
-            [customerID, houseAddress, area]
-        );
-        return { addressID: result.insertId };
+        try {
+            const [result] = await pool.query(
+                "INSERT INTO address (CustomerID, HouseAddress, Area) VALUES (?, ?, ?)",
+                [customerID, houseAddress, area]
+            );
+    
+            if (!result || result.affectedRows === 0) {
+                throw new Error("Không thể chèn dữ liệu vào bảng address");
+            }
+    
+            return { addressID: result.insertId };
+        } catch (error) {
+            console.error("Lỗi khi thực hiện query thêm địa chỉ:", error);
+            throw error;
+        }
     },
+    
 
     updateAddressById: async (addressID, addressData) => {
         try {
@@ -22,18 +33,22 @@ const AddressModel = {
             const oldAddress = oldAddressQuery[0];
     
             if (!oldAddress) {
-                throw new Error('Địa chỉ không tồn tại');
+                return { success: false, message: 'Địa chỉ không tồn tại' };
             }
     
             const updatedAddress = {
-                HouseAddress: addressData.HouseAddress || oldAddress.HouseAddress,
-                Area: addressData.Area || oldAddress.Area,
+                HouseAddress: addressData.houseAddress || oldAddress.HouseAddress,
+                Area: addressData.area || oldAddress.Area,
             };
     
-            await pool.query(
+            const [result] = await pool.query(
                 'UPDATE address SET HouseAddress = ?, Area = ? WHERE AddressID = ?',
                 [updatedAddress.HouseAddress, updatedAddress.Area, addressID]
             );
+    
+            if (result.affectedRows === 0) {
+                return { success: false, message: "Không có bản ghi nào được cập nhật" };
+            }
     
             return { success: true, message: "Cập nhật địa chỉ thành công" };
         } catch (error) {
@@ -43,23 +58,28 @@ const AddressModel = {
     },
     
     removeAddress: async (addressID, customerID) => {
-        const [countResult] = await pool.query(
-            "SELECT COUNT(*) AS count FROM address WHERE CustomerID = ?", 
-            [customerID]
-        );
-
-        if (countResult[0].count <= 1) {
-            return { success: false, message: "Khách hàng phải có ít nhất một địa chỉ" };
+        try {
+            // Kiểm tra số lượng địa chỉ của khách hàng
+            const [countResult] = await pool.query(
+                "SELECT COUNT(*) AS count FROM address WHERE CustomerID = ?", 
+                [customerID]
+            );
+    
+            // Xóa địa chỉ
+            const [result] = await pool.query("DELETE FROM address WHERE AddressID = ?", [addressID]);
+    
+            if (result.affectedRows === 0) {
+                return { success: false, message: "Không tìm thấy địa chỉ để xóa!" };
+            }
+    
+            return { success: true, message: "Địa chỉ đã được xóa thành công!" };
+    
+        } catch (error) {
+            console.error("Lỗi khi xóa địa chỉ:", error);
+            return { success: false, message: "Lỗi khi xóa địa chỉ!" };
         }
-
-        const [result] = await pool.query("DELETE FROM address WHERE AddressID = ?", [addressID]);
-
-        if (result.affectedRows === 0) {
-            return { success: false, message: "Không tìm thấy địa chỉ để xóa" };
-        }
-
-        return { success: true, message: "Địa chỉ đã được xóa" };
     }
+    
 };
 
 module.exports = AddressModel;

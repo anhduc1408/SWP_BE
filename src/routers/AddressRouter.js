@@ -3,7 +3,7 @@ const AddressController = require('../controllers/AddressController');
 
 const router = express.Router();
 
-router.get('/customer/:customerID', AddressController.getAddressByCustomerId);
+router.get('/:customerID', AddressController.getAddressByCustomerId);
 router.post('/', AddressController.addAddress);
 router.put('/:addressID', AddressController.updateAddressById);
 router.delete('/', AddressController.removeAddress);

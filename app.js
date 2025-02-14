@@ -25,8 +25,8 @@ app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
 app.use('/api/Products', Products)
 
-http://localhost:3001/api/address/customer/:AddressID
-app.use('/api/address', AddressRouter);
+//http://localhost:3001/address/:customerID
+app.use('/address', AddressRouter);
 
 //http://localhost:3001/customers
 app.use(
