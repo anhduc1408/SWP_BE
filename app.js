@@ -1,13 +1,25 @@
 const express = require('express');
-const cartRouter = require('./src/routers/CartRouter')
-const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
+const Products = require('./src/routers/productRouter');
+const orderRouter = require('./src/routers/OrderRouter');
+const cartRouter = require('./src/routers/CartRouter');
+const VoucherRouter = require('./src/routers/VoucherRouter');
+const CustomerRouter = require('./src/routers/CustomerRouter');
+const customerApiRouter = require('./src/routers/APICustomer');  // Thêm API mới
+
+const app = express();
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "web_deploy",
+];
 
 const port = 3001;
+
 app.use(express.json());
 app.use(cors());
-
-app.use('/api/Cart',cartRouter)
 
 // Cấu hình CORS
 app.use(

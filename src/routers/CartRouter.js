@@ -1,9 +1,11 @@
 const CartController = require('../controllers/CartController');
 const express = require('express');
 
-const router = express.Router();
+const router =  express.Router();
+// http://localhost:3001/api/Cart/CheckOut
 
-router.get('/', CartController.getAllCarts);
-router.get('/cusID', CartController.getCartByCusID);
+router.post('/',CartController.getAllCart); 
+router.post('/cusID',CartController.getCartByCusID);
+
 
 module.exports = router;
