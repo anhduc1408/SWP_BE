@@ -21,16 +21,12 @@ const port = 3001;
 app.use(express.json());
 app.use(cors());
 
-<<<<<<< HEAD
-// Cấu hình CORS
-=======
 
-app.use('/api/Order',orderRouter)
-app.use('/api/Cart',cartRouter)
-app.use('/api/Voucher',VoucherRouter)
-app.use('/api/Products', Products)
+app.use('/api/Order',orderRouter);
+app.use('/api/Cart',cartRouter);
+app.use('/api/Voucher',VoucherRouter);
+app.use('/api/Products', Products);
 
->>>>>>> 12b3fe39a6c27bba9c8f217924cab421d244ffe1
 app.use(
   cors({
     origin: "*", // Chấp nhận tất cả các domain (không an toàn)
