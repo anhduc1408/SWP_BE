@@ -23,6 +23,7 @@ const Cart = {
                     totalAmount: item.Quantity * product[0].Price + 32000,
                 };
             }))
+            
         return result;
     },
     removeCartDetail:async(OrderInfor)=>{

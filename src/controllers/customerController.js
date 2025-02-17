@@ -28,8 +28,6 @@ const CustomerControllers = {
             ? `${req.protocol}://${req.get("host")}/uploads/${result.Avatar}`
             : null,
         };
-
-        console.log("customer: ", customer);
         res.status(200).json(customer);
       } else {
         res.status(404).json({ message: "Customer not found" });
