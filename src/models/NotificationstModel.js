@@ -71,8 +71,8 @@ const Notifications = {
       } else if (type === "Cập Nhật Đơn Hàng") {
         const [result] = await pool.query(
           `SELECT 
-              o.CustomerID,
-              o.OrderID,
+            o.CustomerID,
+            o.OrderID,
             o.Status,
             o.ActualDeliveryTime,
             GROUP_CONCAT(DISTINCT p.ProductImg SEPARATOR ', ') AS ProductImgs
