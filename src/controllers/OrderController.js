@@ -24,6 +24,10 @@ const OrderControllers = {
             const voucher = req.body.voucherChoose;   
             const totalPayment = req.body.totalPayment;
             const cusID = req.body.cusID;
+            console.log(OrderInfor);
+            console.log(voucher);
+            console.log(totalPayment);
+            console.log("cusID: ",cusID);
             await OrderServices.addOrder(OrderInfor,voucher,totalPayment,cusID);
             const result = 'success';
             res.status(200).json(result);

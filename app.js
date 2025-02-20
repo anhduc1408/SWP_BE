@@ -9,6 +9,7 @@ const VoucherRouter = require('./src/routers/VoucherRouter');
 const CustomerRouter = require('./src/routers/CustomerRouter');
 const AddressRouter = require('./src/routers/AddressRouter');
 const customerApiRouter = require('./src/routers/APICustomer'); // API mới
+const NotificationsRouter = require('./src/routers/NotificationsRouter');
 
 const app = express();
 const port = 3001;
@@ -34,6 +35,7 @@ app.use('/api/Products', Products);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
+app.use('/api', NotificationsRouter);
 
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));

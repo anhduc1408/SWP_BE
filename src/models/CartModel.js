@@ -15,6 +15,11 @@ const Carts = {
         query += tmp.join(',');
         query += ')';
         await pool.query(query);
-    }
+    },
+    updateCartDetailQuantity: async (cartDetailID, quantity) => {
+        const query = 'UPDATE CartDetail SET Quantity = Quantity + ? WHERE CartDetailID = ?';
+        await pool.query(query, [quantity, cartDetailID]);
+    },
 }
+
 module.exports = Carts;
