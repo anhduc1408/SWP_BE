@@ -189,9 +189,19 @@ const Products = {
         docs: docs, 
         counts: countResult[0][0].total 
     };
+},
+
+setProductFavorite: async (CustomerID,ProductID) => {
+  const result = await pool.query("INSERT ProductFavorite (CustomerID, ProductID, AddedDate) values (?,?,?)", [CustomerID,ProductID, new Date()]);
+
+  return result;
+},
+
+getProductFavorite: async (CustomerID) => {
+  const result = await pool.query("SELECT * FROM ProductFavorite WHERE CustomerID = ?", [CustomerID]);
+
+  return result;
 }
-
-
 
 };
 module.exports = Products;

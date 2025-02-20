@@ -40,5 +40,24 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  setProductFavorite: async (req, res) => {
+    const {CustomerID,ProductID} = req.body
+    try {
+      const result = await productServices.setProductFavorite(CustomerID,ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getProductFavorite: async (req, res) => {
+    const {CustomerId} = req.body
+    try {
+      const result = await productServices.getProductFavorite(CustomerId);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;
