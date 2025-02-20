@@ -6,7 +6,7 @@ const Carts = {
         return result[0];
     },
     getCartDetailByCusID: async(cusID)=>{
-        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartDetailID)',[cusID])
+        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)',[cusID])
         return result[0];
     },
     removeCartDetail: async (OrderInfor)=>{
