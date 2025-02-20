@@ -2,11 +2,11 @@ const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
 
 const Cart = {
-    getAllCarts:async()=>{
+    getAllCarts: async () => {
         return await CartModel.getAllCart();
     },
-    getCartByCusID: async(cusID)=>{
-        const CartDetail =  await CartModel.getCartDetailByCusID(cusID);
+    getCartByCusID: async (cusID) => {
+        const CartDetail = await CartModel.getCartDetailByCusID(cusID);
         const result = await Promise.all(
             CartDetail.map(async (item) => {
                 const product = await ProductModel.getProductByProID(item.ProductID);
@@ -25,11 +25,19 @@ const Cart = {
             }))
         return result;
     },
-    removeCartDetail:async(OrderInfor)=>{
-        await CartModel.removeCartDetail(OrderInfor);
-    },
     updateCartDetailQuantity: async (cartDetailID, quantity) => {
-        await CartModel.updateCartDetailQuantity(cartDetailID, quantity);
+        const cartItem = await CartModel.getCartItemById(cartDetailID);
+        if (!cartItem) {
+            throw new Error('Cart item not found');
+        }
+        if (cartItem.Quantity + quantity <= 0) {
+            await CartModel.removeCartDetail([{ CartDetailID: cartDetailID }]);
+        } else {
+            await CartModel.updateCartDetailQuantity(cartDetailID, quantity);
+        }
+    },
+    removeCartDetail: async (OrderInfor) => {
+        await CartModel.removeCartDetail(OrderInfor);
     }
 }
 
