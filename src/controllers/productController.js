@@ -1,11 +1,10 @@
-const productServices = require("../services/ProductServices");
+const productServices = require("../services/ProductService");
 
 const productControllers = {
   getAllProductsNew: async (req, res) => {
     try {
       const option = req.query.option;
       const type = req.query.type;
-      console.log(option, type);
       const result = await productServices.getAllProductsNew(option, type);
       res.status(200).json(result);
     } catch (err) {

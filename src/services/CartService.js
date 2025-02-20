@@ -1,5 +1,5 @@
 const CartModel = require('../models/CartModel');
-const ProductModel  = require('../models/ProductModel');
+const ProductModel = require('../models/ProductModel');
 
 const Cart = {
     getAllCarts:async()=>{
@@ -23,10 +23,15 @@ const Cart = {
                     totalAmount: item.Quantity * product[0].Price + 32000,
                 };
             }))
+            
         return result;
     },
     removeCartDetail:async(OrderInfor)=>{
         await CartModel.removeCartDetail(OrderInfor);
+    },
+    updateCartDetailQuantity: async (cartDetailID, quantity) => {
+        await CartModel.updateCartDetailQuantity(cartDetailID, quantity);
     }
 }
+
 module.exports = Cart;

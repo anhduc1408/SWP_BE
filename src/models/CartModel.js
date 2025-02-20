@@ -6,7 +6,7 @@ const Carts = {
         return result[0];
     },
     getCartDetailByCusID: async(cusID)=>{
-        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartDetailID)',[cusID])
+        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)',[cusID])
         return result[0];
     },
     removeCartDetail: async (OrderInfor)=>{
@@ -15,6 +15,11 @@ const Carts = {
         query += tmp.join(',');
         query += ')';
         await pool.query(query);
-    }
+    },
+    updateCartDetailQuantity: async (cartDetailID, quantity) => {
+        const query = 'UPDATE CartDetail SET Quantity = Quantity + ? WHERE CartDetailID = ?';
+        await pool.query(query, [quantity, cartDetailID]);
+    },
 }
+
 module.exports = Carts;
