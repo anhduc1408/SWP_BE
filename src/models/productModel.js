@@ -4,110 +4,110 @@ const Products = {
     if (option === "Tất Cả") {
       if (type === "Mới Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product ORDER BY ProductID DESC"
+          "SELECT * FROM Product ORDER BY ProductID DESC LIMIT 15"
         );
         return result;
       } else if (type === "Rẻ Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product ORDER BY Price ASC "
+          "SELECT * FROM Product ORDER BY Price ASC LIMIT 15"
         );
         return result;
       } else if (type === "Đắt Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product ORDER BY Price DESC "
+          "SELECT * FROM Product ORDER BY Price DESC LIMIT 15"
         );
         return result;
       } else if (type === "Bán Chạy Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product ORDER BY SoldQuantity DESC "
+          "SELECT * FROM Product ORDER BY SoldQuantity DESC LIMIT 15"
         );
         return result;
       }
     } else if (option === "Đồ Ăn") {
       if (type === "Mới Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY ProductID DESC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY ProductID DESC LIMIT 15"
         );
         return result;
       } else if (type === "Rẻ Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY Price ASC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY Price ASC LIMIT 15"
         );
         return result;
       } else if (type === "Đắt Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY Price DESC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY Price DESC LIMIT 15"
         );
         return result;
       } else if (type === "Bán Chạy Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY SoldQuantity DESC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn' ORDER BY SoldQuantity DESC LIMIT 15"
         );
         return result;
       }
     } else if (option === "Đồ Ăn Chay") {
       if (type === "Mới Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY ProductID DESC"
+          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY ProductID DESC LIMIT 15"
         );
         return result;
       } else if (type === "Rẻ Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY Price ASC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY Price ASC LIMIT 15"
         );
         return result;
       } else if (type === "Đắt Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY Price DESC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY Price DESC LIMIT 15"
         );
         return result;
       } else if (type === "Bán Chạy Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY SoldQuantity DESC "
+          "SELECT * FROM Product Where Category ='Đồ Ăn Chay' ORDER BY SoldQuantity DESC LIMIT 15"
         );
         return result;
       }
     } else if (option === "Đồ Uống") {
       if (type === "Mới Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY ProductID DESC "
+          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY ProductID DESC LIMIT 15"
         );
-        return
+        return result;
       } else if (type === "Rẻ Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY Price ASC "
+          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY Price ASC LIMIT 15"
         );
         return result;
       } else if (type === "Đắt Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY Price DESC "
+          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY Price DESC LIMIT 15"
         );
         return result;
       } else if (type === "Bán Chạy Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY SoldQuantity DESC "
+          "SELECT * FROM Product Where Category ='Đồ Uống' ORDER BY SoldQuantity DESC LIMIT 15"
         );
         return result;
       }
     }else if (option === "Đồ Tươi Sống") {
       if (type === "Mới Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY ProductID DESC "
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY ProductID DESC LIMIT 15"
         );
         return result;
       } else if (type === "Rẻ Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price ASC "
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price ASC LIMIT 15"
         );
         return result;
       } else if (type === "Đắt Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price DESC "
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY Price DESC LIMIT 15"
         );
         return result;
       } else if (type === "Bán Chạy Nhất") {
         const result = await pool.query(
-          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY SoldQuantity DESC "
+          "SELECT * FROM Product Where Category ='Đồ Tươi Sống' ORDER BY SoldQuantity DESC LIMIT 15"
         );
         return result;
       }
