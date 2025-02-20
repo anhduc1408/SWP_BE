@@ -18,5 +18,14 @@ const notificationsServices = {
       console.log(err);
     }
   },
+
+  getStatusNotifications : async (req, res) => {
+    try {
+      const result = await Notifications.getStatusNotifications(req, res);
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = notificationsServices;
