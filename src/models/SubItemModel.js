@@ -1,6 +1,6 @@
 const pool = require("../config/Database");
 
-const SubItems = {
+const SubItemModel = {
     getSubItemsByCategory: async (categoryId) => {
         const [result] = await pool.query("SELECT * FROM SubItemPortal WHERE category_id = ?", [categoryId]);
         return result;
@@ -12,7 +12,16 @@ const SubItems = {
             [`%${query}%`, `%${query}%`]
         );
         return result;
+    },
+
+    // Hàm cập nhật view_count
+    incrementViewCount: async (id) => {
+        const [result] = await pool.query(
+            "UPDATE SubItemPortal SET view_count = view_count + 1 WHERE id = ?",
+            [id]
+        );
+        return result.affectedRows > 0;
     }
 };
 
-module.exports = SubItems;
+module.exports = SubItemModel;

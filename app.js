@@ -11,6 +11,12 @@ const AddressRouter = require('./src/routers/AddressRouter');
 const customerApiRouter = require('./src/routers/APICustomer'); // API mới
 const NotificationsRouter = require('./src/routers/NotificationsRouter');
 const SubItemRouter = require("./src/routers/SubItemRouter");
+const categoryRouter = require("./src/routers/CategoryRouter");
+const errorHandler = require("./src/middlewares/errorHandler");
+const FAQRouter = require("./src/routers/FAQRouter");
+
+
+
 const app = express();
 const port = 3001;
 
@@ -26,7 +32,7 @@ app.use(
 
 app.use(express.json());
 app.use(bodyParser.json());
-
+app.use(cors());
 // Định tuyến API
 app.use('/api/Order', orderRouter);
 app.use('/api/Cart', cartRouter);
@@ -36,7 +42,10 @@ app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
 app.use('/api', NotificationsRouter);
-app.use("/api/subitems", SubItemRouter)
+app.use("/api/subitems", SubItemRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/faqs", FAQRouter);
+app.use(errorHandler);
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
 

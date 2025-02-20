@@ -7,6 +7,11 @@ const SubItemService = {
 
     searchSubItems: async (query) => {
         return await SubItemModel.searchSubItems(query);
+    },
+
+    // Hàm tăng view_count
+    incrementViewCount: async (id) => {
+        return await SubItemModel.incrementViewCount(id);
     }
 };
 
