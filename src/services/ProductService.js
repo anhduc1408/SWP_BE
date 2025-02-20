@@ -18,6 +18,17 @@ const productServices = {
         const result = await Products.searchProduct(categoryName, pageIndex,keyword);
 
         return result;
+    },
+
+    setProductFavorite: async (CustomerID,ProductID)=>{
+        const result = await Products.setProductFavorite(CustomerID,ProductID);
+
+        return result;
+    },
+    getProductFavorite: async (CustomerID)=>{
+        const result = await Products.getProductFavorite(CustomerID);
+
+        return result;
     }
 }
 module.exports = productServices;
