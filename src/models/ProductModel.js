@@ -189,9 +189,78 @@ const Products = {
         docs: docs, 
         counts: countResult[0][0].total 
     };
-}
+},
 
+setProductFavorite: async (CustomerID,ProductID) => {
+  const result = await pool.query("INSERT ProductFavorite (CustomerID, ProductID, AddedDate) values (?,?,?)", [CustomerID,ProductID, new Date()]);
 
+  return result;
+},
+
+deleteProductFavorite: async (CustomerID,ProductID) => {
+  const result = await pool.query("DELETE FROM ProductFavorite WHERE CustomerID = ? AND ProductID = ?", [CustomerID,ProductID]);
+
+  return result;
+},
+
+getProductFavorite: async (CustomerID) => {
+  const result = await pool.query("SELECT * FROM ProductFavorite WHERE CustomerID = ?", [CustomerID]);
+
+  return result;
+},
+
+getProductDetail: async (ProductID) => {
+  console.log('ProductID',ProductID);
+  
+  const result = await pool.query("SELECT * FROM Product WHERE ProductID = ? ", [ProductID]);
+  return result;
+},
+
+getProductsFavorite: async (CustomerID, pageIndex, keyword) => {
+  const pageSize = 12;
+  const offset = (pageIndex - 1) * pageSize;
+
+  let whereClause = "";
+  let params = [];
+
+  if (CustomerID) {
+      whereClause = " WHERE CustomerID = ?";
+      params.push(CustomerID);
+  }
+
+  if (keyword) {
+      if (whereClause) {
+          whereClause += " AND";
+      } else {
+          whereClause = " WHERE";
+      }
+      whereClause += " (Category LIKE ? OR ProductName LIKE ?)";
+      params.push(`%${keyword}%`, `%${keyword}%`);
+  }
+
+  const queryDocs = `
+      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID 
+      ${whereClause}
+      LIMIT ? OFFSET ?;
+  `;
+
+  const queryCount = `
+      SELECT COUNT(*) AS total FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID 
+      ${whereClause};
+  `;
+
+  params.push(pageSize, offset);
+
+  const [docs, countResult] = await Promise.all([
+      pool.query(queryDocs, params),
+      pool.query(queryCount, params.slice(0, params.length - 2)) 
+  ]);
+
+  return {
+      docs: docs, 
+      counts: countResult[0][0].total 
+  };
+},
 
 };
 module.exports = Products;
