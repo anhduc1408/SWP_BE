@@ -1,12 +1,12 @@
 const express = require('express');
+const Products = require('./src/routers/productRouter')
+const orderRouter = require('./src/routers/OrderRouter')
+const cartRouter = require('./src/routers/CartRouter')
+const VoucherRouter = require('./src/routers/VoucherRouter')
+const CustomerRouter = require('./src/routers/CustomerRouter')
+const Review = require('./src/routers/ReviewRouter')
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
-const Products = require('./src/routers/productRouter');
-const orderRouter = require('./src/routers/OrderRouter');
-const cartRouter = require('./src/routers/CartRouter');
-const VoucherRouter = require('./src/routers/VoucherRouter');
-const CustomerRouter = require('./src/routers/CustomerRouter');
 const AddressRouter = require('./src/routers/AddressRouter');
 const customerApiRouter = require('./src/routers/APICustomer'); // API mới
 const NotificationsRouter = require('./src/routers/NotificationsRouter');
@@ -19,6 +19,15 @@ const FAQRouter = require("./src/routers/FAQRouter");
 
 const app = express();
 const port = 3001;
+app.use(express.json());
+app.use(cors());
+
+
+app.use('/api/Order',orderRouter)
+app.use('/api/Cart',cartRouter)
+app.use('/api/Voucher',VoucherRouter)
+app.use('/api/Products', Products)
+app.use('/api/Review',Review)
 
 // Cấu hình CORS
 app.use(

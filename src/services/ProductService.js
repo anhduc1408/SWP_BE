@@ -18,6 +18,32 @@ const productServices = {
         const result = await Products.searchProduct(categoryName, pageIndex,keyword);
 
         return result;
+    },
+
+    setProductFavorite: async (CustomerID,ProductID)=>{
+        const result = await Products.setProductFavorite(CustomerID,ProductID);
+
+        return result;
+    },
+    getProductFavorite: async (CustomerID)=>{
+        const result = await Products.getProductFavorite(CustomerID);
+
+        return result;
+    },
+    getProductsFavorite: async (CustomerID, pageIndex, keyword)=>{
+        const result = await Products.getProductsFavorite(CustomerID, pageIndex, keyword);
+
+        return result;
+    },
+
+    deleteProductFavorite: async (CustomerID,ProductID)=>{
+        const result = await Products.deleteProductFavorite(CustomerID,ProductID);
+        return result;
+    },
+    getProductDetail: async (ProductID)=>{
+        const result = await Products.getProductDetail(ProductID);
+        return result;
     }
+
 }
 module.exports = productServices;

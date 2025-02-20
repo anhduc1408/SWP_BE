@@ -11,7 +11,6 @@ const Notifications = {
 
       // Nếu thông báo đã tồn tại, không chèn thêm
       if (existingRows.length > 0) {
-        console.log("Notification already exists");
         return { message: "Notification already exists", data: existingRows };
       }
 
@@ -44,82 +43,97 @@ const Notifications = {
       if (type === "Tất Cả Thông Báo") {
         const [result] = await pool.query(
           `SELECT 
-                      o.CustomerID,
-                      o.OrderID,
-                      o.Status,
-                      o.ActualDeliveryTime,
-                      p.ProductImg,
-                      v.VoucherImg,
-                      v.IsActive,
-                      v.StartDate,
-                      v.EndDate,
-                      v.VoucherName,
-                      v.VoucherTitle
-                  FROM Orders o
-                  LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-                  LEFT JOIN Product p ON od.ProductID = p.ProductID
-                  LEFT JOIN VoucherDetail vd ON o.CustomerID = vd.CustomerID
-                  LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
-                  WHERE o.CustomerID = ?
-                  GROUP BY o.CustomerID, o.OrderID, v.VoucherID, p.ProductImg
-                  ORDER BY o.ActualDeliveryTime DESC
-                  Limit 10;`,
-          [customerID]
-        );
-
-        return result;
-      } else if (type === "Cập Nhật Đơn Hàng") {
-        const [result] = await pool.query(
-          `SELECT 
-            o.CustomerID,
-            o.OrderID,
-            o.Status,
-            o.ActualDeliveryTime,
-            GROUP_CONCAT(DISTINCT p.ProductImg SEPARATOR ', ') AS ProductImgs
-            FROM Orders o
-            LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-            LEFT JOIN Product p ON od.ProductID = p.ProductID
-            WHERE o.CustomerID = ?
-            GROUP BY o.CustomerID, o.OrderID
-            ORDER BY o.ActualDeliveryTime DESC
-            LIMIT 10;`,
-          [customerID]
-        );
-
-        console.log("type: ", type);
-        console.log("Type Down hangf: ", result);
-
-        return result;
-      }else if (type === "Khuyến Mãi") {
-        const [result] = await pool.query(
-          `SELECT 
               o.CustomerID,
               o.OrderID,
-              o.Status,
-              o.ActualDeliveryTime,
+              od.Status,
+              od.DeliveryTime,
+              p.ProductImg,
+              v.VoucherID,
               v.VoucherImg,
               v.IsActive,
               v.StartDate,
               v.EndDate,
               v.VoucherName,
-              v.VoucherTitle
+              v.VoucherTitle,
+              n.status as notification_status
               FROM Orders o
+              Left JOIN Notifications n ON n.order_id = o.OrderID
+              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
+              LEFT JOIN Product p ON od.ProductID = p.ProductID
               LEFT JOIN VoucherDetail vd ON o.CustomerID = vd.CustomerID
               LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
               WHERE o.CustomerID = ?
-              GROUP BY o.CustomerID, o.OrderID, v.VoucherID
-              ORDER BY o.ActualDeliveryTime DESC
+              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime, v.VoucherID, p.ProductImg, n.status
+              ORDER BY od.DeliveryTime DESC
               LIMIT 10;`,
           [customerID]
         );
-
-        console.log("type: ", type);
-        console.log("Type Down hangf: ", result);
+        return result;
+      } else if (type === "Cập Nhật Đơn Hàng") {
+        const [result] = await pool.query(
+          `SELECT 
+              o.CustomerID,
+              o.OrderID,
+              od.Status,
+              od.DeliveryTime,
+              p.ProductImg AS ProductImgs,
+              n.status as notification_status
+              FROM Orders o
+              Left JOIN Notifications n ON n.order_id = o.OrderID
+              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
+              LEFT JOIN Product p ON od.ProductID = p.ProductID
+              WHERE o.CustomerID = ?
+              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime,p.ProductImg, n.status
+              ORDER BY od.DeliveryTime DESC
+              LIMIT 10;`,
+          [customerID]
+        );
+        return result;
+      } else if (type === "Khuyến Mãi") {
+        const [result] = await pool.query(
+          `SELECT 
+              v.VoucherImg,
+              v.IsActive,
+              vd.CustomerID,
+              v.VoucherID,
+              v.StartDate,
+              v.EndDate,
+              v.VoucherName,
+              v.VoucherTitle
+              FROM VoucherDetail vd
+              LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
+              WHERE vd.CustomerID = ?
+              GROUP BY v.VoucherID
+              ORDER BY v.StartDate DESC
+              LIMIT 10;`,
+          [customerID]
+        );
 
         return result;
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
+      throw error;
+    }
+  },
+
+  getStatusNotifications: async (req, res) => {
+    try {
+      const cusID = req.query.customer_ID;
+      const orderID = req.query.order_ID;
+      const voucherID = req.query.voucher_ID;
+      const status = req.query.statusNotification;
+
+      console.log("Model BE Status: ",cusID, orderID, voucherID, status);
+
+      const [result] = await pool.query(
+        `UPDATE Notifications
+         SET status = ?
+         WHERE order_id = ? AND customer_id = ? AND voucher_id = ?;`,
+        [status, orderID, cusID, voucherID]
+      );
+    } catch (error) {
+      console.error("Error status notifications:", error);
       throw error;
     }
   },
