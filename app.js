@@ -4,6 +4,7 @@ const orderRouter = require('./src/routers/OrderRouter')
 const cartRouter = require('./src/routers/CartRouter')
 const VoucherRouter = require('./src/routers/VoucherRouter')
 const CustomerRouter = require('./src/routers/CustomerRouter')
+const Review = require('./src/routers/ReviewRouter')
 
 const app = express();
 const cors = require('cors');
@@ -22,6 +23,7 @@ app.use('/api/Order',orderRouter)
 app.use('/api/Cart',cartRouter)
 app.use('/api/Voucher',VoucherRouter)
 app.use('/api/Products', Products)
+app.use('/api/Review',Review)
 
 app.use(
   cors({
