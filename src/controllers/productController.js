@@ -59,5 +59,32 @@ const productControllers = {
       console.log(err);
     }
   },
+  getProductsFavorite: async (req, res) => {
+    const {CustomerID, pageIndex, keyword} = req.body
+    try {
+      const result = await productServices.getProductsFavorite(CustomerID, pageIndex, keyword);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  deleteProductFavorite: async (req, res) => {
+    const {CustomerID,ProductID} = req.body
+    try {
+      const result = await productServices.deleteProductFavorite(CustomerID,ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getProductDetail: async (req, res) => {
+    const {productID} = req.body
+    try {
+      const result = await productServices.getProductDetail(productID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;

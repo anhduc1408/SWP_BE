@@ -11,6 +11,14 @@ const review={
         } catch (error) {
             console.log(error)
         }
+    },
+    getReview: async(req,res)=>{
+        try {
+            const rs =  await Review.getReview(req.body.form);
+            res.status(200).json(rs)
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 
