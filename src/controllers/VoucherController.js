@@ -1,11 +1,34 @@
 const VoucherService = require('../services/VoucherService');
 
 const Voucher = {
-    getVoucherByCusID: async(req,res)=>{
-        const cusID = req.body.cusID;
+    getVoucherAllByCusID: async(req,res)=>{
+        try {
+            const cusID = req.body.cusID;
         const totalPrice = req.body.totalPrice;
-        const result = await VoucherService.getVoucherByCusID(cusID,totalPrice);
-        res.json(result)
+        const result = await VoucherService.getVoucherAllByCusID(cusID,totalPrice);
+        res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getVoucherByShopID: async(req,res)=>{
+        try {
+            const shop = req.body.shop;
+            const cusID = req.body.cusID;
+            const result = await VoucherService.getVoucherByShopID(shop,cusID);
+            res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getVoucherByCusID: async (req,res)=>{
+        try {
+            const cusID = req.body.cusID;
+            const result = await VoucherService.getVoucherByCusID(cusID);
+            res.status(200).json(result);
+        } catch (error) {
+           console.log(error)
+        }
     }
 }
 
