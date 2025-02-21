@@ -8,6 +8,8 @@ router.get('/All',productControllers.getAllProducts);
 router.get('/All/New',productControllers.getAllProductsNew);
 router.get('/Category',productControllers.getAllCategory);
 router.post('/Search',productControllers.searchProduct);
+router.post('/fetchProduct',productControllers.getProductByID);
+router.post('/Favorite',productControllers.getFavoriteByCusID);
 
 
 module.exports = router;

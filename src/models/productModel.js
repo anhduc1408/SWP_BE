@@ -189,8 +189,15 @@ const Products = {
         docs: docs, 
         counts: countResult[0][0].total 
     };
-}
-
+  },
+  getProductByID: async(proID)=>{
+    const result = await pool.query('select * from Product where ProductID = ?',[proID]);
+    return result[0][0];
+  },
+  getFavoriteByCusID: async(cusID)=>{
+    const result = await pool.query('select * from Product where ProductID in(select ProductID from ProductFavorite where CustomerID = ?)',[cusID]);
+    return result[0];
+  }
 
 
 };

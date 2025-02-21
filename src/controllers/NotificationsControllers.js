@@ -18,9 +18,8 @@ const NotificationsControllers = {
     try {
       const result = await NotificationsServices.getAllNotifications(req, res);
       res.status(200).json(result);
-      console.log("List BE Notification: ", result[0])
     } catch (err) {
-      console.log(err);
+      res.status(200).json("ok");
     }
   },
 };

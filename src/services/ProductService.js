@@ -18,6 +18,14 @@ const productServices = {
         const result = await Products.searchProduct(categoryName, pageIndex,keyword);
 
         return result;
+    },
+    getProductByID: async(proID)=>{
+        const result = Products.getProductByID(proID);
+        return result;
+    },
+    getFavoriteByCusID: async(cusID)=>{
+        const result = await Products.getFavoriteByCusID(cusID);
+        return result
     }
 }
 module.exports = productServices;
