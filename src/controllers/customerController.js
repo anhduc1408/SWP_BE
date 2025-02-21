@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 const bcrypt = require('bcryptjs'); // Import bcryptjs để mã hóa mật khẩu
->>>>>>> aafdcd9fc453c23ef077780481cc6d13bfedb32a
 const CustomerServices = require("../services/customerService");
 
 const CustomerControllers = {
