@@ -24,12 +24,18 @@ const AddressController = {
             const result = await AddressService.addAddress(customerID, houseAddress, area);
             console.log("Dữ liệu lưu vào DB:", result);
     
-            res.json(result);
+            return res.json({ success: true, data: result });
         } catch (error) {
             console.error("Lỗi khi thêm địa chỉ:", error);
-            res.status(500).json({ error: "Không thể thêm địa chỉ" });
+    
+            return res.status(500).json({
+                success: false,
+                error: "Không thể thêm địa chỉ",
+                details: error.message
+            });
         }
     },
+    
     
 
     updateAddressById: async (req, res) => {
