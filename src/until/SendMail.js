@@ -1,32 +1,25 @@
-import nodemailer from "nodemailer";
+const otpStore = new Map(); // Tạm thời lưu OTP
 
-//config smtp
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "nghiadphe180494@fpt.edu.vn",
-        pass: "ukua onvl uhdk bzfr",
-    },
-});
+const sendOtpToEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        const otp = Math.floor(100000 + Math.random() * 900000); // 6 chữ số
 
-export const sendEmail = async (mailInfo) => {
-    const { to, subject, text } = mailInfo;
+        otpStore.set(email, otp); // Lưu OTP vào Map
 
-    try {
         const mailOptions = {
-            from: "nghiadphe180494@fpt.edu.vn",
-            to,
-            subject,
-            text,
+            from: 'nghiadphe180494@fpt.edu.vn',
+            to: email,
+            subject: 'Mã OTP xác nhận thay đổi email',
+            text: `Mã OTP của bạn là: ${otp}`,
         };
 
-        await transporter.sendMail(mailOptions);
-        console.log("mail sent successfully");
-    } catch (err) {
-        console.log("mail sent faled: ", err);
-        throw err;
-    }
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve({ success: true, message: "OTP đã được gửi", otp });
+        });
+    });
 };
 
-
-
+module.exports = { sendOtpToEmail, otpStore };

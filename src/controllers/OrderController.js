@@ -13,7 +13,7 @@ const OrderControllers = {
         try {
             const cusID = req.body.cusID;
             const result = await OrderServices.getOrderByCusID(cusID);
-            res.status(200).json(result[0]);
+            res.status(200).json(result);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -24,8 +24,22 @@ const OrderControllers = {
             const voucher = req.body.voucherChoose;   
             const totalPayment = req.body.totalPayment;
             const cusID = req.body.cusID;
+            console.log(OrderInfor);
+            console.log(voucher);
+            console.log(totalPayment);
+            console.log("cusID: ",cusID);
             await OrderServices.addOrder(OrderInfor,voucher,totalPayment,cusID);
             const result = 'success';
+            res.status(200).json(result);
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error);
+        }
+    },
+    getOrderDetailByCusID: async(req,res)=>{
+        try {
+            const cusID = req.body.cusID;
+            const result = await OrderServices.getOrderDetailByCusID(cusID);
             res.status(200).json(result);
         } catch (error) {
             console.log(error)
