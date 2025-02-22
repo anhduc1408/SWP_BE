@@ -124,8 +124,6 @@ const Notifications = {
       const voucherID = req.query.voucher_ID;
       const status = req.query.statusNotification;
 
-      console.log("Model BE Status: ",cusID, orderID, voucherID, status);
-
       const [result] = await pool.query(
         `UPDATE Notifications
          SET status = ?
