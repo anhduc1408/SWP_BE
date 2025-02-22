@@ -261,7 +261,10 @@ getProductsFavorite: async (CustomerID, pageIndex, keyword) => {
       counts: countResult[0][0].total 
   };
 },
-
+getFavoriteByCusID: async(cusID)=>{
+  const result = await pool.query('select * from Product where ProductID in (select ProductID from ProductFavorite where CustomerID = ?)',[cusID]);
+  return result[0];
+}
 };
 module.exports = Products;
 

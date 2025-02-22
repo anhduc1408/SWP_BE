@@ -19,7 +19,14 @@ const productServices = {
 
         return result;
     },
-
+    getProductByID: async(proID)=>{
+        const result = Products.getProductByID(proID);
+        return result;
+    },
+    getFavoriteByCusID: async(cusID)=>{
+        const result = await Products.getFavoriteByCusID(cusID);
+        return result
+    },
     setProductFavorite: async (CustomerID,ProductID)=>{
         const result = await Products.setProductFavorite(CustomerID,ProductID);
 
