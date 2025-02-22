@@ -11,14 +11,14 @@ const Carts = {
     },
     removeCartDetail: async (OrderInfor)=>{
         let query = 'delete from CartDetail where CartDetailID in (';
-        let tmp = OrderInfor.map((item)=>item.CartDetailID)
+        let tmp = OrderInfor.map((item)=>item.cartID)
         query += tmp.join(',');
         query += ')';
         await pool.query(query);
     },
-    updateCartDetailQuantity: async (cartDetailID, quantity) => {
+    updateCartDetailQuantity: async (cartID, quantity) => {
         const query = 'UPDATE CartDetail SET Quantity = Quantity + ? WHERE CartDetailID = ?';
-        await pool.query(query, [quantity, cartDetailID]);
+        await pool.query(query, [quantity, cartID]);
     },
 }
 
