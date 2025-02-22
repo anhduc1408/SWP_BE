@@ -21,11 +21,11 @@ const Cart = {
     },
     updateQuantity: async (req, res) => {
         try {
-            const { cartDetailID, quantity } = req.body;
-            if (!cartDetailID || quantity === undefined) {
+            const { cartID, quantity } = req.body;
+            if (!cartID || quantity === undefined) {
                 return res.status(400).json({ error: "Thiếu dữ liệu" });
             }
-            const result = await CartService.updateCartDetailQuantity(cartDetailID, quantity);
+            const result = await CartService.updateCartDetailQuantity(cartID, quantity);
             res.status(200).json(result);
         } catch (error) {
             res.status(500).json(error);
@@ -33,11 +33,11 @@ const Cart = {
     },
     deleteItem: async (req, res) => {
         try {
-            const { cartDetailID } = req.body;
-            if (!cartDetailID) {
+            const { cartID } = req.body;
+            if (!cartID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu" });
             }
-            await CartService.removeCartDetail([{ CartDetailID: cartDetailID }]);
+            await CartService.removeCartDetail([{ CartID: cartID }]);
             res.status(200).json({ message: "Item deleted successfully" });
         } catch (error) {
             res.status(500).json(error);

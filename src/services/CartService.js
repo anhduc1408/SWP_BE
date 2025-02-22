@@ -25,15 +25,15 @@ const Cart = {
             }))
         return result;
     },
-    updateCartDetailQuantity: async (cartDetailID, quantity) => {
-        const cartItem = await CartModel.getCartItemById(cartDetailID);
+    updateCartDetailQuantity: async (cartID, quantity) => {
+        const cartItem = await CartModel.getCartItemById(cartID);
         if (!cartItem) {
             throw new Error('Cart item not found');
         }
         if (cartItem.Quantity + quantity <= 0) {
-            await CartModel.removeCartDetail([{ CartDetailID: cartDetailID }]);
+            await CartModel.removeCartDetail([{ CartID: cartID }]);
         } else {
-            await CartModel.updateCartDetailQuantity(cartDetailID, quantity);
+            await CartModel.updateCartDetailQuantity(cartID, quantity);
         }
     },
     removeCartDetail: async (OrderInfor) => {
