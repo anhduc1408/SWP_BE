@@ -6,6 +6,6 @@ const pool = mysql.createPool({
     password:'123321',
     database:'G5_Customer',
     port :3306,
-    connectionLimit: 20,
+    connectTimeout: 50000
 })
 module.exports = pool;

@@ -9,7 +9,12 @@ router.get('/All/New',productControllers.getAllProductsNew);
 router.get('/Category',productControllers.getAllCategory);
 router.post('/Search',productControllers.searchProduct);
 router.post('/fetchProduct',productControllers.getProductByID);
-router.post('/Favorite',productControllers.getFavoriteByCusID);
+router.post('/getFavorite',productControllers.getFavoriteByCusID);
+router.post('/Favorite',productControllers.setProductFavorite);
+router.post('/Favorite/delete',productControllers.deleteProductFavorite);
+router.post('/Favorite/getAll',productControllers.getProductFavorite);
+router.post('/Favorite/getAll-product',productControllers.getProductsFavorite);
+router.post('/detail',productControllers.getProductDetail);
 
 
 module.exports = router;
