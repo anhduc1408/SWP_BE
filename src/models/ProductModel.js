@@ -168,7 +168,7 @@ const Products = {
     }
 
     const queryDocs = `
-        SELECT * FROM Product
+        SELECT  p.*, s.ShopName FROM Product p JOIN Shop s ON s.ShopID = p.ShopID
         ${whereClause}
         LIMIT ? OFFSET ?;
     `;
