@@ -210,9 +210,7 @@ getProductFavorite: async (CustomerID) => {
 },
 
 getProductDetail: async (ProductID) => {
-  console.log('ProductID',ProductID);
-  
-  const result = await pool.query("SELECT * FROM Product WHERE ProductID = ? ", [ProductID]);
+  const result = await pool.query("SELECT p.*, s.ShopName FROM Product p JOIN Shop s ON s.ShopID = p.ShopID WHERE ProductID = ? ", [ProductID]);
   return result;
 },
 
