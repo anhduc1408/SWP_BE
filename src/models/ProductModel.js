@@ -237,7 +237,7 @@ getProductsFavorite: async (CustomerID, pageIndex, keyword) => {
   }
 
   const queryDocs = `
-      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID 
+      SELECT *, s.ShopName  FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID JOIN Shop s ON s.ShopID = p.ShopID
       ${whereClause}
       LIMIT ? OFFSET ?;
   `;
@@ -262,7 +262,13 @@ getProductsFavorite: async (CustomerID, pageIndex, keyword) => {
 getFavoriteByCusID: async(cusID)=>{
   const result = await pool.query('select * from Product where ProductID in (select ProductID from ProductFavorite where CustomerID = ?)',[cusID]);
   return result[0];
+},
+
+checkUserCanComment: async(CustomerID, ProductID)=>{
+  const result = await pool.query('SELECT * FROM OrderDetail od JOIN Orders o ON o.OrderID = od.OrderID where o.CustomerID = ? AND ProductID  = ?',[CustomerID, ProductID]);
+  return result[0];
 }
+
 };
 module.exports = Products;
 

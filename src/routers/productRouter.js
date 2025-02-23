@@ -15,6 +15,8 @@ router.post('/Favorite/delete',productControllers.deleteProductFavorite);
 router.post('/Favorite/getAll',productControllers.getProductFavorite);
 router.post('/Favorite/getAll-product',productControllers.getProductsFavorite);
 router.post('/detail',productControllers.getProductDetail);
+router.post('/check-user-can-comment',productControllers.checkUserCanComment);
+
 
 
 module.exports = router;

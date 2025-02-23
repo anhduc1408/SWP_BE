@@ -50,6 +50,10 @@ const productServices = {
     getProductDetail: async (ProductID)=>{
         const result = await Products.getProductDetail(ProductID);
         return result;
+    },
+    checkUserCanComment: async (CustomerID, ProductID)=>{
+        const result = await Products.checkUserCanComment(CustomerID, ProductID);
+        return result;
     }
 
 }

@@ -105,5 +105,14 @@ const productControllers = {
       console.log(err);
     }
   },
+  checkUserCanComment: async (req, res) => {
+    const {CustomerID, ProductID} = req.body
+    try {
+      const result = await productServices.checkUserCanComment(CustomerID, ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;
