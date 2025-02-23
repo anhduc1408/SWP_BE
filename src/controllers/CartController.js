@@ -37,7 +37,7 @@ const Cart = {
             if (!cartID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu" });
             }
-            await CartService.removeCartDetail([{ CartID: cartID }]);
+            await CartService.removeCartDetail(cartID);
             res.status(200).json({ message: "Item deleted successfully" });
         } catch (error) {
             res.status(500).json(error);
