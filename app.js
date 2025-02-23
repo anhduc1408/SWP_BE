@@ -5,6 +5,7 @@ const cartRouter = require('./src/routers/CartRouter')
 const VoucherRouter = require('./src/routers/VoucherRouter')
 const CustomerRouter = require('./src/routers/CustomerRouter')
 const Review = require('./src/routers/ReviewRouter')
+const Shop = require('./src/routers/ShopRouter')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const AddressRouter = require('./src/routers/AddressRouter');
@@ -42,6 +43,7 @@ app.use(
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
+
 // Định tuyến API
 app.use('/api/Order', orderRouter);
 app.use('/api/Cart', cartRouter);
@@ -54,6 +56,7 @@ app.use('/api', NotificationsRouter);
 app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
+app.use("/api/shop", Shop);
 app.use(errorHandler);
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
