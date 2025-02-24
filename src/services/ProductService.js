@@ -50,7 +50,17 @@ const productServices = {
     getProductDetail: async (ProductID)=>{
         const result = await Products.getProductDetail(ProductID);
         return result;
-    }
+    },
+
+    getProductShopSuggest: async (ShopID)=>{
+        const result = await Products.getProductShopSuggest(ShopID);
+        return result;
+    },
+
+    getCategoryProductByShopID: async (ShopID)=>{
+        const result = await Products.getCategoryProductByShopID(ShopID);
+        return result;
+    },
 
 }
 module.exports = productServices;

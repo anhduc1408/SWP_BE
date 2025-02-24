@@ -20,6 +20,11 @@ const Voucher =  {
     getVoucherByCusID: async(cusID)=>{
         const result = await pool.query('select * from Voucher where VoucherID in (select VoucherID from VoucherDetail where CustomerID =?)',[cusID]);
         return result[0];
+    },
+
+    getVoucherShopByShopID: async(shopID)=>{
+        const result = await pool.query('select * from Voucher where ShopID = ?',[shopID]);
+        return result[0];
     }
 }
 
