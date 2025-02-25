@@ -61,6 +61,10 @@ const productServices = {
         const result = await Products.getCategoryProductByShopID(ShopID);
         return result;
     },
+    checkUserCanComment: async (CustomerID, ProductID)=>{
+        const result = await Products.checkUserCanComment(CustomerID, ProductID);
+        return result;
+    }
 
 }
 module.exports = productServices;

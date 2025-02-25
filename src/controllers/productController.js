@@ -121,9 +121,19 @@ const productControllers = {
       const shopID = req.query.shopID;
       const result = await productServices.getCategoryProductByShopID(shopID);      
       res.status(200).json(result);
-    } catch (err) {
+    }catch(err){
       console.log(err);
     }
   },
+
+  checkUserCanComment: async (req, res) => {
+    const {CustomerID, ProductID} = req.body
+    try {
+      const result = await productServices.checkUserCanComment(CustomerID, ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 };
 module.exports = productControllers;

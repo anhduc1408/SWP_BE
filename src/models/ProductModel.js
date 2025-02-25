@@ -299,9 +299,10 @@ const Products = {
 
   getCategoryProductByShopID:  async (shopID) => {
     const result = await pool.query(
-      "select DISTINCT  Category from Product where ShopID = ?",
+      "select distinct Category from Product where ShopID = ?",
       [shopID]
     );
+    console.log(result[0])
     return result[0];
   },
 };
