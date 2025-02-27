@@ -35,6 +35,15 @@ const Shop = {
       console.error("Lỗi truy vấn MySQL:", error);
       res.status(500).json({ error: "Lỗi server, vui lòng thử lại sau." });
     }
+  },
+
+  getShopByID: async (shopID) => {
+    const [rows] = await pool.query(`SELECT ShopName FROM Shop WHERE ShopID = ?`, [shopID]);
+    if (rows.length > 0) {
+      return rows[0].ShopName;
+    } else {
+      return null;
+    }
   }
 };
 
