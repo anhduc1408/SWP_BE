@@ -64,6 +64,11 @@ const productServices = {
     checkUserCanComment: async (CustomerID, ProductID)=>{
         const result = await Products.checkUserCanComment(CustomerID, ProductID);
         return result;
+    },
+
+    getProductShop : async (type, option, shopID)=>{
+        const result = await Products.getProductShop(type, option, shopID);
+        return result;
     }
 
 }

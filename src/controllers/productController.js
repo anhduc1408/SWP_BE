@@ -134,6 +134,18 @@ const productControllers = {
     } catch (err) {
       console.log(err);
     }
-  }
+  },
+
+  getProductShop : async (req, res) => {
+    try {
+      const type = req.query.type
+      const option = req.query.option
+      const shopID = req.query.shopID
+      const result = await productServices.getProductShop(type, option, shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;

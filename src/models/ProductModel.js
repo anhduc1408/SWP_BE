@@ -1,4 +1,5 @@
 const pool = require("../config/Database");
+const { checkUserCanComment } = require("../services/ProductService");
 const Products = {
   getAllProductsNew: async (option, type) => {
     if (option === "Tất Cả") {
@@ -302,8 +303,143 @@ const Products = {
       "select distinct Category from Product where ShopID = ?",
       [shopID]
     );
-    console.log(result[0])
     return result[0];
   },
+
+  getProductShop: async (type, option, shopID) => {
+    if (type === "Đồ Ăn") {
+      if (option === "Mới Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY ProductID DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Cao đến Thấp") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY Price DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Thấp đến Cao") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY Price ASC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Phổ Biến") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY Popularity DESC",
+          [shopID]
+        );
+        console.log(result[0]);
+        return result;
+      }else if (option === "Bán Chạy") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY SoldQuantity DESC",
+          [shopID]
+        );
+        return result;
+      }
+    } else if (type === "Đồ Ăn Chay") {
+      if (option === "Mới Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn Chay' AND ShopID = ? ORDER BY ProductID DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Phổ Biến") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn Chay' AND ShopID = ? ORDER BY Popularity DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Bán Chạy") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn Chay' AND ShopID = ? ORDER BY SoldQuantity DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Thấp đến Cao") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn Chay' AND ShopID = ? ORDER BY Price ASC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Cao đến Thấp") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Ăn Chay' AND ShopID = ? ORDER BY Price DESC",
+          [shopID]
+        );
+        return result;
+      }
+    } else if (type === "Đồ Uống") {
+      if (option === "Mới Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Uống' AND ShopID = ? ORDER BY ProductID DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Phổ Biến") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Uống' AND ShopID = ? ORDER BY Popularity DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Bán Chạy") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Uống' AND ShopID = ? ORDER BY SoldQuantity DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Thấp đến Cao") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Uống' AND ShopID = ? ORDER BY Price ASC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Cao đến Thấp") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Uống' AND ShopID = ? ORDER BY Price DESC",
+          [shopID]
+        );
+        return result;
+      }
+    } else if (type === "Đồ Tươi Sống") {
+      if (option === "Mới Nhất") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY ProductID DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Phổ Biến") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Popularity DESC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Bán Chạy") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY SoldQuantity DESC",
+          [shopID]
+        );
+        console.log(result);
+        return result;
+      } else if (option === "Giá: Thấp đến Cao") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Price ASC",
+          [shopID]
+        );
+        return result;
+      } else if (option === "Giá: Cao đến Thấp") {
+        const result = await pool.query(
+          "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Price DESC",
+          [shopID]
+        );
+        console.log(result[0]);
+        return result;
+      }
+    }
+  },  
+
 };
 module.exports = Products;
