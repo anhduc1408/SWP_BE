@@ -15,7 +15,7 @@ const SubItemRouter = require("./src/routers/SubItemRouter");
 const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
-
+const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
 
 
 const app = express();
@@ -52,11 +52,12 @@ app.use('/api/Products', Products);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
-app.use('/api', NotificationsRouter);
+app.use('/api/notifications', NotificationsRouter);
 app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use("/api/shop", Shop);
+app.use("/api/ProductFavorite", ProductFavoriteRouter);
 app.use(errorHandler);
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
