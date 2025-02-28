@@ -114,5 +114,20 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  updateStock: async (req, res) => {
+    const { cartItems } = req.body
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(400).json({ success: false, error: "Không có sản phẩm trong giỏ hàng"})
+    }
+
+    try {
+      const result = await productServices.updateQuantityInStock(cartItems);
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, error: error.message || "Lỗi server" });
+    }
+  }
 };
 module.exports = productControllers;

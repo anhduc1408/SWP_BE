@@ -267,8 +267,24 @@ getFavoriteByCusID: async(cusID)=>{
 checkUserCanComment: async(CustomerID, ProductID)=>{
   const result = await pool.query('SELECT * FROM OrderDetail od JOIN Orders o ON o.OrderID = od.OrderID where o.CustomerID = ? AND ProductID  = ?',[CustomerID, ProductID]);
   return result[0];
-}
+},
 
+updateQuantityInStock: async (cartItems) => {
+  try {
+    for (let item of cartItems) {
+      const result = await pool.query(
+        `UPDATE Product SET StockQuantity = StockQuantity - ? WHERE ProductID = ? AND StockQuantity >= ?`, 
+        [item.StockQuantity, item.ProductID, item.StockQuantity]);
+
+        if (result.affectedRows === 0) {
+          throw new Error(`Sản phẩm có ID ${item.ProductID} trong kho không đủ`);
+        }
+    }
+    return { success: true, message: 'Cập nhật số lượng sản phẩm thành công' };
+  } catch (error) {
+    throw error;
+  }
+}
 };
 module.exports = Products;
 

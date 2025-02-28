@@ -18,7 +18,7 @@ const Cart = {
                     productImg: product[0].ProductImg,
                     productName: product[0].ProductName,
                     productCategory: product[0].Category,
-                    productPopularity: product[0].Popularity, 
+                    productQuantity: product[0].StockQuantity, 
                     ShopID: product[0].ShopID,
                     ShopName: shopName,
                     productPrice: product[0].Price,
