@@ -10,12 +10,17 @@ const Carts = {
         return result[0];
     },
     removeCartDetail: async (OrderInfor)=>{
-        console.log(OrderInfor);
-        let query = 'delete from CartDetail where CartDetailID = ?';
-        await pool.query(query, [OrderInfor]);
+        let query = 'delete from CartDetail where CartDetailID in (';
+        let values = OrderInfor.map((item, index) => {
+            return item.CartDetailID;
+          });
+          query += values.join(",");
+          query += ')';
+        await pool.query(query);      
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
         const query = 'UPDATE CartDetail SET Quantity = Quantity + ? WHERE CartDetailID = ?';
+        
         await pool.query(query, [quantity, cartID]);
     },
 }

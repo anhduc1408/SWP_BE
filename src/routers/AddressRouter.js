@@ -7,5 +7,6 @@ router.get('/:customerID', AddressController.getAddressByCustomerId);
 router.post('/', AddressController.addAddress);
 router.put('/:addressID', AddressController.updateAddressById);
 router.delete('/', AddressController.removeAddress);
+router.post('/setDefault',AddressController.setDefault);
 
 module.exports = router;
