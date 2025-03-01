@@ -51,8 +51,23 @@ const productServices = {
         const result = await Products.getProductDetail(ProductID);
         return result;
     },
+
+    getProductShopSuggest: async (ShopID)=>{
+        const result = await Products.getProductShopSuggest(ShopID);
+        return result;
+    },
+
+    getCategoryProductByShopID: async (ShopID)=>{
+        const result = await Products.getCategoryProductByShopID(ShopID);
+        return result;
+    },
     checkUserCanComment: async (CustomerID, ProductID)=>{
         const result = await Products.checkUserCanComment(CustomerID, ProductID);
+        return result;
+    },
+
+    getProductShop : async (type, option, shopID)=>{
+        const result = await Products.getProductShop(type, option, shopID);
         return result;
     }
 

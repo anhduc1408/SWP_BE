@@ -135,5 +135,6 @@ const Notifications = {
       throw error;
     }
   },
+
 };
 module.exports = Notifications;
