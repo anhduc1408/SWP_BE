@@ -23,8 +23,10 @@ const AddressModel = {
             throw error;
         }
     },
-    
-
+    setDefault:async(addressID)=>{
+        await pool.query('update address set isDefault = 1 where AddressID = ?',[addressID[0]])
+        await pool.query('update address set isDefault = 0 where AddressID = ?',[addressID[1]])
+    },
     updateAddressById: async (addressID, addressData) => {
         try {
             const [oldAddressQuery] = await pool.query(
