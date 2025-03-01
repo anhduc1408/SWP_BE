@@ -1,5 +1,4 @@
 const pool = require("../config/Database");
-const { checkUserCanComment } = require("../services/ProductService");
 const Products = {
   getAllProductsNew: async (option, type) => {
     if (option === "Tất Cả") {
@@ -177,7 +176,7 @@ const Products = {
     }
 
     const queryDocs = `
-        SELECT * FROM Product
+        SELECT  p.*, s.ShopName FROM Product p JOIN Shop s ON s.ShopID = p.ShopID
         ${whereClause}
         LIMIT ? OFFSET ?;
     `;
@@ -228,10 +227,8 @@ const Products = {
   },
 
   getProductDetail: async (ProductID) => {
-    console.log("ProductID", ProductID);
-
     const result = await pool.query(
-      "SELECT * FROM Product WHERE ProductID = ? ",
+      "SELECT * FROM Product p JOIN Shop s ON s.ShopID = p.ShopID WHERE ProductID = ? ",
       [ProductID]
     );
     return result;
@@ -260,7 +257,7 @@ const Products = {
     }
 
     const queryDocs = `
-      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID 
+      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID JOIN Shop s ON s.ShopID = p.ShopID
       ${whereClause}
       LIMIT ? OFFSET ?;
   `;
@@ -439,7 +436,13 @@ const Products = {
         return result;
       }
     }
-  },  
+  },
+
+  checkUserCanComment: async(CustomerID, ProductID)=>{
+    const result = await pool.query('SELECT * FROM OrderDetail od JOIN Orders o ON o.OrderID = od.OrderID where o.CustomerID = ? AND ProductID  = ?',[CustomerID, ProductID]);
+    return result[0];
+  },
+   
 
 };
 module.exports = Products;
