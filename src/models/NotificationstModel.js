@@ -135,6 +135,8 @@ const Notifications = {
       throw error;
     }
   },
-
+  addNotifications: async(cusID,OrderID)=>{
+    await pool.query('insert into Notifications (customer_id,order_id) values (? ,?)',[cusID,OrderID])
+  }
 };
 module.exports = Notifications;
