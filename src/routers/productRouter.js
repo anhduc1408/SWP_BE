@@ -3,7 +3,9 @@ const OrderControllers = require('../controllers/productController')
 const express = require('express')
 
 const router = express.Router();
-
+router.get('/All/Shop',productControllers.getProductShop);
+router.get('/Shop',productControllers.getCategoryProductByShopID);
+router.get('/Shop/Suggest',productControllers.getProductShopSuggest);
 router.get('/All',productControllers.getAllProducts);
 router.get('/All/New',productControllers.getAllProductsNew);
 router.get('/Category',productControllers.getAllCategory);
@@ -15,6 +17,8 @@ router.post('/Favorite/delete',productControllers.deleteProductFavorite);
 router.post('/Favorite/getAll',productControllers.getProductFavorite);
 router.post('/Favorite/getAll-product',productControllers.getProductsFavorite);
 router.post('/detail',productControllers.getProductDetail);
+router.post('/check-user-can-comment',productControllers.checkUserCanComment);
+
 
 
 module.exports = router;

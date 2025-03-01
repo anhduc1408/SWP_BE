@@ -2,8 +2,9 @@ const notificationsControllers = require('../controllers/NotificationsController
 const express = require('express')
 
 const router = express.Router();
+
 router.get('/',notificationsControllers.getAllNotifications);
-router.get('/notifications_status',notificationsControllers.getStatusNotifications);
+router.get('/status',notificationsControllers.getStatusNotifications);
 
 
 module.exports = router;

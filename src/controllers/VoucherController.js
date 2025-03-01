@@ -29,7 +29,19 @@ const Voucher = {
         } catch (error) {
            console.log(error)
         }
+    },
+
+    getVoucherShopByShopID:  async (req,res)=>{
+        try {
+            const shopID = req.query.shopID;
+            const result = await VoucherService.getVoucherShopByShopID(shopID);
+            res.status(200).json(result);
+        } catch (error) {
+           console.log(error)
+        }
     }
+
+    
 }
 
 module.exports = Voucher;

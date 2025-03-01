@@ -105,5 +105,47 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  getProductShopSuggest : async (req, res) => {
+    try {
+      const shopID = req.query.shopID;
+      const result = await productServices.getProductShopSuggest(shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getCategoryProductByShopID: async (req, res) => {
+    try {
+      const shopID = req.query.shopID;
+      const result = await productServices.getCategoryProductByShopID(shopID);      
+      res.status(200).json(result);
+    }catch(err){
+      console.log(err);
+    }
+  },
+
+  checkUserCanComment: async (req, res) => {
+    const {CustomerID, ProductID} = req.body
+    try {
+      const result = await productServices.checkUserCanComment(CustomerID, ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getProductShop : async (req, res) => {
+    try {
+      const type = req.query.type
+      const option = req.query.option
+      const shopID = req.query.shopID
+      const result = await productServices.getProductShop(type, option, shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;
