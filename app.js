@@ -15,16 +15,13 @@ const SubItemRouter = require("./src/routers/SubItemRouter");
 const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
-<<<<<<< HEAD
 const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
 const VoucherDetailRouter = require("./src/routers/VoucherDetailRouter");
 const CustomerShopFollowRouter = require("./src/routers/CustomerShopFollowRouter");
-=======
 const TransactionRouter = require("./src/routers/TransactionRouter")
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 
 
->>>>>>> 54631f00d9c2dc825334f80b0a885039eea58f6b
 
 
 const app = express();
