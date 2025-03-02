@@ -37,14 +37,14 @@ const Shop = {
     }
   },
 
-  getShopByID: async (shopID) => {
-    const [rows] = await pool.query(`SELECT ShopName FROM Shop WHERE ShopID = ?`, [shopID]);
-    if (rows.length > 0) {
-      return rows[0].ShopName;
-    } else {
-      return null;
-    }
-  }
+  
+  getAllShop: async () => {
+    const result = await pool.query(
+      "SELECT * FROM Shop"
+    );
+
+    return result;
+  },
 };
 
 module.exports = Shop;
