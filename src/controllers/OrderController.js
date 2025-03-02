@@ -27,7 +27,8 @@ const OrderControllers = {
       const voucher = req.body.voucherChoose;
       const totalPayment = req.body.totalPayment;
       const cusID = req.body.cusID;
-      await OrderServices.addOrder(OrderInfor, voucher, totalPayment, cusID);
+      const address = req.body.address;
+      await OrderServices.addOrder(address,OrderInfor, voucher, totalPayment, cusID);
       const result = "success";
       res.status(200).json(result);
     } catch (error) {
@@ -51,7 +52,9 @@ const OrderControllers = {
       const OrderInfor  = req.body.OrderInfor;
       const voucherChoose = req.body.voucherChoose;
       const cusID = req.body.cusID;
-      const OrderDetailID = await OrderServices.addOrderPrepay(OrderInfor, voucherChoose, totalPayment, cusID);
+      const address = req.body.address;
+      const url = req.body.url;
+      const OrderDetailID = await OrderServices.addOrderPrepay(address,OrderInfor, voucherChoose, totalPayment, cusID);
 
       var partnerCode = "MOMO";
       var accessKey = process.env.MOMO_ACCESSKEY;
@@ -59,12 +62,12 @@ const OrderControllers = {
       var requestId = partnerCode + new Date().getTime();
       var orderId = requestId;
       var orderInfo = "anh đức đẹp trai";
-      var redirectUrl = "http://localhost:3000";
-      var ipnUrl = "https://3fa2-117-5-153-194.ngrok-free.app/api/Transaction/callback";
+      var redirectUrl = `http://localhost:3000`;
+      var ipnUrl = `${process.env.MOMO_IPNURL}/api/Transaction/callback`;
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
       var extraData = JSON.stringify(OrderDetailID);
-
+      console.log(ipnUrl,redirectUrl)
       var rawSignature ="accessKey=" +accessKey +"&amount=" +amount +"&extraData=" +extraData +"&ipnUrl=" +ipnUrl +"&orderId=" +orderId +"&orderInfo=" +orderInfo +
         "&partnerCode=" +partnerCode +"&redirectUrl=" +redirectUrl +"&requestId=" +requestId +"&requestType=" +requestType;
       const crypto = require("crypto");
@@ -97,6 +100,7 @@ const OrderControllers = {
         data:requestBody
     }
       const result = await axios(options)
+      console.log(result.data)
       res.status(200).json({ payUrl: result.data.payUrl });
     } catch (error) {
       console.log(error);
