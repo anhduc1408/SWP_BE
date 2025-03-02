@@ -17,7 +17,7 @@ const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
 const TransactionRouter = require("./src/routers/TransactionRouter")
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
-
+const SupportRoutes = require('./src/routers/supportRoutes');
 
 
 
@@ -28,11 +28,11 @@ app.use(cors());
 require('dotenv').config()
 
 
-app.use('/api/Order',orderRouter)
-app.use('/api/Cart',cartRouter)
-app.use('/api/Voucher',VoucherRouter)
+app.use('/api/Order', orderRouter)
+app.use('/api/Cart', cartRouter)
+app.use('/api/Voucher', VoucherRouter)
 app.use('/api/Products', Products)
-app.use('/api/Review',Review)
+app.use('/api/Review', Review)
 
 // Cấu hình CORS
 app.use(
@@ -60,9 +60,10 @@ app.use('/api/notifications', NotificationsRouter);
 app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
-app.use("/api/Transaction",TransactionRouter)
+app.use("/api/Transaction", TransactionRouter)
 app.use("/api/shop", Shop);
 app.use("/api/combo-product", ComboProductRouter);
+app.use('/api/support', SupportRoutes);
 
 app.use(errorHandler);
 // Cấu hình upload file
