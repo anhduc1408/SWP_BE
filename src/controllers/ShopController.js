@@ -25,7 +25,15 @@ const Shop = {
       console.error("❌ Lỗi khi lấy thông tin shop:", err);
       res.status(500).json({ error: "Lỗi server khi lấy thông tin shop" });
     }
-  }
+  },
+  getAllShop: async (req, res) => {
+    try {
+      const result = await shopService.getAllShop();      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 module.exports = Shop;

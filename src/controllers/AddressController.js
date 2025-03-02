@@ -10,7 +10,6 @@ const AddressController = {
             res.status(500).json({ error: "Lỗi khi lấy địa chỉ" });
         }
     },
-
     addAddress: async (req, res) => {
         try {
             console.log("Dữ liệu nhận từ frontend:", req.body);
@@ -35,9 +34,6 @@ const AddressController = {
             });
         }
     },
-    
-    
-
     updateAddressById: async (req, res) => {
         try {
             const addressID = req.params.addressID;
@@ -59,8 +55,17 @@ const AddressController = {
             console.error("Lỗi server:", error);
             res.status(500).json({ error: "Lỗi khi xóa địa chỉ" });
         }
+    },
+    setDefault: async(req,res)=>{
+        try {
+            const AddressID = req.body.AddressID;
+            const customerID = req.body.customerID;
+            const result = await AddressService.setDefault(AddressID,customerID);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log(error)
+        }
     }
-    
 };
 
 module.exports = AddressController;

@@ -1,5 +1,4 @@
 const pool = require("../config/Database");
-const { checkUserCanComment } = require("../services/ProductService");
 const Products = {
   getAllProductsNew: async (option, type) => {
     if (option === "Tất Cả") {
@@ -177,7 +176,7 @@ const Products = {
     }
 
     const queryDocs = `
-        SELECT * FROM Product
+        SELECT  p.*, s.ShopName FROM Product p JOIN Shop s ON s.ShopID = p.ShopID
         ${whereClause}
         LIMIT ? OFFSET ?;
     `;
@@ -228,10 +227,8 @@ const Products = {
   },
 
   getProductDetail: async (ProductID) => {
-    console.log("ProductID", ProductID);
-
     const result = await pool.query(
-      "SELECT * FROM Product WHERE ProductID = ? ",
+      "SELECT * FROM Product p JOIN Shop s ON s.ShopID = p.ShopID WHERE ProductID = ? ",
       [ProductID]
     );
     return result;
@@ -260,7 +257,7 @@ const Products = {
     }
 
     const queryDocs = `
-      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID 
+      SELECT * FROM Product p JOIN ProductFavorite pf ON pf.ProductID = p.ProductID JOIN Shop s ON s.ShopID = p.ShopID
       ${whereClause}
       LIMIT ? OFFSET ?;
   `;
@@ -331,7 +328,6 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY Popularity DESC",
           [shopID]
         );
-        console.log(result[0]);
         return result;
       }else if (option === "Bán Chạy") {
         const result = await pool.query(
@@ -422,7 +418,6 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY SoldQuantity DESC",
           [shopID]
         );
-        console.log(result);
         return result;
       } else if (option === "Giá: Thấp đến Cao") {
         const result = await pool.query(
@@ -435,11 +430,32 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Price DESC",
           [shopID]
         );
-        console.log(result[0]);
         return result;
       }
     }
-  },  
+  },
 
+  checkUserCanComment: async(CustomerID, ProductID)=>{
+    const result = await pool.query('SELECT * FROM OrderDetail od JOIN Orders o ON o.OrderID = od.OrderID where o.CustomerID = ? AND ProductID  = ?',[CustomerID, ProductID]);
+    return result[0];
+  },
+   
+  getProductByShop: async (ShopID, keyword, type) => {
+    let query = `
+      SELECT * FROM Product 
+      WHERE ShopID = ? 
+      AND (ProductName LIKE ? OR Description LIKE ?)
+    `;
+    
+    let params = [ShopID, `%${keyword}%`, `%${keyword}%`];
+  
+    if (type) {
+      query += " AND Category = ?";
+      params.push(type);
+    }
+  
+    const result = await pool.query(query, params);
+    return result;
+  },
 };
 module.exports = Products;
