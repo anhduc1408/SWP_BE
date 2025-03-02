@@ -35,7 +35,16 @@ const Shop = {
       console.error("Lỗi truy vấn MySQL:", error);
       res.status(500).json({ error: "Lỗi server, vui lòng thử lại sau." });
     }
-  }
+  },
+
+  
+  getAllShop: async () => {
+    const result = await pool.query(
+      "SELECT * FROM Shop"
+    );
+
+    return result;
+  },
 };
 
 module.exports = Shop;

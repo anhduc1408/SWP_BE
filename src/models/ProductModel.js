@@ -441,6 +441,22 @@ const Products = {
     return result[0];
   },
    
-
+  getProductByShop: async (ShopID, keyword, type) => {
+    let query = `
+      SELECT * FROM Product 
+      WHERE ShopID = ? 
+      AND (ProductName LIKE ? OR Description LIKE ?)
+    `;
+    
+    let params = [ShopID, `%${keyword}%`, `%${keyword}%`];
+  
+    if (type) {
+      query += " AND Category = ?";
+      params.push(type);
+    }
+  
+    const result = await pool.query(query, params);
+    return result;
+  },
 };
 module.exports = Products;
