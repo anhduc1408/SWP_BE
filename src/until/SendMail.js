@@ -1,25 +1,43 @@
-const otpStore = new Map(); // Tạm thời lưu OTP
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
-const sendOtpToEmail = (email) => {
-    return new Promise((resolve, reject) => {
-        const otp = Math.floor(100000 + Math.random() * 900000); // 6 chữ số
+dotenv.config();
 
-        otpStore.set(email, otp); // Lưu OTP vào Map
+//Khởi tạo transporter với thông tin chính xác
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,  // Lấy từ biến môi trường
+        pass: process.env.EMAIL_PASS,  // Lấy từ biến môi trường
+    },
+});
 
-        const mailOptions = {
-            from: 'nghiadphe180494@fpt.edu.vn',
-            to: email,
-            subject: 'Mã OTP xác nhận thay đổi email',
-            text: `Mã OTP của bạn là: ${otp}`,
-        };
+//Lưu OTP tạm thời trong Map (Nên dùng Redis nếu cần bảo mật)
+const otpStorage = new Map();
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve({ success: true, message: "OTP đã được gửi", otp });
-        });
-    });
+// gửi OTP
+export const sendOTP = async (email) => {
+    if (!email) throw new Error("Email không hợp lệ!");
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStorage.set(email, otp); // Lưu OTP
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Mã OTP xác minh email",
+        text: `Mã OTP của bạn là: ${otp}. Mã này có hiệu lực trong 5 phút.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ OTP sent to ${email}`);
 };
 
-module.exports = { sendOtpToEmail, otpStore };
+//xác minh OTP
+export const verifyOTP = (email, otp) => {
+    if (otpStorage.get(email) === otp) {
+        otpStorage.delete(email);
+        return true;
+    }
+    return false;
+};
