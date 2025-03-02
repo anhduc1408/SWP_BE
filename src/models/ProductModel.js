@@ -430,6 +430,7 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Price DESC",
           [shopID]
         );
+
         return result;
       }
     }

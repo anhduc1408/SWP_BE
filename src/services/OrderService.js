@@ -11,16 +11,16 @@ const OrderServices = {
     getOrderByCusID:async(cusID)=>{
         return await Orders.getOrderByCusId(cusID)
     },
-    addOrder:async (OrderInfor,voucher,totalPayment,cusID)=>{
-        const OrderID = await Orders.addOrder(cusID,totalPayment,OrderInfor,voucher);
+    addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
+        const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
         await Cart.removeCartDetail(OrderInfor)
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
         await Notification.addNotifications(cusID,OrderID);
     },
-    addOrderPrepay:async (OrderInfor,voucher,totalPayment,cusID)=>{
-        const result = await Orders.addOrderPrepay(cusID,totalPayment,OrderInfor,voucher);
+    addOrderPrepay:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
+        const result = await Orders.addOrderPrepay(address,cusID,totalPayment,OrderInfor,voucher);
         await Cart.removeCartDetail(OrderInfor)
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
@@ -34,6 +34,7 @@ const OrderServices = {
             const query = await Product.getProductByProID(item.ProductID);
             const tmp = {
                 orderID : item.OrderID,
+                orderDetailID:item.OrderDetailID,
                 productID : item.ProductID,
                 productCategory:query[0].Category,
                 status:item.Status,
