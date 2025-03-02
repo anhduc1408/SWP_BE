@@ -2,6 +2,7 @@ const ProductFavoriteController = require('../controllers/ProductFavoriteControl
 const express = require('express')
 
 const router = express.Router();
-router.get('/AddProductIDTym',ProductFavoriteController.postAddProductIDTym);
-
-module.exports = router
+router.post('/AddProductIDTym',ProductFavoriteController.postAddProductIDTym);
+router.delete('/DeleteProductIDTym',ProductFavoriteController.deleteProductIDTym);
+router.get('/AllList',ProductFavoriteController.getAllProductFavorite);
+module.exports = router;

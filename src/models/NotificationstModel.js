@@ -70,6 +70,7 @@ const Notifications = {
         );
         return result;
       } else if (type === "Cập Nhật Đơn Hàng") {
+        
         const [result] = await pool.query(
           `SELECT 
               o.CustomerID,

@@ -16,6 +16,8 @@ const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
 const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
+const VoucherDetailRouter = require("./src/routers/VoucherDetailRouter");
+const CustomerShopFollowRouter = require("./src/routers/CustomerShopFollowRouter");
 
 
 const app = express();
@@ -58,6 +60,8 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use("/api/shop", Shop);
 app.use("/api/ProductFavorite", ProductFavoriteRouter);
+app.use("/api/VoucherDetail", VoucherDetailRouter);
+app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
 app.use(errorHandler);
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
