@@ -14,6 +14,8 @@ const SubItemRouter = require("./src/routers/SubItemRouter");
 const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
+const SupportRouter = require("./src/routers/supportRoutes"); // Router hỗ trợ khách hàng
+
 
 
 
@@ -23,11 +25,11 @@ app.use(express.json());
 app.use(cors());
 
 
-app.use('/api/Order',orderRouter)
-app.use('/api/Cart',cartRouter)
-app.use('/api/Voucher',VoucherRouter)
+app.use('/api/Order', orderRouter)
+app.use('/api/Cart', cartRouter)
+app.use('/api/Voucher', VoucherRouter)
 app.use('/api/Products', Products)
-app.use('/api/Review',Review)
+app.use('/api/Review', Review)
 
 // Cấu hình CORS
 app.use(
@@ -55,8 +57,10 @@ app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use(errorHandler);
+app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
+
 
 // Khởi động server
 app.listen(port, () => {
