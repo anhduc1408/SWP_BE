@@ -147,5 +147,15 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  getProductByShop : async (req, res) => {
+    try {
+      const {ShopID, keyword,type} = req.body
+      const result = await productServices.getProductByShop(ShopID, keyword,type);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = productControllers;

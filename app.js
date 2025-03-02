@@ -16,6 +16,8 @@ const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
 const TransactionRouter = require("./src/routers/TransactionRouter")
+const ComboProductRouter = require("./src/routers/ComboProductRouter")
+
 
 
 
@@ -60,6 +62,8 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use("/api/Transaction",TransactionRouter)
 app.use("/api/shop", Shop);
+app.use("/api/combo-product", ComboProductRouter);
+
 app.use(errorHandler);
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));

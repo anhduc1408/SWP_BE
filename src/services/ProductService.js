@@ -69,6 +69,11 @@ const productServices = {
     getProductShop : async (type, option, shopID)=>{
         const result = await Products.getProductShop(type, option, shopID);
         return result;
+    },
+
+    getProductByShop : async (ShopID, keyword,type)=>{
+        const result = await Products.getProductByShop(ShopID, keyword,type);
+        return result;
     }
 
 }

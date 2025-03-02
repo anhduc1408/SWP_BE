@@ -328,7 +328,6 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Ăn' AND ShopID = ? ORDER BY Popularity DESC",
           [shopID]
         );
-        console.log(result[0]);
         return result;
       }else if (option === "Bán Chạy") {
         const result = await pool.query(
@@ -419,7 +418,6 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY SoldQuantity DESC",
           [shopID]
         );
-        console.log(result);
         return result;
       } else if (option === "Giá: Thấp đến Cao") {
         const result = await pool.query(
@@ -432,7 +430,6 @@ const Products = {
           "SELECT * FROM Product WHERE Category = 'Đồ Tươi Sống' AND ShopID = ? ORDER BY Price DESC",
           [shopID]
         );
-        console.log(result[0]);
         return result;
       }
     }
@@ -443,6 +440,22 @@ const Products = {
     return result[0];
   },
    
-
+  getProductByShop: async (ShopID, keyword, type) => {
+    let query = `
+      SELECT * FROM Product 
+      WHERE ShopID = ? 
+      AND (ProductName LIKE ? OR Description LIKE ?)
+    `;
+    
+    let params = [ShopID, `%${keyword}%`, `%${keyword}%`];
+  
+    if (type) {
+      query += " AND Category = ?";
+      params.push(type);
+    }
+  
+    const result = await pool.query(query, params);
+    return result;
+  },
 };
 module.exports = Products;
