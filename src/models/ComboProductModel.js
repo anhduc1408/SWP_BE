@@ -83,7 +83,7 @@ const ComboProduct = {
     }
 
     const queryDocs2 = `
-      SELECT cp.ComboID, p.* FROM comboproducts cp JOIN product p  ON p.ProductID = cp.ProductID JOIN combos c ON c.ComboID = cp.ComboID
+      SELECT cp.ComboID, p.* FROM comboproducts cp JOIN Product p  ON p.ProductID = cp.ProductID JOIN combos c ON c.ComboID = cp.ComboID
       ${whereClause2}
   `;
 
