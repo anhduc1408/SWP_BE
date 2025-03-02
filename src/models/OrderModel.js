@@ -12,7 +12,8 @@ const Orders = {
     );
     return result[0];
   },
-  addOrder: async (cusID, totalPayment, OrderInfor, voucher) => {
+  addOrder: async (address,cusID, totalPayment, OrderInfor, voucher) => {
+    console.log(address)
     console.log(voucher[voucher.length - 1]);
     const voucherAllID = voucher[voucher.length - 1].voucher
       ? voucher[voucher.length - 1].voucher.VoucherID
@@ -20,9 +21,10 @@ const Orders = {
     const voucherAllDis = voucher[voucher.length - 1].voucher
       ? voucher[voucher.length - 1].Discount
       : 0;
+      const addressT = `${address.houseAddress} ${address.area}`
     const result = await pool.query(
-      "insert into Orders(CustomerID,TotalAmount,VoucherID,discount) values(?,?,?,?)",
-      [cusID, totalPayment, voucherAllID, voucherAllDis]
+      "insert into Orders(CustomerID,TotalAmount,VoucherID,discount,address) values(?,?,?,?,?)",
+      [cusID, totalPayment, voucherAllID, voucherAllDis,addressT]
     );
     let query = "insert into OrderDetail values";
     let values = OrderInfor.map((item, index) => {
@@ -35,17 +37,17 @@ const Orders = {
     await pool.query(query);
     return result[0].insertId;
   },
-  addOrderPrepay: async (cusID, totalPayment, OrderInfor, voucher) => {
-    console.log(voucher[voucher.length - 1]);
+  addOrderPrepay: async (address,cusID, totalPayment, OrderInfor, voucher) => {
     const voucherAllID = voucher[voucher.length - 1].voucher
       ? voucher[voucher.length - 1].voucher.VoucherID
       : null;
     const voucherAllDis = voucher[voucher.length - 1].voucher
       ? voucher[voucher.length - 1].Discount
       : 0;
+      const addressT = `${address.houseAddress} ${address.area}`
     const result = await pool.query(
-      "insert into Orders(CustomerID,TotalAmount,VoucherID,discount) values(?,?,?,?)",
-      [cusID, totalPayment, voucherAllID, voucherAllDis]
+      "insert into Orders(CustomerID,TotalAmount,VoucherID,discount,address) values(?,?,?,?,?)",
+      [cusID, totalPayment, voucherAllID, voucherAllDis,addressT]
     );
     let query = "insert into OrderDetail values";
     let values = OrderInfor.map((item, index) => {
@@ -65,7 +67,7 @@ const Orders = {
   },
   getOrderDetailByCusID: async (cusID) => {
     const result = await pool.query(
-      "select ProductID,Quantity,Status,VoucherID,discount,ShipperID,OrderID from OrderDetail where OrderID in (select OrderID from Orders where CustomerID = ?)",
+      "select ProductID,Quantity,Status,VoucherID,discount,ShipperID,OrderID,OrderDetailID from OrderDetail where OrderID in (select OrderID from Orders where CustomerID = ?)",
       [cusID]
     );
     return result[0];
