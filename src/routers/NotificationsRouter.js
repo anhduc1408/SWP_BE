@@ -3,8 +3,8 @@ const express = require('express')
 
 const router = express.Router();
 
-router.get('/notifications',notificationsControllers.getAllNotifications);
-router.get('/notifications_status',notificationsControllers.getStatusNotifications);
+router.get('/',notificationsControllers.getAllNotifications);
+router.get('/status',notificationsControllers.getStatusNotifications);
 
 
 module.exports = router;

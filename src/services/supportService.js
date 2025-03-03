@@ -1,5 +1,6 @@
 const SupportModel = require('../models/SupportModel');
 
+
 const SupportService = {
     createRequest: async (customer_id, category, subject, details) => {
         return await SupportModel.createRequest(customer_id, category, subject, details);

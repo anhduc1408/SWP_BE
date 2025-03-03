@@ -1,3 +1,4 @@
+const AddressModel = require('../models/AddressModel');
 const Address = require('../models/AddressModel');
 
 const AddressService = {
@@ -14,14 +15,17 @@ const AddressService = {
     
         return result;
     },
-    
-
     updateAddressById: async (addressID, addressData) => {
         return await Address.updateAddressById(addressID, addressData);
     },
 
     removeAddress: async (addressID, customerID) => {
         return await Address.removeAddress(addressID, customerID);
+    },
+    setDefault:async(addressID,customerID)=>{
+        await AddressModel.setDefault(addressID,customerID);
+        const result = await AddressModel.getAddressByCustomerId(customerID);
+        return result
     }
 };
 

@@ -26,6 +26,11 @@ const Voucher = {
     getVoucherByCusID: async(cusID)=>{
         const result = await VoucherModel.getVoucherByCusID(cusID);
         return result;
+    }, 
+
+    getVoucherShopByShopID: async(shopID)=>{
+        const result = await VoucherModel.getVoucherShopByShopID(shopID);
+        return result;
     }
 }
 

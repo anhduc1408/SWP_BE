@@ -40,6 +40,25 @@ const productControllers = {
       console.log(err);
     }
   },
+  getProductByID: async (req,res)=>{
+    try {
+      const proID = req.body.productID;
+      const result = await productServices.getProductByID(proID);
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  getFavoriteByCusID: async(req,res)=>{
+    try {
+      const cusID = req.body.cusID;
+      const result = await productServices.getFavoriteByCusID(cusID);
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error)
+    }
+    
+  },
 
   setProductFavorite: async (req, res) => {
     const {CustomerID,ProductID} = req.body
@@ -81,6 +100,58 @@ const productControllers = {
     const {productID} = req.body
     try {
       const result = await productServices.getProductDetail(productID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getProductShopSuggest : async (req, res) => {
+    try {
+      const shopID = req.query.shopID;
+      const result = await productServices.getProductShopSuggest(shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getCategoryProductByShopID: async (req, res) => {
+    try {
+      const shopID = req.query.shopID;
+      const result = await productServices.getCategoryProductByShopID(shopID);      
+      res.status(200).json(result);
+    }catch(err){
+      console.log(err);
+    }
+  },
+
+  checkUserCanComment: async (req, res) => {
+    const {CustomerID, ProductID} = req.body
+    try {
+      const result = await productServices.checkUserCanComment(CustomerID, ProductID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getProductShop : async (req, res) => {
+    try {
+      const type = req.query.type
+      const option = req.query.option
+      const shopID = req.query.shopID
+      const result = await productServices.getProductShop(type, option, shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getProductByShop : async (req, res) => {
+    try {
+      const {ShopID, keyword,type} = req.body
+      const result = await productServices.getProductByShop(ShopID, keyword,type);      
       res.status(200).json(result);
     } catch (err) {
       console.log(err);

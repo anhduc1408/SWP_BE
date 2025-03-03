@@ -70,6 +70,7 @@ const Notifications = {
         );
         return result;
       } else if (type === "Cập Nhật Đơn Hàng") {
+        
         const [result] = await pool.query(
           `SELECT 
               o.CustomerID,
@@ -124,8 +125,6 @@ const Notifications = {
       const voucherID = req.query.voucher_ID;
       const status = req.query.statusNotification;
 
-      console.log("Model BE Status: ",cusID, orderID, voucherID, status);
-
       const [result] = await pool.query(
         `UPDATE Notifications
          SET status = ?
@@ -137,5 +136,8 @@ const Notifications = {
       throw error;
     }
   },
+  addNotifications: async(cusID,OrderID)=>{
+    await pool.query('insert into Notifications (customer_id,order_id) values (? ,?)',[cusID,OrderID])
+  }
 };
 module.exports = Notifications;

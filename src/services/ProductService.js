@@ -19,7 +19,14 @@ const productServices = {
 
         return result;
     },
-
+    getProductByID: async(proID)=>{
+        const result = Products.getProductByID(proID);
+        return result;
+    },
+    getFavoriteByCusID: async(cusID)=>{
+        const result = await Products.getFavoriteByCusID(cusID);
+        return result
+    },
     setProductFavorite: async (CustomerID,ProductID)=>{
         const result = await Products.setProductFavorite(CustomerID,ProductID);
 
@@ -42,6 +49,30 @@ const productServices = {
     },
     getProductDetail: async (ProductID)=>{
         const result = await Products.getProductDetail(ProductID);
+        return result;
+    },
+
+    getProductShopSuggest: async (ShopID)=>{
+        const result = await Products.getProductShopSuggest(ShopID);
+        return result;
+    },
+
+    getCategoryProductByShopID: async (ShopID)=>{
+        const result = await Products.getCategoryProductByShopID(ShopID);
+        return result;
+    },
+    checkUserCanComment: async (CustomerID, ProductID)=>{
+        const result = await Products.checkUserCanComment(CustomerID, ProductID);
+        return result;
+    },
+
+    getProductShop : async (type, option, shopID)=>{
+        const result = await Products.getProductShop(type, option, shopID);
+        return result;
+    },
+
+    getProductByShop : async (ShopID, keyword,type)=>{
+        const result = await Products.getProductByShop(ShopID, keyword,type);
         return result;
     }
 

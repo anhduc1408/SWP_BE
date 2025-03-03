@@ -6,5 +6,7 @@ router.get('/request/:id', SupportController.getRequestById); // API lấy chi t
 router.post('/request', SupportController.createRequest);
 router.get('/requests/:customer_id', SupportController.getUserRequests);
 router.get('/categories', SupportController.getRequestCategories);
+router.post('/request', SupportController.createRequest);
+router.get('/requests/:customer_id', SupportController.getUserRequests);
 
 module.exports = router;
