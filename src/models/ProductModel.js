@@ -441,23 +441,6 @@ const Products = {
     return result[0];
   },
    
-
-updateQuantityInStock: async (cartItems) => {
-  try {
-    for (let item of cartItems) {
-      const result = await pool.query(
-        `UPDATE Product SET StockQuantity = StockQuantity - ? WHERE ProductID = ? AND StockQuantity >= ?`, 
-        [item.StockQuantity, item.ProductID, item.StockQuantity]);
-
-        if (result.affectedRows === 0) {
-          throw new Error(`Sản phẩm có ID ${item.ProductID} trong kho không đủ`);
-        }
-    }
-    return { success: true, message: 'Cập nhật số lượng sản phẩm thành công' };
-  } catch (error) {
-    throw error;
-  }
-},
   getProductByShop: async (ShopID, keyword, type) => {
     let query = `
       SELECT * FROM Product 
