@@ -16,6 +16,7 @@ const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
 const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
+const Shipper = require('./src/routers/ShipperRouter')
 const VoucherDetailRouter = require("./src/routers/VoucherDetailRouter");
 const CustomerShopFollowRouter = require("./src/routers/CustomerShopFollowRouter");
 const TransactionRouter = require("./src/routers/TransactionRouter")
@@ -70,6 +71,7 @@ app.use(bodyParser.json());
 app.use(cors());
 // Định tuyến API
 app.use('/api/Order', orderRouter);
+app.use('/api/Shipper',Shipper );
 app.use('/api/Cart', cartRouter);
 app.use('/api/Voucher', VoucherRouter);
 app.use('/api/Products', Products);

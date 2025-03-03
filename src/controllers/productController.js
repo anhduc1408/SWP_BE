@@ -11,7 +11,15 @@ const productControllers = {
       console.log(err);
     }
   },
-
+  getProductByShopID: async(req,res)=>{
+    try {
+      const ShopID = req.body.ShopID;
+      const result = await productServices.getProductByShopID(ShopID);
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   getAllProducts: async (req, res) => {
     try {
       const option = req.query.option;
