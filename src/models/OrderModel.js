@@ -31,7 +31,7 @@ const Orders = {
       const voucherID = voucher[index].voucher
         ? voucher[index].voucher.VoucherID
         : null;
-      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip},null)`;
+      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},null,null,${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip},${voucherID})`;
     });
     query += values.join(",");
     await pool.query(query);

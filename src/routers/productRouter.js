@@ -20,6 +20,7 @@ router.post('/detail',productControllers.getProductDetail);
 router.post('/check-user-can-comment',productControllers.checkUserCanComment);
 // router.put('/updateStock', productControllers.updateStock);
 router.post('/search-product-by-shop',productControllers.getProductByShop);
+router.post('/getProductByShopID',productControllers.getProductByShopID);
 
 
 
