@@ -31,16 +31,19 @@ const Notifications = {
     }
   },
 
-  getAllNotifications: async (req, res) => {
+  getAllNotifications: async (customerID, typeNotification) => {
     try {
-      const customerID = req.query.customerID;
-      const type = req.query.typeNotification;
-
       if (!customerID) {
         return res.status(400).json({ message: "customerID is required" });
       }
+      if (!typeNotification) {
+        console.log(typeNotification);
+        return res
+          .status(400)
+          .json({ message: "typeNotification is required" });
+      }
 
-      if (type === "Tất Cả Thông Báo") {
+      if (typeNotification === "Tất Cả Thông Báo") {
         const [result] = await pool.query(
           `SELECT 
               o.CustomerID,
@@ -69,15 +72,14 @@ const Notifications = {
           [customerID]
         );
         return result;
-      } else if (type === "Cập Nhật Đơn Hàng") {
-        
+      } else if (typeNotification === "Cập Nhật Đơn Hàng") {
         const [result] = await pool.query(
           `SELECT 
               o.CustomerID,
               o.OrderID,
               od.Status,
               od.DeliveryTime,
-              p.ProductImg AS ProductImgs,
+              p.ProductImg,
               n.status as notification_status
               FROM Orders o
               Left JOIN Notifications n ON n.order_id = o.OrderID
@@ -90,7 +92,7 @@ const Notifications = {
           [customerID]
         );
         return result;
-      } else if (type === "Khuyến Mãi") {
+      } else if (typeNotification === "Khuyến Mãi") {
         const [result] = await pool.query(
           `SELECT 
               v.VoucherImg,
@@ -118,26 +120,29 @@ const Notifications = {
     }
   },
 
-  getStatusNotifications: async (req, res) => {
+  getStatusNotifications: async (
+    customerID,
+    order_ID,
+    voucher_ID,
+    statusNotification
+  ) => {
     try {
-      const cusID = req.query.customer_ID;
-      const orderID = req.query.order_ID;
-      const voucherID = req.query.voucher_ID;
-      const status = req.query.statusNotification;
-
       const [result] = await pool.query(
         `UPDATE Notifications
          SET status = ?
          WHERE order_id = ? AND customer_id = ? AND voucher_id = ?;`,
-        [status, orderID, cusID, voucherID]
+        [statusNotification, order_ID, customerID, voucher_ID]
       );
     } catch (error) {
       console.error("Error status notifications:", error);
       throw error;
     }
   },
-  addNotifications: async(cusID,OrderID)=>{
-    await pool.query('insert into Notifications (customer_id,order_id) values (? ,?)',[cusID,OrderID])
-  }
+  addNotifications: async (cusID, OrderID) => {
+    await pool.query(
+      "insert into Notifications (customer_id,order_id) values (? ,?)",
+      [cusID, OrderID]
+    );
+  },
 };
 module.exports = Notifications;

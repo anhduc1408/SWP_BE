@@ -10,18 +10,19 @@ const notificationsServices = {
     return result;
   },
 
-  getAllNotifications: async (req, res) => {
+  getAllNotifications: async (customerID, typeNotification) => {
     try {
-      const result = await Notifications.getAllNotifications(req, res);
+      const result = await Notifications.getAllNotifications(customerID, typeNotification);
+      
       return result;
     } catch (err) {
       console.log(err);
     }
   },
 
-  getStatusNotifications : async (req, res) => {
+  getStatusNotifications : async (customerID, order_ID, voucher_ID, statusNotification) => {
     try {
-      const result = await Notifications.getStatusNotifications(req, res);
+      const result = await Notifications.getStatusNotifications(customerID, order_ID, voucher_ID, statusNotification);
       return result;
     } catch (err) {
       console.log(err);

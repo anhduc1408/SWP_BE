@@ -22,9 +22,6 @@ const VoucherDetailModel = {
                 SELECT * FROM VoucherDetail 
                 WHERE CustomerID = ? AND VoucherID = ?
             `, [customerID, deleteVoucherID]);
-
-            console.log(existingRows);
-            console.log("cusID + voucher: ", customerID, deleteVoucherID);
     
             if (existingRows.length === 0) {
                 return { success: false, message: 'Voucher not found for this customer!' };

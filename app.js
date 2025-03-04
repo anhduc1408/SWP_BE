@@ -77,7 +77,7 @@ app.use('/api/Products', Products);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
-app.use('/api', NotificationsRouter);
+app.use('/api/notifications', NotificationsRouter);
 app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
