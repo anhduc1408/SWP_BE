@@ -1,4 +1,4 @@
-const SupportService = require('../services/SupportService');
+const SupportService = require('../services/supportService');
 
 
 const SupportController = {
