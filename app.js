@@ -21,6 +21,7 @@ const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
 const VoucherDetailRouter = require("./src/routers/VoucherDetailRouter");
 const CustomerShopFollowRouter = require("./src/routers/CustomerShopFollowRouter");
 const TransactionRouter = require("./src/routers/TransactionRouter")
+const ActivityLogsRouter = require("./src/routers/ActivityLogsRouter");
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
 
@@ -81,12 +82,13 @@ app.use('/api/Products', Products);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
-app.use('/api', NotificationsRouter);
+app.use('/api/notifications', NotificationsRouter);
 app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use("/api/Transaction", TransactionRouter)
 app.use("/api/shop", Shop);
+app.use("/api/activitylogs", ActivityLogsRouter)
 app.use("/api/ProductFavorite", ProductFavoriteRouter);
 app.use("/api/VoucherDetail", VoucherDetailRouter);
 app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
