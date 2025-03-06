@@ -4,7 +4,10 @@ const productServices = {
         const result = await Products.getAllProductsNew(option, type);
         return result;
     },
-
+    getProductByShopID: async(ShopID)=>{
+        const result = await Products.getProductByShopID(ShopID);
+        return result;
+    },
     getAllProducts: async (option)=>{
         const result = await Products.getAllProducts(option);
         return result;

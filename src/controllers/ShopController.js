@@ -5,7 +5,6 @@ const Shop = {
 
     try {
       const shopID = req.query.shopID;
-
       // Kiểm tra nếu không có shopID
       if (!shopID) {
         return res.status(400).json({ error: "Thiếu shopID trong request" });

@@ -62,12 +62,12 @@ const OrderControllers = {
       var requestId = partnerCode + new Date().getTime();
       var orderId = requestId;
       var orderInfo = "anh đức đẹp trai";
-      var redirectUrl = `http://localhost:3000`;
+      var redirectUrl = `http://localhost:3000${url}`;
       var ipnUrl = `${process.env.MOMO_IPNURL}/api/Transaction/callback`;
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
       var extraData = JSON.stringify(OrderDetailID);
-      console.log(ipnUrl,redirectUrl)
+      console.log('cmm',url)
       var rawSignature ="accessKey=" +accessKey +"&amount=" +amount +"&extraData=" +extraData +"&ipnUrl=" +ipnUrl +"&orderId=" +orderId +"&orderInfo=" +orderInfo +
         "&partnerCode=" +partnerCode +"&redirectUrl=" +redirectUrl +"&requestId=" +requestId +"&requestType=" +requestType;
       const crypto = require("crypto");

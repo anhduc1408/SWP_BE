@@ -7,6 +7,7 @@ const FAQModel = {
             FROM SubItemPortal 
             ORDER BY view_count DESC 
             LIMIT 10
+
         `);
         return rows;
     },

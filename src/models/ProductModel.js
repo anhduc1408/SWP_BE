@@ -1,5 +1,9 @@
 const pool = require("../config/Database");
 const Products = {
+  getProductByShopID:async(ShopID)=>{
+    const result = await pool.query('select * from Product where ShopID = ? order by Popularity limit 5',[ShopID]);
+    return result[0];
+  },
   getAllProductsNew: async (option, type) => {
     if (option === "Tất Cả") {
       if (type === "Mới Nhất") {
