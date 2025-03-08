@@ -33,11 +33,7 @@ const Cart = {
     updateCartDetailQuantity: async (cartID, quantity) => {
         console.log("Cập nhật số lượng", cartID, quantity);
         
-        const cartItem = await CartModel.getCartItemById(cartID);
-        if (!cartItem) {
-            throw new Error('Cart item not found');
-        }
-        if (cartItem.Quantity + quantity <= 0) {
+        if (quantity <= 0) {
             await CartModel.removeCartDetail([{ CartDetailID: cartID }]);
         } else {
             await CartModel.updateCartDetailQuantity(cartID, quantity);

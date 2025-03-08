@@ -18,9 +18,10 @@ const Carts = {
         await pool.query(query, [cartDetailIDs]);
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
-        const query = 'UPDATE CartDetail SET Quantity = ? WHERE CartDetailID = ?';
-
-        await pool.query(query, [quantity, cartID]);
+        if (quantity <= 0) {
+            await pool.query('DELETE FROM CartDetail WHERE CartDetailID = ?', [cartID]);
+        }
+            await pool.query('UPDATE CartDetail SET Quantity = ? WHERE CartDetailID = ?', [quantity, cartID]);
     },
     getCartItemById: async (cartID) => {
         const result = await pool.query('select * from CartDetail where CartDetailID = ?', [cartID]);

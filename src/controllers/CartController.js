@@ -28,7 +28,7 @@ const Cart = {
             console.log("Dữ liệu hợp lệ");
 
             await CartService.updateCartDetailQuantity(cartID, newQuantity);
-            res.status(200).json({ message: "Cập nhật số lượng thành công!" });
+            res.status(200).json({ message: newQuantity > 0 ? "Cập nhật số lượng thành công!" : "Sản phẩm bị xóa" });
         } catch (error) {
             res.status(500).json(error);
         }
