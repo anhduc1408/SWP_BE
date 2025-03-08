@@ -21,25 +21,28 @@ const Cart = {
     },
     updateQuantity: async (req, res) => {
         try {
-            const { cartID, quantity } = req.body;
-            if (!cartID || quantity === undefined) {
+            const { cartID, newQuantity } = req.body;
+            if (!cartID || newQuantity === undefined || isNaN(newQuantity)) {
                 return res.status(400).json({ error: "Thiếu dữ liệu" });
             }
-            const result = await CartService.updateCartDetailQuantity(cartID, quantity);
-            res.status(200).json(result);
+            console.log("Dữ liệu hợp lệ");
+
+            await CartService.updateCartDetailQuantity(cartID, newQuantity);
+            res.status(200).json({ message: "Cập nhật số lượng thành công!" });
         } catch (error) {
             res.status(500).json(error);
         }
     },
     deleteItem: async (req, res) => {
         try {
-            const { cartID } = req.body;
+            const cartID = req.body?.cartID || req.query?.cartID;
             if (!cartID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu" });
             }
-            await CartService.removeCartDetail([{ CartID: cartID }]);
+            await CartService.removeCartDetail(cartID);
             res.status(200).json({ message: "Item deleted successfully" });
         } catch (error) {
+            console.error(error);
             res.status(500).json(error);
         }
     }
