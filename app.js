@@ -25,6 +25,7 @@ const TransactionRouter = require("./src/routers/TransactionRouter")
 const ActivityLogsRouter = require("./src/routers/ActivityLogsRouter");
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
+const ChatRoutes = require('./src/routers/ChatRouter');
 
 
 const Shop = require("./src/routers/ShopRouter")
@@ -96,6 +97,8 @@ app.use("/api/VoucherDetail", VoucherDetailRouter);
 app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
 app.use("/api/combo-product", ComboProductRouter);
 app.use('/api/support', SupportRoutes);
+app.use('/api/chat', ChatRoutes);
+
 
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
