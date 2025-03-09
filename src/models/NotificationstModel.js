@@ -1,7 +1,7 @@
 const pool = require("../config/Database");
 
 const Notifications = {
-  getAddNotifications: async (OrderInfor, voucher, totalPayment, cusID) => {
+  getAddNotifications: async (OrderInfor, voucher, cusID) => {
     try {
       // Kiểm tra xem thông báo đã tồn tại chưa
       const [existingRows] = await pool.query(
@@ -42,53 +42,25 @@ const Notifications = {
           .status(400)
           .json({ message: "typeNotification is required" });
       }
+      if (typeNotification === "Cập Nhật Đơn Hàng") {
+        const [result] = await pool.query(
+          `SELECT DISTINCT 
+    n.customer_id,
+    o.OrderID,
+    od.Status,
+    od.DeliveryTime,
+    p.ProductImg,
+    o.status_Orders
+FROM Notifications n
+LEFT JOIN Orders o ON o.OrderID = n.order_id
+LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
+LEFT JOIN Product p ON od.ProductID = p.ProductID
+WHERE n.customer_id = ?
+ORDER BY od.DeliveryTime DESC
+LIMIT 10;
 
-      if (typeNotification === "Tất Cả Thông Báo") {
-        const [result] = await pool.query(
-          `SELECT 
-              o.CustomerID,
-              o.OrderID,
-              od.Status,
-              od.DeliveryTime,
-              p.ProductImg,
-              v.VoucherID,
-              v.VoucherImg,
-              v.IsActive,
-              v.StartDate,
-              v.EndDate,
-              v.VoucherName,
-              v.VoucherTitle,
-              n.status as notification_status
-              FROM Orders o
-              Left JOIN Notifications n ON n.order_id = o.OrderID
-              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-              LEFT JOIN Product p ON od.ProductID = p.ProductID
-              LEFT JOIN VoucherDetail vd ON o.CustomerID = vd.CustomerID
-              LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
-              WHERE o.CustomerID = ?
-              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime, v.VoucherID, p.ProductImg, n.status
-              ORDER BY od.DeliveryTime DESC
-              LIMIT 10;`,
-          [customerID]
-        );
-        return result;
-      } else if (typeNotification === "Cập Nhật Đơn Hàng") {
-        const [result] = await pool.query(
-          `SELECT 
-              o.CustomerID,
-              o.OrderID,
-              od.Status,
-              od.DeliveryTime,
-              p.ProductImg,
-              n.status as notification_status
-              FROM Orders o
-              Left JOIN Notifications n ON n.order_id = o.OrderID
-              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-              LEFT JOIN Product p ON od.ProductID = p.ProductID
-              WHERE o.CustomerID = ?
-              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime,p.ProductImg, n.status
-              ORDER BY od.DeliveryTime DESC
-              LIMIT 10;`,
+
+`,
           [customerID]
         );
         return result;
@@ -102,11 +74,13 @@ const Notifications = {
               v.StartDate,
               v.EndDate,
               v.VoucherName,
-              v.VoucherTitle
+              v.VoucherTitle,
+              vd.status_voucherDetail
               FROM VoucherDetail vd
-              LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
+              LEFT JOIN Voucher v ON v.VoucherID = vd.VoucherID
+              LEFT JOIN Notifications n ON vd.VoucherID = n.voucher_id
               WHERE vd.CustomerID = ?
-              GROUP BY v.VoucherID
+              GROUP BY vd.VoucherID, vd.status_voucherDetail
               ORDER BY v.StartDate DESC
               LIMIT 10;`,
           [customerID]
@@ -127,12 +101,21 @@ const Notifications = {
     statusNotification
   ) => {
     try {
-      const [result] = await pool.query(
-        `UPDATE Notifications
-         SET status = ?
-         WHERE order_id = ? AND customer_id = ? AND voucher_id = ?;`,
-        [statusNotification, order_ID, customerID, voucher_ID]
-      );
+      if(order_ID){
+        const [result] = await pool.query(
+          `UPDATE Orders
+           SET status_Orders = ?
+           WHERE OrderID = ?  AND CustomerID = ?;`,
+          [statusNotification, order_ID, customerID]
+        );
+      }else {
+        const [result] = await pool.query(
+          `UPDATE VoucherDetail
+           SET status_voucherDetail = ?
+           WHERE VoucherID = ?  AND CustomerID = ?;`,
+          [statusNotification, voucher_ID, customerID]
+        );
+      }
     } catch (error) {
       console.error("Error status notifications:", error);
       throw error;

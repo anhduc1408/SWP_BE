@@ -45,6 +45,14 @@ const Cart = {
             console.error(error);
             res.status(500).json(error);
         }
+    },
+    updateCartDetail: async (req, res) => {
+        try {
+            await CartService.updateCartDetail(req.body);
+            res.status(200).json({ message: "Thêm sản phẩm thành công", status: 200 });
+        } catch (error) {
+            res.status(200).json({message: "Thêm sản phẩm thất bại", status: 204});
+        }
     }
 }
 module.exports = Cart;

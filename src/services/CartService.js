@@ -1,7 +1,7 @@
 const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
 const ShopModel = require('../models/ShopModel');
-
+``
 const Cart = {
     getAllCarts: async () => {
         return await CartModel.getAllCart();
@@ -42,6 +42,7 @@ const Cart = {
     removeCartDetail: async (cartDetailID) => {
         await CartModel.removeCartDetail([cartDetailID]);
     }
+
 }
 
 module.exports = Cart;
