@@ -25,7 +25,7 @@ const TransactionRouter = require("./src/routers/TransactionRouter")
 const ActivityLogsRouter = require("./src/routers/ActivityLogsRouter");
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
-
+const LoyaltyRouter = require("./src/routers/LoyaltyRouter");
 
 const Shop = require("./src/routers/ShopRouter")
 
@@ -77,7 +77,7 @@ app.use(bodyParser.json());
 app.use(cors());
 // Định tuyến API
 app.use('/api/Order', orderRouter);
-app.use('/api/Shipper',Shipper );
+app.use('/api/Shipper', Shipper);
 app.use('/api/Cart', cartRouter);
 app.use('/api/Voucher', VoucherRouter);
 app.use('/api/Products', Products);
@@ -96,7 +96,7 @@ app.use("/api/VoucherDetail", VoucherDetailRouter);
 app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
 app.use("/api/combo-product", ComboProductRouter);
 app.use('/api/support', SupportRoutes);
-
+app.use("/api/loyalty", LoyaltyRouter);
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
 // Cấu hình upload file
