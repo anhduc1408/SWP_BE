@@ -31,22 +31,16 @@ const Cart = {
         return result;
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
-        const cartItem = await CartModel.getCartItemById(cartID);
-        if (!cartItem) {
-            throw new Error('Cart item not found');
-        }
-        if (cartItem.Quantity + quantity <= 0) {
-            await CartModel.removeCartDetail([{ CartID: cartID }]);
+        console.log("Cập nhật số lượng", cartID, quantity);
+        
+        if (quantity <= 0) {
+            await CartModel.removeCartDetail([{ CartDetailID: cartID }]);
         } else {
             await CartModel.updateCartDetailQuantity(cartID, quantity);
         }
     },
-    removeCartDetail: async (OrderInfor) => {
-        await CartModel.removeCartDetail(OrderInfor);
-    },
-    
-    updateCartDetail: async (body) => {
-        await CartModel.updateCartDetail(body);
+    removeCartDetail: async (cartDetailID) => {
+        await CartModel.removeCartDetail([cartDetailID]);
     }
 
 }
