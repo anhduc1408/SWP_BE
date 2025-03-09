@@ -32,6 +32,10 @@ const NotificationsControllers = {
       const order_ID = req.query.order_ID;
       const voucher_ID = req.query.voucher_ID;
       const statusNotification = req.query.statusNotification;
+      console.log("cus: ", customerID)
+      console.log("oredr: ", order_ID)
+      console.log("voucher: ", voucher_ID)
+      console.log("status: ", statusNotification)
       const result = await NotificationsServices.getStatusNotifications(customerID, order_ID, voucher_ID, statusNotification);
       
       res.status(200).json(result);
