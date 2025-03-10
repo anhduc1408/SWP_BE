@@ -1,6 +1,5 @@
 const SupportService = require('../services/supportService');
 
-
 const SupportController = {
     createRequest: async (req, res) => {
         try {
@@ -32,7 +31,6 @@ const SupportController = {
         }
     },
 
-    // API lấy chi tiết một yêu cầu hỗ trợ theo ID
     getRequestById: async (req, res) => {
         try {
             const { id } = req.params;
@@ -48,21 +46,13 @@ const SupportController = {
             res.status(500).json({ error: "Lỗi server!" });
         }
     },
+
     getRequestCategories: async (req, res) => {
         try {
             const categories = await SupportService.getRequestCategories();
             res.status(200).json(categories);
         } catch (error) {
             console.error("Lỗi khi lấy danh sách loại yêu cầu:", error);
-            res.status(500).json({ error: "Lỗi server!" });
-        }
-    },
-    getCategories: async (req, res) => {
-        try {
-            const [categories] = await pool.query("SELECT * FROM RequestCategories");
-            res.status(200).json(categories);
-        } catch (error) {
-            console.error("Lỗi khi lấy danh sách categories:", error);
             res.status(500).json({ error: "Lỗi server!" });
         }
     }

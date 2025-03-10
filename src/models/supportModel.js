@@ -17,10 +17,7 @@ const SupportModel = {
     getUserRequests: async (customer_id) => {
         try {
             const [rows] = await pool.query(
-                `SELECT sr.*, rc.name AS category_name 
-                 FROM SupportRequests sr 
-                 JOIN RequestCategories rc ON sr.category = rc.id 
-                 WHERE sr.customer_id = ? ORDER BY sr.created_at DESC`,
+                'SELECT * FROM SupportRequests WHERE customer_id = ? ORDER BY created_at DESC',
                 [customer_id]
             );
             return rows;
@@ -30,7 +27,6 @@ const SupportModel = {
         }
     },
 
-    // Thêm truy vấn lấy yêu cầu theo ID
     getRequestById: async (id) => {
         const [rows] = await pool.query(
             'SELECT * FROM SupportRequests WHERE id = ?',
@@ -38,6 +34,7 @@ const SupportModel = {
         );
         return rows.length ? rows[0] : null;
     },
+
     getRequestCategories: async () => {
         const [rows] = await pool.query("SELECT id, name FROM RequestCategories");
         return rows;
