@@ -1,4 +1,5 @@
 const Products = require('../models/ProductModel');
+const CustomerBehaviorModel = require('../models/CustomerBehaviorModel');
 const productServices = {
     getAllProductsNew: async (option, type)=>{
         const result = await Products.getAllProductsNew(option, type);
@@ -77,7 +78,37 @@ const productServices = {
     getProductByShop : async (ShopID, keyword,type)=>{
         const result = await Products.getProductByShop(ShopID, keyword,type);
         return result;
+    },
+
+    getProductBehaviorShop: async (customerID, shopID) => {
+        let CategoryByShopCustomerBehavior = await CustomerBehaviorModel.getCategoryByShop(customerID, shopID);
+    
+        if (CategoryByShopCustomerBehavior.length === 0) {
+            const result = await Products.getProductCheapestBehaviorShop(shopID);
+            return result;
+        }
+            const result = await Promise.all(
+            CategoryByShopCustomerBehavior.map(async (item) => {
+                const productBehavior = await ProductModel.getProductCustomerBehaviorShop(shopID, item.category);
+    
+                return productBehavior[0].map((product) => ({
+                    productID: product.ProductID,
+                    productImg: product.ProductImg,
+                    productName: product.ProductName,
+                    productCategory: product.Category,
+                    productSoldQuantity: product.StockQuantity,
+                    productWeight: product.Weight,
+                    ShopID: product.ShopID,
+                    productPrice: product.Price,
+                }));
+            })
+        );
+        console.log("List Behavior shop Service: ", result[0]);
+    
+        // Flatten mảng kết quả nếu cần thiết (nếu mỗi category trả về một mảng sản phẩm, bạn sẽ có một mảng mảng)
+        return result.flat();
     }
+    
 
 }
 module.exports = productServices;

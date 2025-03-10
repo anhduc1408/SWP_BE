@@ -156,6 +156,18 @@ const productControllers = {
     }
   },
 
+  getProductBehaviorShop: async (req, res) => {
+    try {
+      console.log(123);
+      const customerID = req.query.customerID;
+      const shopID = req.query.shopID
+      const result = await productServices.getProductBehaviorShop(customerID, shopID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
   getProductByShop : async (req, res) => {
     try {
       const {ShopID, keyword,type} = req.body

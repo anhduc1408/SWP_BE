@@ -462,5 +462,28 @@ const Products = {
     const result = await pool.query(query, params);
     return result;
   },
+
+  getProductCheapestBehaviorShop: async (shopID) => {
+    const result = await pool.query(
+      `SELECT * FROM Product
+       WHERE ShopID = ?
+       ORDER BY Price ASC
+       LIMIT 10`,
+      [shopID]
+    );
+    return result;
+  },
+
+  getProductCustomerBehaviorShop: async (shopID, category) => {
+    const result = await pool.query(
+      `SELECT * FROM Product
+       WHERE ShopID = ? and Category = ?
+       ORDER BY SoldQuantity DESC
+       LIMIT 10`,
+      [shopID, category]
+    );
+    return result;
+  },
+  
 };
 module.exports = Products;
