@@ -1,7 +1,7 @@
 const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
 const ShopModel = require('../models/ShopModel');
-``
+
 const Cart = {
     getAllCarts: async () => {
         return await CartModel.getAllCart();
@@ -31,16 +31,33 @@ const Cart = {
         return result;
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
-        console.log("Cập nhật số lượng", cartID, quantity);
+        const cartItem = await CartModel.getCartItemById(cartID);
+        if (!cartItem) {
+            throw new Error('Cart item không tìm thấy');
+        }
+
+        const product = await ProductModel.getProductByProID(cartItem.ProductID);
+        if (!product || product.length === 0) {
+            throw new Error('Sản phẩm không tìm thấy');
+        }
+
+        const stockQuantity = product[0].StockQuantity;
+        if (quantity > stockQuantity) {
+            throw new Error('Số lượng sản phẩm vượt quá số lượng trong kho');
+        }
         
         if (quantity <= 0) {
-            await CartModel.removeCartDetail([{ CartDetailID: cartID }]);
+            await CartModel.removeCartDetail(cartID);
         } else {
             await CartModel.updateCartDetailQuantity(cartID, quantity);
         }
     },
-    removeCartDetail: async (cartDetailID) => {
-        await CartModel.removeCartDetail([cartDetailID]);
+    getCartItemById: async (cartID) => {
+        return await CartModel.getCartItemById(cartID);
+    },
+    removeCartDetail: async (cartID) => {
+        console.log(`Xóa sản phẩm có cartID=${cartID}`);
+        await CartModel.removeCartDetail([cartID]);
     }
 
 }
