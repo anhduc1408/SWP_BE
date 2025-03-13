@@ -1,7 +1,7 @@
 const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
 const ShopModel = require('../models/ShopModel');
-``
+
 const Cart = {
     getAllCarts: async () => {
         return await CartModel.getAllCart();
@@ -33,20 +33,31 @@ const Cart = {
     updateCartDetailQuantity: async (cartID, quantity) => {
         const cartItem = await CartModel.getCartItemById(cartID);
         if (!cartItem) {
-            throw new Error('Cart item not found');
+            throw new Error('Cart item không tìm thấy');
         }
-        if (cartItem.Quantity + quantity <= 0) {
-            await CartModel.removeCartDetail([{ CartID: cartID }]);
+
+        const product = await ProductModel.getProductByProID(cartItem.ProductID);
+        if (!product || product.length === 0) {
+            throw new Error('Sản phẩm không tìm thấy');
+        }
+
+        const stockQuantity = product[0].StockQuantity;
+        if (quantity > stockQuantity) {
+            throw new Error('Số lượng sản phẩm vượt quá số lượng trong kho');
+        }
+        
+        if (quantity <= 0) {
+            await CartModel.removeCartDetail(cartID);
         } else {
             await CartModel.updateCartDetailQuantity(cartID, quantity);
         }
     },
-    removeCartDetail: async (OrderInfor) => {
-        await CartModel.removeCartDetail(OrderInfor);
+    getCartItemById: async (cartID) => {
+        return await CartModel.getCartItemById(cartID);
     },
-    
-    updateCartDetail: async (body) => {
-        await CartModel.updateCartDetail(body);
+    removeCartDetail: async (cartID) => {
+        console.log(`Xóa sản phẩm có cartID=${cartID}`);
+        await CartModel.removeCartDetail([cartID]);
     }
 
 }

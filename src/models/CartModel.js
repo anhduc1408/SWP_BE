@@ -1,27 +1,38 @@
 const pool = require('../config/Database');
 
 const Carts = {
-    getAllCart:async()=>{
+    getAllCart: async () => {
         const result = await pool.query('select * from Cart');
         return result[0];
     },
-    getCartDetailByCusID: async(cusID)=>{
-        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)',[cusID])
+    getCartDetailByCusID: async (cusID) => {
+        const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)', [cusID])
         return result[0];
     },
-    removeCartDetail: async (OrderInfor)=>{
-        let query = 'delete from CartDetail where CartDetailID in (';
-        let values = OrderInfor.map((item, index) => {
-            return item.CartDetailID;
-          });
-          query += values.join(",");
-          query += ')';
-        await pool.query(query);      
+    removeCartDetail: async (cartID) => {
+        const query = 'DELETE FROM CartDetail WHERE CartDetailID = ?';
+        try {
+            const result = await pool.query(query, [cartID]);
+            console.log(`Đã xóa ${result.affectedRows} dòng từ CartDetail`);
+            return result;
+        } catch (error) {
+            console.error('Lỗi khi xóa dữ liệu trong CartDetail:', error);
+            throw error;
+        }
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
-        const query = 'UPDATE CartDetail SET Quantity = Quantity + ? WHERE CartDetailID = ?';
-        
-        await pool.query(query, [quantity, cartID]);
+        if (quantity <= 0) {
+            await pool.query('DELETE FROM CartDetail WHERE CartDetailID = ?', [cartID]);
+        }
+            await pool.query('UPDATE CartDetail SET Quantity = ? WHERE CartDetailID = ?', [quantity, cartID]);
+    },
+    getCartItemById: async (cartID) => {
+        const result = await pool.query('select * from CartDetail where CartDetailID = ?', [cartID]);
+        if (result[0].length > 0) {
+            return result[0][0];
+        } else {
+            return null;
+        }
     },
 
     updateCartDetail: async (body) => {
