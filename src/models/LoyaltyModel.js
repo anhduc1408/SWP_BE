@@ -1,28 +1,36 @@
-const db = require("../config/Database");
+const pool = require("../config/Database");
 
 const LoyaltyModel = {
-    getLoyaltyData: async (customerId) => {
-        try {
-            const query = `
-                SELECT 
-                    l.CustomerID AS customer_id,
-                    CONCAT(c.FirstName, ' ', c.LastName) AS username,
-                    l.TotalOrders AS total_orders,
-                    l.TotalSpent AS total_spent,
-                    l.Tier AS tier,
-                    l.LastUpdated AS last_updated
-                FROM G5_Customer.Loyalty l
-                JOIN G5_Customer.Customer c ON l.CustomerID = c.CustomerID
-                WHERE l.CustomerID = ?;
-            `;
+    getLoyaltyByCustomerId: async (customerId) => {
+        const [rows] = await pool.query(
+            "SELECT * FROM G5_Customer.Loyalty WHERE customerId = ?",
+            [customerId]
+        );
+        return rows[0];  // Chỉ lấy dòng đầu tiên nếu có
+    },
 
-            const [rows] = await db.execute(query, [customerId]);
+    getCustomerById: async (customerId) => {
+        const [rows] = await pool.query(
+            "SELECT * FROM G5_Customer.Customer WHERE CustomerId = ?",
+            [customerId]
+        );
+        return rows[0]; // Chỉ lấy dòng đầu tiên nếu có
+    },
 
-            return rows.length ? rows[0] : null;
-        } catch (error) {
-            console.error("Lỗi truy vấn Loyalty:", error.message);
-            throw new Error("Lỗi lấy dữ liệu thành viên");
-        }
+    getLoyaltyHistoryByCustomerId: async (customerId) => {
+        const [rows] = await pool.query(
+            "SELECT * FROM G5_Customer.LoyaltyHistory WHERE customerId = ? ORDER BY transactionDate DESC",
+            [customerId]
+        );
+        return rows;
+    },
+
+    getOrderById: async (orderId) => {
+        const [rows] = await pool.query(
+            "SELECT * FROM G5_Customer.Orders WHERE OrderID = ?",
+            [orderId]
+        );
+        return rows[0];
     }
 };
 

@@ -101,6 +101,8 @@ app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
 // Cấu hình upload file
 app.use("/uploads", express.static("src/uploads"));
+app.use("/api/loyalty", LoyaltyRouter);
+
 
 
 // Khởi động server

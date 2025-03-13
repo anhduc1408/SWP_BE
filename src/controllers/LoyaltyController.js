@@ -1,18 +1,14 @@
 const LoyaltyService = require("../services/LoyaltyService");
 
 const LoyaltyController = {
-    getLoyaltyStatus: async (req, res, next) => {
+    getLoyaltyByCustomerId: async (req, res) => {
         try {
-            const { customerId } = req.params;
-            const loyaltyData = await LoyaltyService.getLoyaltyData(customerId);
-
-            if (!loyaltyData) {
-                return res.status(404).json({ error: "Customer not found" });
-            }
-
-            res.status(200).json(loyaltyData);
+            const customerId = req.params.customerId;
+            const loyaltyDetails = await LoyaltyService.getLoyaltyDetails(customerId);
+            res.status(200).json(loyaltyDetails);
         } catch (error) {
-            next(error);
+            console.error("LoyaltyController Error:", error.message);
+            res.status(500).json({ message: error.message });
         }
     }
 };

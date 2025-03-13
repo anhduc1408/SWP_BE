@@ -3,6 +3,6 @@ const LoyaltyController = require("../controllers/LoyaltyController");
 
 const router = express.Router();
 
-router.get("/:customerId", LoyaltyController.getLoyaltyStatus);
+router.get("/:customerId", LoyaltyController.getLoyaltyByCustomerId);
 
 module.exports = router;
