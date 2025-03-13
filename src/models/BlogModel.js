@@ -11,16 +11,6 @@ const Blog = {
         return result[0].length > 0 ? result[0][0] : null;
     },
 
-    getBlogsByCategory: async (categoryID) => {
-        const result = await pool.query('SELECT * FROM Blog WHERE CategoryID = ?', [categoryID]);
-        return result[0];
-    },
-
-    getBlogCategories: async () => {
-        const [result] = await pool.query('SELECT * FROM BlogCategories');
-        return result;
-    },
-
     createBlog: async (data) => {
         const { Title, Slug, ShortDescription, Content, Image, CategoryID } = data;
         const result = await pool.query('INSERT INTO Blog\n'

@@ -22,34 +22,6 @@ const Blog = {
         }
     },
 
-    getBlogByCategory: async (req, res) => {
-        try {
-            const { categoryID } = req.params;
-            const blog = await BlogService.getBlogsByCategory(categoryID);
-            return res.status(200).json(blog);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Lỗi khi lấy blog!" });
-        }
-    },
-
-    getBlogCategories: async (req, res) => {
-        try {
-            const categories = await BlogService.getBlogCategories();
-            
-            if (!categories || categories.length === 0) {
-                console.log('Không có danh mục');
-                return res.status(404).json({ error: "Không tìm thấy thư mục nào!" });
-            }
-
-            console.log('Danh sách thư mục:', categories);
-            return res.status(200).json(categories);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Lỗi khi lấy danh sách thư mục!" });
-        }
-    },
-
     createBlog: async (req, res) => {
         try {
             const { title, content, category } = req.body;
