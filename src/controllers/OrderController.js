@@ -53,7 +53,6 @@ const OrderControllers = {
       const voucherChoose = req.body.voucherChoose;
       const cusID = req.body.cusID;
       const address = req.body.address;
-      const url = req.body.url;
       const OrderDetailID = await OrderServices.addOrderPrepay(address,OrderInfor, voucherChoose, totalPayment, cusID);
 
       var partnerCode = "MOMO";
@@ -62,12 +61,11 @@ const OrderControllers = {
       var requestId = partnerCode + new Date().getTime();
       var orderId = requestId;
       var orderInfo = "anh đức đẹp trai";
-      var redirectUrl = `http://localhost:3000${url}`;
+      var redirectUrl = `http://localhost:3000`;
       var ipnUrl = `${process.env.MOMO_IPNURL}/api/Transaction/callback`;
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
       var extraData = JSON.stringify(OrderDetailID);
-      console.log('cmm',url)
       var rawSignature ="accessKey=" +accessKey +"&amount=" +amount +"&extraData=" +extraData +"&ipnUrl=" +ipnUrl +"&orderId=" +orderId +"&orderInfo=" +orderInfo +
         "&partnerCode=" +partnerCode +"&redirectUrl=" +redirectUrl +"&requestId=" +requestId +"&requestType=" +requestType;
       const crypto = require("crypto");
