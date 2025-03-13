@@ -13,7 +13,9 @@ const OrderServices = {
     },
     addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
         const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
-        await Cart.removeCartDetail(OrderInfor)
+        if(OrderInfor[0].CartDetailID){
+            await Cart.removeCartDetail(OrderInfor)
+        }
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
@@ -21,7 +23,9 @@ const OrderServices = {
     },
     addOrderPrepay:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
         const result = await Orders.addOrderPrepay(address,cusID,totalPayment,OrderInfor,voucher);
-        await Cart.removeCartDetail(OrderInfor)
+        if(OrderInfor[0].CartDetailID){
+            await Cart.removeCartDetail(OrderInfor)
+        }
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
