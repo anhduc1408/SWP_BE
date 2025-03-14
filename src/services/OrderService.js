@@ -30,6 +30,7 @@ const OrderServices = {
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
         await Notification.addNotifications(cusID,result.OrderID);
+        
         return result.OrderDetailID;
     },
     getOrderDetailByCusID: async (cusID)=>{
