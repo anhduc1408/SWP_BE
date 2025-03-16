@@ -29,6 +29,7 @@ const TransactionRouter = require("./src/routers/TransactionRouter")
 const ActivityLogsRouter = require("./src/routers/ActivityLogsRouter");
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
+const ChatRoutes = require('./src/routers/ChatRouter');
 
 
 const Shop = require("./src/routers/ShopRouter")
@@ -104,6 +105,9 @@ app.use('/api/CustomerBehavior', CustomerBehaviorRouter);
 app.use('/api/Bills', BillsRouter);
 app.use('/api/Payments', TransactionHistoryRouter);
 app.use('/api/PayBills', PayBillsRouter);
+app.use('/api/chat', ChatRoutes);
+
+
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
 // Cấu hình upload file

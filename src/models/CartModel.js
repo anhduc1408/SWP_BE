@@ -9,13 +9,16 @@ const Carts = {
         const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)', [cusID])
         return result[0];
     },
-    removeCartDetail: async (cartDetailIDs) => {
-        if (!Array.isArray(cartDetailIDs) || cartDetailIDs.length === 0) {
-            throw new Error("Danh sách ID không hợp lệ!");
+    removeCartDetail: async (cartID) => {
+        const query = 'DELETE FROM CartDetail WHERE CartDetailID = ?';
+        try {
+            const result = await pool.query(query, [cartID]);
+            console.log(`Đã xóa ${result.affectedRows} dòng từ CartDetail`);
+            return result;
+        } catch (error) {
+            console.error('Lỗi khi xóa dữ liệu trong CartDetail:', error);
+            throw error;
         }
-
-        const query = `DELETE FROM CartDetail WHERE CartDetailID IN (${cartDetailIDs.map(() => '?').join(',')})`;
-        await pool.query(query, [cartDetailIDs]);
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
         if (quantity <= 0) {
@@ -25,7 +28,11 @@ const Carts = {
     },
     getCartItemById: async (cartID) => {
         const result = await pool.query('select * from CartDetail where CartDetailID = ?', [cartID]);
-        return result[0][0];
+        if (result[0].length > 0) {
+            return result[0][0];
+        } else {
+            return null;
+        }
     },
 
     updateCartDetail: async (body) => {
@@ -47,7 +54,6 @@ const Carts = {
         const cartDetailCurrentRecord =  await pool.query(
             "SELECT * FROM cartdetail WHERE CartID = ? AND ProductID = ? ORDER BY CartDetailID desc", [currentCartID, productID]
         );
-console.log('cartDetailCurrentRecord', cartDetailCurrentRecord);
 
         let currentCartdDetailID = cartDetailCurrentRecord?.[0]?.[0]?.CartDetailID
         
