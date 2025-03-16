@@ -157,8 +157,8 @@ const productControllers = {
   },
 
   getProductBehaviorShop: async (req, res) => {
+
     try {
-      console.log(123);
       const customerID = req.query.customerID;
       const shopID = req.query.shopID
       const result = await productServices.getProductBehaviorShop(customerID, shopID);      
@@ -177,5 +177,26 @@ const productControllers = {
       console.log(err);
     }
   },
+
+  getFollowedShopsProducts: async (req, res) => {
+    try {
+      const customerID= req.query.customerID;
+      const result = await productServices.getFollowedShopsProducts(customerID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  getBehaviorCustomerProducts: async (req, res) => {
+    try {
+      const customerID= req.query.customerID;
+      const result = await productServices.getBehaviorCustomerProducts(customerID);      
+      res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
 };
 module.exports = productControllers;

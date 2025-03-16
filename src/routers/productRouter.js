@@ -1,9 +1,10 @@
 const productControllers = require('../controllers/productController');
-const OrderControllers = require('../controllers/productController')
+const OrderControllers = require('../controllers/OrderController')
 const express = require('express')
 
 const router = express.Router();
-
+router.get('/FollowedShops',productControllers.getFollowedShopsProducts);
+router.get('/BehaviorCustomer',productControllers.getBehaviorCustomerProducts);
 router.get('/Behavior/Shop',productControllers.getProductBehaviorShop);
 router.get('/All/Shop',productControllers.getProductShop);
 router.get('/Shop',productControllers.getCategoryProductByShopID);

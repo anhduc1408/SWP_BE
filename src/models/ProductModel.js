@@ -471,7 +471,7 @@ const Products = {
        LIMIT 10`,
       [shopID]
     );
-    return result;
+    return result[0];
   },
 
   getProductCustomerBehaviorShop: async (shopID, category) => {
@@ -484,6 +484,30 @@ const Products = {
     );
     return result;
   },
+
+  getProductCustomerBehaviorShop: async (shopID) => {
+    const result = await pool.query(
+      `SELECT * FROM Product
+       WHERE ShopID = ?
+       ORDER BY SoldQuantity DESC
+       LIMIT 15`,
+      [shopID]
+    );
+    return result;
+  },
+
+  getBehaviorCustomerProducts: async (Category) => {
+    const result = await pool.query(
+      `SELECT * FROM Product
+       WHERE Category = ?
+       ORDER BY SoldQuantity DESC
+       LIMIT 10`,
+      [Category]
+    );
+    return result;
+  },
+
+  
   
 };
 module.exports = Products;

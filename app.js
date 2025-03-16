@@ -16,6 +16,9 @@ const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
 const CustomerBehaviorRouter = require("./src/routers/CustomerBehaviorRouter");
+const BillsRouter = require('./src/routers/BillsRouter');
+const TransactionHistoryRouter = require('./src/routers/TransactionHistoryRouter');
+const PayBillsRouter = require('./src/routers/PayBillsRouter');
 const SupportRouter = require("./src/routers/supportRoutes"); // Router hỗ trợ khách hàng
 
 const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
@@ -98,6 +101,9 @@ app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
 app.use("/api/combo-product", ComboProductRouter);
 app.use('/api/support', SupportRoutes);
 app.use('/api/CustomerBehavior', CustomerBehaviorRouter);
+app.use('/api/Bills', BillsRouter);
+app.use('/api/Payments', TransactionHistoryRouter);
+app.use('/api/PayBills', PayBillsRouter);
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
 // Cấu hình upload file

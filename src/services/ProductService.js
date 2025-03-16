@@ -82,33 +82,73 @@ const productServices = {
 
     getProductBehaviorShop: async (customerID, shopID) => {
         let CategoryByShopCustomerBehavior = await CustomerBehaviorModel.getCategoryByShop(customerID, shopID);
-    
         if (CategoryByShopCustomerBehavior.length === 0) {
             const result = await Products.getProductCheapestBehaviorShop(shopID);
             return result;
         }
             const result = await Promise.all(
             CategoryByShopCustomerBehavior.map(async (item) => {
-                const productBehavior = await ProductModel.getProductCustomerBehaviorShop(shopID, item.category);
+                const productBehavior = await Products.getProductCustomerBehaviorShop(shopID, item.category);
     
                 return productBehavior[0].map((product) => ({
-                    productID: product.ProductID,
-                    productImg: product.ProductImg,
-                    productName: product.ProductName,
-                    productCategory: product.Category,
-                    productSoldQuantity: product.StockQuantity,
-                    productWeight: product.Weight,
+                    ProductID: product.ProductID,
+                    ProductImg: product.ProductImg,
+                    ProductName: product.ProductName,
+                    Category: product.Category,
+                    SoldQuantity: product.StockQuantity,
+                    Weight: product.Weight,
                     ShopID: product.ShopID,
-                    productPrice: product.Price,
+                    Price: product.Price,
                 }));
             })
-        );
-        console.log("List Behavior shop Service: ", result[0]);
-    
-        // Flatten mảng kết quả nếu cần thiết (nếu mỗi category trả về một mảng sản phẩm, bạn sẽ có một mảng mảng)
+        );    
+        // console.log("list all: ", result[0]);
         return result.flat();
-    }
+    },
+
+    getFollowedShopsProducts: async (customerID, shopID) => {
+        let CustomerFollowedShops = await CustomerBehaviorModel.getCustomerFollowedShops(customerID);
+
+            const result = await Promise.all(
+                CustomerFollowedShops.map(async (item) => {
+                const productBehavior = await Products.getProductCustomerBehaviorShop(item.shop_ID);
     
+                return productBehavior[0].map((product) => ({
+                    ProductID: product.ProductID,
+                    ProductImg: product.ProductImg,
+                    ProductName: product.ProductName,
+                    Category: product.Category,
+                    SoldQuantity: product.StockQuantity,
+                    Weight: product.Weight,
+                    ShopID: product.ShopID,
+                    Price: product.Price,
+                }));
+            })
+        );    
+        return result.flat();
+    },
+
+    getBehaviorCustomerProducts: async (customerID) => {
+        let BehaviorCustomerProducts = await CustomerBehaviorModel.getBehaviorCustomerProducts(customerID);
+
+            const result = await Promise.all(
+                BehaviorCustomerProducts.map(async (item) => {
+                const productCustomerBehavior = await Products.getBehaviorCustomerProducts(item.category);
+    
+                return productCustomerBehavior[0].map((product) => ({
+                    ProductID: product.ProductID,
+                    ProductImg: product.ProductImg,
+                    ProductName: product.ProductName,
+                    Category: product.Category,
+                    SoldQuantity: product.StockQuantity,
+                    Weight: product.Weight,
+                    ShopID: product.ShopID,
+                    Price: product.Price,
+                }));
+            })
+        );    
+        return result.flat();
+    },
 
 }
 module.exports = productServices;
