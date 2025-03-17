@@ -12,6 +12,15 @@ const Orders = {
     );
     return result[0];
   },
+
+  getOrderByOrderID: async (OrderID) => {
+    const result = await pool.query(
+      "select * from Orders where OrderID = ?",
+      [OrderID]
+    );
+    return result[0];
+  },
+
   addOrder: async (address,cusID, totalPayment, OrderInfor, voucher) => {
     console.log(address)
     console.log(voucher[voucher.length - 1]);

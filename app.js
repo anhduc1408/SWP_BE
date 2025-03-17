@@ -15,6 +15,10 @@ const SubItemRouter = require("./src/routers/SubItemRouter");
 const categoryRouter = require("./src/routers/CategoryRouter");
 const errorHandler = require("./src/middlewares/errorHandler");
 const FAQRouter = require("./src/routers/FAQRouter");
+const CustomerBehaviorRouter = require("./src/routers/CustomerBehaviorRouter");
+const BillsRouter = require('./src/routers/BillsRouter');
+const TransactionHistoryRouter = require('./src/routers/TransactionHistoryRouter');
+const PayBillsRouter = require('./src/routers/PayBillsRouter');
 const SupportRouter = require("./src/routers/supportRoutes"); // Router hỗ trợ khách hàng
 
 const ProductFavoriteRouter = require("./src/routers/ProductFavoriteRouter");
@@ -27,6 +31,8 @@ const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
 const BlogRouter = require('./src/routers/BlogRouter');
 const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
+const ChatRoutes = require('./src/routers/ChatRouter');
+
 
 const Shop = require("./src/routers/ShopRouter")
 
@@ -98,6 +104,12 @@ app.use("/api/VoucherDetail", VoucherDetailRouter);
 app.use("/api/CustomerShopFollow", CustomerShopFollowRouter);
 app.use("/api/combo-product", ComboProductRouter);
 app.use('/api/support', SupportRoutes);
+app.use('/api/CustomerBehavior', CustomerBehaviorRouter);
+app.use('/api/Bills', BillsRouter);
+app.use('/api/Payments', TransactionHistoryRouter);
+app.use('/api/PayBills', PayBillsRouter);
+app.use('/api/chat', ChatRoutes);
+
 
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng

@@ -54,7 +54,6 @@ const Carts = {
         const cartDetailCurrentRecord =  await pool.query(
             "SELECT * FROM cartdetail WHERE CartID = ? AND ProductID = ? ORDER BY CartDetailID desc", [currentCartID, productID]
         );
-console.log('cartDetailCurrentRecord', cartDetailCurrentRecord);
 
         let currentCartdDetailID = cartDetailCurrentRecord?.[0]?.[0]?.CartDetailID
         
