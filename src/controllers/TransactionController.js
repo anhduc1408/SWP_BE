@@ -8,6 +8,7 @@ const Transaction = {
         const OrderID = JSON.parse(req.body.extraData);
         await Order.changeStatusShip(OrderID);
     },
+    
     checkPayment: async(req,res)=>{
         try {
             const orderId = req.body.orderId;

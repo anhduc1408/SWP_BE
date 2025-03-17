@@ -58,8 +58,11 @@ const Cart = {
     removeCartDetail: async (cartID) => {
         console.log(`Xóa sản phẩm có cartID=${cartID}`);
         await CartModel.removeCartDetail([cartID]);
-    }
+    },
 
+    updateCartDetail: async (body) => {
+        await CartModel.updateCartDetail(body);
+    }
 }
 
 module.exports = Cart;
