@@ -9,12 +9,12 @@ const Blog = {
         return await BlogModel.getBlogById(BlogID)
     },
 
-    createBlog: async (data) => {
-        return await BlogModel.createBlog(data)
+    createBlog: async (data, sections, images) => {
+        return await BlogModel.createBlog(data, sections, images)
     },
 
-    updateBlog: async (BlogID, data) => {
-        return await BlogModel.updateBlog(BlogID, data)
+    updateBlog: async (BlogID, data, sections, images) => {
+        return await BlogModel.updateBlog(BlogID, data, sections, images)
     },
 
     deleteBlog: async (blogID) => {

@@ -15,6 +15,11 @@ const Blog = {
         try {
             const { blogID } = req.params;
             const blog = await BlogService.getBlogById(blogID);
+
+            if (!blog || blog.error) {
+                return res.status(404).json({ error: "Blog không tồn tại!" });
+            }
+
             return res.status(200).json(blog);
         } catch (error) {
             console.error(error);
@@ -24,8 +29,21 @@ const Blog = {
 
     createBlog: async (req, res) => {
         try {
-            const { title, content, category } = req.body;
-            const blog = await BlogService.createBlog(title, content, category);
+            const { title, categoryID, shortDescription, customerID, sections, images } = req.body;
+            const coverImage = req.file ? `uploads/${req.file.filename}` : null;
+
+            const blogData = {
+                Title: title,
+                CategoryID: categoryID,
+                Slug: title.toLowerCase().replace(/\s+/g, "-"),
+                ShortDescription: shortDescription,
+                CustomerID: customerID,
+                Image: coverImage,
+                sections,
+                images
+            };
+
+            const blog = await BlogService.createBlog(blogData);
             return res.status(200).json(blog);
         } catch (error) {
             console.error(error);
@@ -36,9 +54,26 @@ const Blog = {
     updateBlog: async (req, res) => {
         try {
             const { blogID } = req.params;
-            const { title, content, category } = req.body;
-            const blog = await BlogService.updateBlog(blogID, title, content, category);
-            return res.status(200).json(blog);
+            const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
+            
+            let Image = existingCoverImage;
+
+            if (req.files && req.files.coverImage) {
+                Image = `/uploads/${req.files.coverImage[0].filename}`;
+            }
+
+            const newImages = req.files && req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
+
+            const allImages = [...(existingImages ? JSON.parse(existingImages) : []), ...newImages];
+
+            await BlogService.updateBlog(blogID, {
+                Title: title,
+                CategoryID: categoryID,
+                Slug: title.toLowerCase().replace(/\s+/g, "-"),
+                ShortDescription: shortDescription,
+                Image,
+            }, sections, allImages);
+            return res.status(200).json({ message: "Cập nhật blog thành công!" });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Lỗi khi cập nhật blog!" });
