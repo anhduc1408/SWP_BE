@@ -12,6 +12,7 @@ const OrderServices = {
         return await Orders.getOrderByCusId(cusID)
     },
     addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
+        console.log("OrderIfor: ", OrderInfor);
         const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
         await Cart.removeCartDetail(OrderInfor)
         if(voucher){
