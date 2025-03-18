@@ -22,6 +22,7 @@ const CustomerShopFollowRouter = require("./src/routers/CustomerShopFollowRouter
 const TransactionRouter = require("./src/routers/TransactionRouter")
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const Shop = require("./src/routers/ShopRouter")
+const VideoRouter = require("./src/routers/VideoRouter")
 
 const app = express();
 const port = 3001;
@@ -83,6 +84,7 @@ app.use("/api/subitems", SubItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/faqs", FAQRouter);
 app.use("/api/Transaction",TransactionRouter)
+app.use("/api/video",VideoRouter)
 app.use("/api/shop", Shop);
 app.use("/api/ProductFavorite", ProductFavoriteRouter);
 app.use("/api/VoucherDetail", VoucherDetailRouter);
