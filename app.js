@@ -30,6 +30,8 @@ const ActivityLogsRouter = require("./src/routers/ActivityLogsRouter");
 const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
 const LoyaltyRouter = require("./src/routers/LoyaltyRouter");
+const BlogRouter = require('./src/routers/BlogRouter');
+const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
 const ChatRoutes = require('./src/routers/ChatRouter');
 const LoyaltyHistoryRouter = require("./src/routers/loyaltyHistoryRoutes");
 const AffiliateTrackingRouter = require("./src/routers/AffiliateTrackingRouter");
@@ -62,7 +64,6 @@ app.post("/verify-otp", (req, res) => {
   }
 });
 
-
 app.use('/api/Order', orderRouter)
 app.use('/api/Cart', cartRouter)
 app.use('/api/Voucher', VoucherRouter)
@@ -88,6 +89,8 @@ app.use('/api/Shipper', Shipper);
 app.use('/api/Cart', cartRouter);
 app.use('/api/Voucher', VoucherRouter);
 app.use('/api/Products', Products);
+app.use('/api/Blog', BlogRouter)
+app.use('/api/blogcategory', BlogCategoriesRouter)
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);
