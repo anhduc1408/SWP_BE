@@ -55,6 +55,35 @@ const SupportController = {
             console.error("Lỗi khi lấy danh sách loại yêu cầu:", error);
             res.status(500).json({ error: "Lỗi server!" });
         }
+    },
+
+    updateRequest: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { subject, details } = req.body;
+
+            if (!subject || !details) {
+                return res.status(400).json({ error: "Vui lòng nhập đầy đủ thông tin." });
+            }
+
+            await SupportService.updateRequest(id, subject, details);
+            res.status(200).json({ message: "Cập nhật yêu cầu thành công!" });
+        } catch (error) {
+            console.error("Lỗi khi cập nhật yêu cầu:", error);
+            res.status(500).json({ error: "Lỗi khi cập nhật yêu cầu." });
+        }
+    },
+
+    deleteRequest: async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            await SupportService.deleteRequest(id);
+            res.status(200).json({ message: "Xóa yêu cầu thành công!" });
+        } catch (error) {
+            console.error("Lỗi khi xóa yêu cầu:", error);
+            res.status(500).json({ error: "Lỗi khi xóa yêu cầu." });
+        }
     }
 };
 

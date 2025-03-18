@@ -7,9 +7,7 @@ const SupportService = {
 
     getUserRequests: async (customer_id) => {
         const requests = await SupportModel.getUserRequests(customer_id);
-        // Nếu cần lấy tên category, bạn có thể gọi thêm Service để lấy tên
         const categories = await SupportModel.getRequestCategories();
-        // Thêm tên category vào các yêu cầu
         return requests.map(request => {
             const category = categories.find(cat => cat.id === request.category);
             return { ...request, category_name: category ? category.name : 'Không xác định' };
@@ -22,6 +20,14 @@ const SupportService = {
 
     getRequestCategories: async () => {
         return await SupportModel.getRequestCategories();
+    },
+
+    updateRequest: async (id, subject, details) => {
+        return await SupportModel.updateRequest(id, subject, details);
+    },
+
+    deleteRequest: async (id) => {
+        return await SupportModel.deleteRequest(id);
     }
 };
 

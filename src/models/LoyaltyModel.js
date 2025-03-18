@@ -1,36 +1,31 @@
 const pool = require("../config/Database");
 
 const LoyaltyModel = {
-    getLoyaltyByCustomerId: async (customerId) => {
-        const [rows] = await pool.query(
-            "SELECT * FROM G5_Customer.Loyalty WHERE customerId = ?",
-            [customerId]
-        );
-        return rows[0];  // Chỉ lấy dòng đầu tiên nếu có
-    },
-
     getCustomerById: async (customerId) => {
         const [rows] = await pool.query(
-            "SELECT * FROM G5_Customer.Customer WHERE CustomerId = ?",
+            `SELECT CustomerID, FirstName, LastName, Email 
+             FROM G5_Customer.Customer WHERE CustomerID = ?`,
             [customerId]
         );
-        return rows[0]; // Chỉ lấy dòng đầu tiên nếu có
+        return rows[0] || null;
     },
 
-    getLoyaltyHistoryByCustomerId: async (customerId) => {
+    getOrderStatsByCustomerId: async (customerId) => {
         const [rows] = await pool.query(
-            "SELECT * FROM G5_Customer.LoyaltyHistory WHERE customerId = ? ORDER BY transactionDate DESC",
+            `SELECT COUNT(*) AS totalOrders, 
+                    COALESCE(SUM(TotalAmount), 0) AS totalSpent 
+             FROM G5_Customer.Orders WHERE CustomerID = ?`,
             [customerId]
+        );
+        return rows[0] || { totalOrders: 0, totalSpent: 0 };
+    },
+
+    getRewardsByTier: async (tier) => {
+        const [rows] = await pool.query(
+            `SELECT reward_name, description, icon FROM LoyaltyRewards WHERE tier = ?`,
+            [tier]
         );
         return rows;
-    },
-
-    getOrderById: async (orderId) => {
-        const [rows] = await pool.query(
-            "SELECT * FROM G5_Customer.Orders WHERE OrderID = ?",
-            [orderId]
-        );
-        return rows[0];
     }
 };
 

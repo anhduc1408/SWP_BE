@@ -31,7 +31,8 @@ const ComboProductRouter = require("./src/routers/ComboProductRouter")
 const SupportRoutes = require('./src/routers/supportRoutes');
 const LoyaltyRouter = require("./src/routers/LoyaltyRouter");
 const ChatRoutes = require('./src/routers/ChatRouter');
-
+const LoyaltyHistoryRouter = require("./src/routers/loyaltyHistoryRoutes");
+const AffiliateTrackingRouter = require("./src/routers/AffiliateTrackingRouter");
 
 const Shop = require("./src/routers/ShopRouter")
 
@@ -108,7 +109,8 @@ app.use('/api/Bills', BillsRouter);
 app.use('/api/Payments', TransactionHistoryRouter);
 app.use('/api/PayBills', PayBillsRouter);
 app.use('/api/chat', ChatRoutes);
-
+app.use("/api/loyalty-history", LoyaltyHistoryRouter);
+app.use("/api/affiliate", AffiliateTrackingRouter);
 
 app.use(errorHandler);
 app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng

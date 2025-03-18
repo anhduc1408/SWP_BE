@@ -1,43 +1,33 @@
 const LoyaltyModel = require("../models/LoyaltyModel");
 
+const determineLoyaltyTier = (totalOrders, totalSpent) => {
+    if (totalOrders >= 10 || totalSpent >= 5000000) return "Diamond";
+    if (totalOrders >= 6 || totalSpent >= 3000000) return "Gold";
+    if (totalOrders >= 3 || totalSpent >= 1000000) return "Silver";
+    return "Bronze";
+};
+
 const LoyaltyService = {
     getLoyaltyDetails: async (customerId) => {
-        // Kiểm tra loyalty
-        const loyalty = await LoyaltyModel.getLoyaltyByCustomerId(customerId);
-        if (!loyalty) {
-            throw new Error("Không tìm thấy thông tin khách hàng thân thiết");
-        }
-
-        // Kiểm tra customer
         const customer = await LoyaltyModel.getCustomerById(customerId);
         if (!customer) {
             throw new Error("Khách hàng không tồn tại");
         }
 
-        // Lấy lịch sử tích điểm
-        const history = await LoyaltyModel.getLoyaltyHistoryByCustomerId(customerId);
+        const { totalOrders, totalSpent } = await LoyaltyModel.getOrderStatsByCustomerId(customerId);
+        const currentTier = determineLoyaltyTier(totalOrders, totalSpent);
 
-        const loyaltyInfo = {
+        // Lấy danh sách phần thưởng theo hạng
+        const rewards = await LoyaltyModel.getRewardsByTier(currentTier);
+
+        return {
             name: `${customer.FirstName} ${customer.LastName}`,
             email: customer.Email,
-            currentTier: loyalty.currentTier,
-            currentPoints: loyalty.currentPoints,
-            pointsToNextTier: loyalty.pointsToNextTier,
-            lastUpdated: loyalty.lastUpdated
+            totalOrders,
+            totalSpent,
+            currentTier,
+            rewards
         };
-
-        const loyaltyHistory = await Promise.all(history.map(async item => {
-            const order = await LoyaltyModel.getOrderById(item.orderId);
-            return {
-                historyId: item.historyId,
-                transactionDate: item.transactionDate,
-                orderId: order.OrderID,
-                totalAmount: order.TotalAmount,
-                pointsEarned: item.pointsEarned
-            };
-        }));
-
-        return { loyaltyInfo, loyaltyHistory };
     }
 };
 

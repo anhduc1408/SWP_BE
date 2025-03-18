@@ -38,6 +38,42 @@ const SupportModel = {
     getRequestCategories: async () => {
         const [rows] = await pool.query("SELECT id, name FROM RequestCategories");
         return rows;
+    },
+
+    updateRequest: async (id, subject, details) => {
+        try {
+            const [result] = await pool.query(
+                "UPDATE SupportRequests SET subject = ?, details = ? WHERE id = ? AND status = 'pending'",
+                [subject, details, id]
+            );
+
+            if (result.affectedRows === 0) {
+                throw new Error("Không thể cập nhật yêu cầu. Chỉ có thể cập nhật khi trạng thái là 'Đang chờ xử lý'.");
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error("❌ Lỗi khi cập nhật yêu cầu:", error);
+            throw new Error("Lỗi khi cập nhật yêu cầu.");
+        }
+    },
+
+    deleteRequest: async (id) => {
+        try {
+            const [result] = await pool.query(
+                "DELETE FROM SupportRequests WHERE id = ? AND status = 'pending'",
+                [id]
+            );
+
+            if (result.affectedRows === 0) {
+                throw new Error("Không thể xóa yêu cầu. Chỉ có thể xóa khi trạng thái là 'Đang chờ xử lý'.");
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error("❌ Lỗi khi xóa yêu cầu:", error);
+            throw new Error("Lỗi khi xóa yêu cầu.");
+        }
     }
 };
 
