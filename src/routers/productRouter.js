@@ -1,8 +1,11 @@
 const productControllers = require('../controllers/productController');
-const OrderControllers = require('../controllers/productController')
+const OrderControllers = require('../controllers/OrderController')
 const express = require('express')
 
 const router = express.Router();
+router.get('/FollowedShops',productControllers.getFollowedShopsProducts);
+router.get('/BehaviorCustomer',productControllers.getBehaviorCustomerProducts);
+router.get('/Behavior/Shop',productControllers.getProductBehaviorShop);
 router.get('/All/Shop',productControllers.getProductShop);
 router.get('/Shop',productControllers.getCategoryProductByShopID);
 router.get('/Shop/Suggest',productControllers.getProductShopSuggest);
@@ -18,6 +21,7 @@ router.post('/Favorite/getAll',productControllers.getProductFavorite);
 router.post('/Favorite/getAll-product',productControllers.getProductsFavorite);
 router.post('/detail',productControllers.getProductDetail);
 router.post('/check-user-can-comment',productControllers.checkUserCanComment);
+// router.put('/updateStock', productControllers.updateStock);
 router.post('/search-product-by-shop',productControllers.getProductByShop);
 router.post('/getProductByShopID',productControllers.getProductByShopID);
 

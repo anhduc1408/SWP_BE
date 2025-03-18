@@ -16,7 +16,9 @@ const NotificationsControllers = {
 
   getAllNotifications: async (req, res) => {
     try {
-      const result = await NotificationsServices.getAllNotifications(req, res);
+      const customerID = req.query.customerID;
+      const typeNotification = req.query.typeNotification; 
+      const result = await NotificationsServices.getAllNotifications(customerID, typeNotification);
       
       res.status(200).json(result);
     } catch (err) {
@@ -26,7 +28,24 @@ const NotificationsControllers = {
 
   getStatusNotifications: async (req, res) => {
     try {
-      const result = await NotificationsServices.getStatusNotifications(req, res);
+      const customerID = req.query.customerID;
+      const order_ID = req.query.order_ID;
+      const voucher_ID = req.query.voucher_ID;
+      const statusNotification = req.query.statusNotification;
+      const result = await NotificationsServices.getStatusNotifications(customerID, order_ID, voucher_ID, statusNotification);
+      
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(200).json("ok");
+    }
+  },
+
+  postReadAll: async (req, res) => {
+    try {
+      const notificationsList = req.body.notificationsList;
+      const typeNotification = req.body.typeNotification;
+      const customerID = req.body.customerID;
+      const result = await NotificationsServices.postReadAll(notificationsList,typeNotification, customerID);
       
       res.status(200).json(result);
     } catch (err) {
