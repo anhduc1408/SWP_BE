@@ -7,6 +7,8 @@ const ActivityLogsController = {
             res.status(200).json(rs);
         } catch (err) {
             res.status(500).json({ message: 'Lỗi server', err });
+            console.log(err);
+
         }
     },
 
@@ -16,6 +18,7 @@ const ActivityLogsController = {
             res.status(200).json(rs);
         } catch (err) {
             res.status(500).json({ message: 'Lỗi server', err });
+            console.log(err);
         }
     },
 
@@ -25,6 +28,8 @@ const ActivityLogsController = {
             res.status(200).json(rs);
         } catch (err) {
             res.status(500).json({ message: 'Lỗi server', err });
+            console.log(err);
+
         }
     }
 };
