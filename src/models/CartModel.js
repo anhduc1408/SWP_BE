@@ -9,25 +9,24 @@ const Carts = {
         const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)', [cusID])
         return result[0];
     },
-    removeCartDetail: async (cartID) => {
-        const query = 'DELETE FROM CartDetail WHERE CartDetailID = ?';
-        try {
-            const result = await pool.query(query, [cartID]);
-            console.log(`Đã xóa ${result.affectedRows} dòng từ CartDetail`);
-            return result;
-        } catch (error) {
-            console.error('Lỗi khi xóa dữ liệu trong CartDetail:', error);
-            throw error;
-        }
+    removeCartDetail: async (OrderInfor)=>{
+        let query = 'delete from CartDetail where CartDetailID in (';
+        let values = OrderInfor.map((item, index) => {
+            return item.CartDetailID;
+          });
+          query += values.join(",");
+          query += ')';
+          console.log("que: ", query);
+          await pool.query(query);      
     },
-    updateCartDetailQuantity: async (cartID, quantity) => {
+    updateCartDetailQuantity: async (CartID, quantity) => {
         if (quantity <= 0) {
-            await pool.query('DELETE FROM CartDetail WHERE CartDetailID = ?', [cartID]);
+            await pool.query('DELETE FROM CartDetail WHERE CartDetailID = ?', [CartID]);
         }
-            await pool.query('UPDATE CartDetail SET Quantity = ? WHERE CartDetailID = ?', [quantity, cartID]);
+            await pool.query('UPDATE CartDetail SET Quantity = ? WHERE CartDetailID = ?', [quantity, CartID]);
     },
-    getCartItemById: async (cartID) => {
-        const result = await pool.query('select * from CartDetail where CartDetailID = ?', [cartID]);
+    getCartItemById: async (CartID) => {
+        const result = await pool.query('select * from CartDetail where CartDetailID = ?', [CartID]);
         if (result[0].length > 0) {
             return result[0][0];
         } else {
@@ -37,34 +36,34 @@ const Carts = {
 
     updateCartDetail: async (body) => {
         const {customerID, productID, quantity} = body
-        const cartCurrentRecord =  await pool.query(
-            "SELECT  * FROM cart WHERE CustomerID = ? ORDER BY CartID desc", [customerID]
+        const CartCurrentRecord =  await pool.query(
+            "SELECT  * FROM Cart WHERE CustomerID = ? ORDER BY CartID desc", [customerID]
         );
 
-        let currentCartID = cartCurrentRecord?.[0]?.[0]?.CartID
+        let currentCartID = CartCurrentRecord?.[0]?.[0]?.CartID
 
-        // TH: CHƯA CÓ CART
+        // TH: CHƯA CÓ Cart
         if(!currentCartID){
             const [resultCart] = await pool.query(
-                "INSERT INTO cart (CustomerID) values (?)", [customerID]
+                "INSERT INTO Cart (CustomerID) values (?)", [customerID]
               );
             currentCartID = resultCart.insertId;
         }
 
-        const cartDetailCurrentRecord =  await pool.query(
-            "SELECT * FROM cartdetail WHERE CartID = ? AND ProductID = ? ORDER BY CartDetailID desc", [currentCartID, productID]
+        const CartDetailCurrentRecord =  await pool.query(
+            "SELECT * FROM CartDetail WHERE CartID = ? AND ProductID = ? ORDER BY CartDetailID desc", [currentCartID, productID]
         );
 
-        let currentCartdDetailID = cartDetailCurrentRecord?.[0]?.[0]?.CartDetailID
+        let currentCartdDetailID = CartDetailCurrentRecord?.[0]?.[0]?.CartDetailID
         
         if(currentCartdDetailID){
             await pool.query(
-                "UPDATE cartdetail SET Quantity = ? WHERE (CartDetailID = ? and ProductID = ?)", [ ((cartDetailCurrentRecord?.[0]?.[0]?.Quantity || 0) + quantity),currentCartdDetailID, productID]
+                "UPDATE CartDetail SET Quantity = ? WHERE (CartDetailID = ? and ProductID = ?)", [ ((CartDetailCurrentRecord?.[0]?.[0]?.Quantity || 0) + quantity),currentCartdDetailID, productID]
               );
             return
         }
          await pool.query(
-            "INSERT INTO cartdetail (CartID, ProductID, Quantity) values (?,?,?)", [currentCartID, productID, quantity]
+            "INSERT INTO CartDetail (CartID, ProductID, Quantity) values (?,?,?)", [currentCartID, productID, quantity]
           );
     },
 }

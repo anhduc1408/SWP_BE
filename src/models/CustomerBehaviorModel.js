@@ -61,7 +61,6 @@ ORDER BY COUNT(shop_ID) DESC
 LIMIT 3;
 `
         );
-        console.log("Result ca: ", result[0]);
         return result[0];  // Trả về kết quả
       }
       return result[0];
@@ -89,7 +88,6 @@ ORDER BY COUNT(category) DESC
 LIMIT 3;
 `
         );
-        console.log("Result ca: ", result[0]);
         return result[0]; 
       }
       return result[0];
@@ -98,6 +96,27 @@ LIMIT 3;
       throw error;
     }
   },
+
+  getNewCategory: async (customerID) => {
+    try {
+      const result = await pool.query(
+        `SELECT category
+         FROM CustomerBehavior
+         WHERE id = (
+           SELECT MAX(id)
+           FROM CustomerBehavior
+           WHERE customer_id = ?
+         )`, 
+        [customerID]  // Truyền giá trị customerID vào câu truy vấn
+      );
+  
+      return result[0];  // Trả về kết quả
+    } catch (error) {
+      console.error("Database query failed:", error);
+      throw error;
+    }
+  }
+  
   
 }
 module.exports = CustomerBehaviorModel;

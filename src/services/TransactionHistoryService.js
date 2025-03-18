@@ -1,7 +1,7 @@
 const TransactionHistoryModels = require("../models/TransactionHistoryModel");
 const Bills = require("../models/BillsModel");
 const Customers = require("../models/CustomerModel");
-const Order = require("../models/OrderModel");
+const Order = require("../services/OrderService");
 
 const TransactionHistory = {
   getTransactionHistory: async (customerID, typeTransactionHistory) => {
@@ -17,10 +17,12 @@ const TransactionHistory = {
           typeTransactionHistory
         );
 
+
         // Kiểm tra paymentBills có phải là mảng không và có ít nhất một phần tử
         if (Array.isArray(paymentBills) && paymentBills.length > 0) {
           const inforPaymentBillID =
             await TransactionHistoryModels.getInforPaymentBillID(item.bill_id);
+            
 
           // Kiểm tra inforPaymentBillID có phải là mảng không và có ít nhất một phần tử
           if (
@@ -55,7 +57,7 @@ const TransactionHistory = {
 
     const result2 = await Promise.all(
       allOrderIdByCustomer.map(async (item) => {
-        const paymentOrderID = await Order.getOrderByOrderID(item.order_id);
+        const paymentOrderID = await Order.getOrderDetailByOrderID(item.order_id);
 
         // Kiểm tra paymentOrderID có phải là mảng không và có ít nhất một phần tử
         if (Array.isArray(paymentOrderID) && paymentOrderID.length > 0) {

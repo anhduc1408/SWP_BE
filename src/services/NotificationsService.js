@@ -28,5 +28,14 @@ const notificationsServices = {
       console.log(err);
     }
   },
+
+  postReadAll: async (notificationsList,typeNotification, customerID) => {
+    try {
+      const result = await Notifications.postReadAll(notificationsList,typeNotification, customerID);
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 module.exports = notificationsServices;

@@ -14,6 +14,16 @@ const CustomerBehaviorController = {
             console.log(error)
         }
     },
+
+    getNewCategory: async(req,res)=>{
+        try {
+        const customerID = req.query.customerID;
+        const result = await CustomerBehaviorService.getNewCategory(customerID);
+        res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+        }
+    },
     
 }
 

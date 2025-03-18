@@ -57,7 +57,7 @@ const Cart = {
     },
     removeCartDetail: async (cartID) => {
         console.log(`Xóa sản phẩm có cartID=${cartID}`);
-        await CartModel.removeCartDetail([cartID]);
+        await CartModel.removeCartDetail(cartID);
     },
 
     updateCartDetail: async (body) => {

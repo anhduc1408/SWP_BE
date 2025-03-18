@@ -40,7 +40,7 @@ const Orders = {
       const voucherID = voucher[index].voucher
         ? voucher[index].voucher.VoucherID
         : null;
-      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},null,null,${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip},${voucherID})`;
+      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,null,${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip})`;
     });
     query += values.join(",");
     await pool.query(query);
@@ -63,7 +63,7 @@ const Orders = {
       const voucherID = voucher[index].voucher
         ? voucher[index].voucher.VoucherID
         : null;
-      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},null,null,${item.distance},'Chờ thanh toán',${voucher[index].Discount},${item.feeShip},${voucherID})`;
+      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,null,${item.distance},'Chờ thanh toán',${voucher[index].Discount},${item.feeShip})`;
     });
     query += values.join(",");
     const result1 = await pool.query(query);
