@@ -1,21 +1,32 @@
 const AffiliateTrackingModel = require("../models/AffiliateTrackingModel");
 
 const AffiliateTrackingService = {
-    // 📌 Lấy thống kê tiếp thị của khách hàng
+    // Lấy dữ liệu tiếp thị theo CustomerID
     getAffiliateStats: async (customerId) => {
-        const data = await AffiliateTrackingModel.getAffiliateStatsByCustomer(customerId);
-        return data.length > 0 ? data : null;
+        return await AffiliateTrackingModel.getAffiliateStatsByCustomer(customerId);
     },
 
-    // 📌 Xử lý nhập mã tiếp thị từ người khác
-    trackAffiliateClick: async (customCode) => {
+    // Lấy lịch sử tiếp thị theo CustomerID
+    getAffiliateHistory: async (customerId) => {
+        return await AffiliateTrackingModel.getAffiliateHistory(customerId);
+    },
+
+    // Xử lý nhập mã tiếp thị
+    trackAffiliateClick: async (customCode, referredUserId) => {
         const referrerId = await AffiliateTrackingModel.getReferrerByCode(customCode);
-        if (!referrerId) return null;
+        if (!referrerId) {
+            console.error("❌ Mã tiếp thị không hợp lệ:", customCode);
+            return null;
+        }
 
+        // Cập nhật lượt click và xu cho người giới thiệu
         await AffiliateTrackingModel.increaseClickCount(customCode);
-        await AffiliateTrackingModel.addRewardsToReferrer(referrerId, 100); // Cộng 100 xu mỗi lần click
+        await AffiliateTrackingModel.addRewardsToReferrer(referrerId, 100);
+        await AffiliateTrackingModel.saveAffiliateHistory(customCode, referredUserId);
 
-        return { referrerId, amount: 100 };
+        // Lấy tên người giới thiệu
+        const referrerName = await AffiliateTrackingModel.getCustomerNameById(referrerId);
+        return { referrerName, amount: 100 };
     }
 };
 

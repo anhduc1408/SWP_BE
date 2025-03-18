@@ -1,7 +1,7 @@
 const AffiliateTrackingService = require("../services/AffiliateTrackingService");
 
 const AffiliateTrackingController = {
-    // 📌 API lấy thông tin tiếp thị theo CustomerID
+    // Lấy thống kê tiếp thị theo CustomerID
     getAffiliateStatsByCustomer: async (req, res) => {
         try {
             const { customerId } = req.params;
@@ -13,28 +13,45 @@ const AffiliateTrackingController = {
 
             res.json(stats);
         } catch (error) {
-            console.error("Lỗi lấy dữ liệu tiếp thị:", error);
+            console.error("❌ Lỗi lấy dữ liệu tiếp thị:", error);
             res.status(500).json({ message: "Lỗi máy chủ." });
         }
     },
 
-    // 📌 API xử lý nhập mã tiếp thị từ người khác
+    // Lấy lịch sử tiếp thị
+    getAffiliateHistoryByCustomer: async (req, res) => {
+        try {
+            const { customerId } = req.params;
+            const history = await AffiliateTrackingService.getAffiliateHistory(customerId);
+
+            if (!history) {
+                return res.status(404).json({ message: "Không có lịch sử tiếp thị." });
+            }
+
+            res.json(history);
+        } catch (error) {
+            console.error("❌ Lỗi lấy lịch sử tiếp thị:", error);
+            res.status(500).json({ message: "Lỗi máy chủ." });
+        }
+    },
+
+    // Xử lý nhập mã tiếp thị từ người khác
     trackAffiliateClick: async (req, res) => {
         try {
-            const { customCode } = req.body;
+            const { customCode, customerId } = req.body;
 
-            if (!customCode) {
-                return res.status(400).json({ message: "Mã tiếp thị không hợp lệ." });
+            if (!customCode || !customerId) {
+                return res.status(400).json({ message: "Mã tiếp thị hoặc CustomerID không hợp lệ." });
             }
 
-            const result = await AffiliateTrackingService.trackAffiliateClick(customCode);
+            const result = await AffiliateTrackingService.trackAffiliateClick(customCode, customerId);
             if (!result) {
-                return res.status(404).json({ message: "Mã tiếp thị không tồn tại." });
+                return res.status(404).json({ message: "Mã tiếp thị không tồn tại hoặc đã được sử dụng." });
             }
 
-            res.json({ message: `Bạn đã giúp ${result.referrerId} nhận ${result.amount} xu!` });
+            res.json({ message: `Bạn đã giúp ${result.referrerName} nhận ${result.amount} xu!` });
         } catch (error) {
-            console.error("Lỗi khi theo dõi lượt click:", error);
+            console.error("❌ Lỗi khi theo dõi lượt click:", error);
             res.status(500).json({ message: "Lỗi máy chủ." });
         }
     }
