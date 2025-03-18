@@ -63,7 +63,7 @@ const Orders = {
       const voucherID = voucher[index].voucher
         ? voucher[index].voucher.VoucherID
         : null;
-      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,null,${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip})`;
+      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,null,${item.distance},'Chờ thanh toán',${voucher[index].Discount},${item.feeShip})`;
     });
     query += values.join(",");
     const result1 = await pool.query(query);

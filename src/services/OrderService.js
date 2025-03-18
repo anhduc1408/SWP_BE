@@ -3,6 +3,7 @@ const Voucher = require('./VoucherService')
 const Cart = require('./CartService')
 const Product = require('../models/ProductModel');
 const Notification = require('../models/NotificationstModel')
+const TransactionHistory = require('../models/TransactionHistoryModel')
 
 const OrderServices = {
     getAllOrder: async ()=>{
@@ -12,9 +13,11 @@ const OrderServices = {
         return await Orders.getOrderByCusId(cusID)
     },
     addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
-        console.log("OrderIfor: ", OrderInfor);
         const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
-        await Cart.removeCartDetail(OrderInfor)
+        if(OrderInfor[0].CartDetailID){
+            console.log("Order: ", OrderInfor);
+            await Cart.removeCartDetail(OrderInfor)
+        }
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
@@ -22,11 +25,14 @@ const OrderServices = {
     },
     addOrderPrepay:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
         const result = await Orders.addOrderPrepay(address,cusID,totalPayment,OrderInfor,voucher);
-        await Cart.removeCartDetail(OrderInfor)
+        if(OrderInfor[0].CartDetailID){
+            await Cart.removeCartDetail(OrderInfor)
+        }
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
         await Notification.addNotifications(cusID,result.OrderID);
+        
         return result.OrderDetailID;
     },
     getOrderDetailByCusID: async (cusID)=>{
@@ -81,8 +87,9 @@ const OrderServices = {
         }))   
         return result;  
     },
-    changeStatusShip: async(OrderID)=>{
+    changeStatusShip: async(OrderInfor, totalPayment, cusID, OrderID)=>{
         Orders.changeStatusShip(OrderID);
+        TransactionHistory.addOrder(OrderInfor, totalPayment, cusID, OrderID);
     }
 }
 module.exports = OrderServices;

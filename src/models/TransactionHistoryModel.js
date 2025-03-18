@@ -86,6 +86,33 @@ const TransactionHistoryModels = {
     );
     return result[0];
   },
+
+  addOrder: async (OrderInfor, totalPayment, cusID, OrderID) => {
+    const payment_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const status = "Thành công";
+    
+    // Lặp qua từng phần tử trong mảng OrderInfor
+
+      const order = OrderInfor[0]; 
+      
+      const result = await pool.query(
+        "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          null,
+          cusID,
+          totalPayment,  // Bạn có thể thay đổi nếu muốn tính toán giá trị khác cho mỗi phần tử
+          payment_date,
+          "Quét Mã QR",
+          status,
+          OrderID,
+          order.productImg,
+        ]
+      );
+      console.log(`Inserted payment for Order ${OrderID} with result:`, result[0]);
+  
+    return { message: 'Payments inserted successfully' };
+  },
+  
 };
 
 module.exports = TransactionHistoryModels;

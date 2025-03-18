@@ -9,16 +9,15 @@ const Carts = {
         const result = await pool.query('select * from CartDetail where CartID in (select CartID from Cart where CustomerID = ? Order by CartID)', [cusID])
         return result[0];
     },
-    removeCartDetail: async (cartID) => {
-        const query = 'DELETE FROM CartDetail WHERE CartDetailID = ?';
-        try {
-            const result = await pool.query(query, [cartID]);
-            console.log(`Đã xóa ${result.affectedRows} dòng từ CartDetail`);
-            return result;
-        } catch (error) {
-            console.error('Lỗi khi xóa dữ liệu trong CartDetail:', error);
-            throw error;
-        }
+    removeCartDetail: async (OrderInfor)=>{
+        let query = 'delete from CartDetail where CartDetailID in (';
+        let values = OrderInfor.map((item, index) => {
+            return item.CartDetailID;
+          });
+          query += values.join(",");
+          query += ')';
+          console.log("que: ", query);
+          await pool.query(query);      
     },
     updateCartDetailQuantity: async (cartID, quantity) => {
         if (quantity <= 0) {
