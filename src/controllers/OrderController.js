@@ -65,6 +65,7 @@ const OrderControllers = {
       var ipnUrl = `${process.env.MOMO_IPNURL}/api/Transaction/callback`;
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
+      console.log(amount)
       var extraData = JSON.stringify(OrderDetailID);
       var rawSignature ="accessKey=" +accessKey +"&amount=" +amount +"&extraData=" +extraData +"&ipnUrl=" +ipnUrl +"&orderId=" +orderId +"&orderInfo=" +orderInfo +
         "&partnerCode=" +partnerCode +"&redirectUrl=" +redirectUrl +"&requestId=" +requestId +"&requestType=" +requestType;
