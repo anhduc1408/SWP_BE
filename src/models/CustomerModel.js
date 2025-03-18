@@ -45,12 +45,13 @@ const Customers = {
             PhoneNumber: customerData.PhoneNumber || oldCustomer.PhoneNumber,
             Gender: customerData.Gender || oldCustomer.Gender,
             password: customerData.password || oldCustomer.password,
-            Avatar: customerData.Avatar || oldCustomer.Avatar
+            Avatar: customerData.Avatar || oldCustomer.Avatar,
+            xu: customerData.xu !== undefined ? customerData.xu : oldCustomer.xu 
         };
     
         const result = await pool.query(
-            'UPDATE Customer SET FirstName = ?, LastName = ?, DateOfBirth = ?, Email = ?, PhoneNumber = ?, Gender = ?, password = ?, Avatar = ? WHERE CustomerID = ?',
-            [updatedCustomer.FirstName, updatedCustomer.LastName, updatedCustomer.DateOfBirth, updatedCustomer.Email, updatedCustomer.PhoneNumber, updatedCustomer.Gender, updatedCustomer.password, updatedCustomer.Avatar, CustomerID]
+            'UPDATE Customer SET FirstName = ?, LastName = ?, DateOfBirth = ?, Email = ?, PhoneNumber = ?, Gender = ?, password = ?, Avatar = ?, xu = ? WHERE CustomerID = ?',
+            [updatedCustomer.FirstName, updatedCustomer.LastName, updatedCustomer.DateOfBirth, updatedCustomer.Email, updatedCustomer.PhoneNumber, updatedCustomer.Gender, updatedCustomer.password, updatedCustomer.Avatar, updatedCustomer.xu, CustomerID]
         );
     
         return result;
