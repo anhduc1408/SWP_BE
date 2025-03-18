@@ -50,6 +50,10 @@ const Notifications = {
     od.Status,
     od.DeliveryTime,
     p.ProductImg,
+    p.Category,
+    o.TotalAmount,
+    p.ProductName,
+    o.address,
     o.status_Orders
 FROM Notifications n
 LEFT JOIN Orders o ON o.OrderID = n.order_id
@@ -73,6 +77,7 @@ LIMIT 10;
               v.VoucherID,
               v.StartDate,
               v.EndDate,
+              v.Discount,
               v.VoucherName,
               v.VoucherTitle,
               vd.status_voucherDetail
@@ -126,6 +131,43 @@ LIMIT 10;
       "insert into Notifications (customer_id,order_id) values (? ,?)",
       [cusID, OrderID]
     );
+  },
+
+  postReadAll: async (notificationsList, typeNotification, customerID) => {
+    if (typeNotification === "Tất Cả Thông Báo" || typeNotification === "Cập Nhật Đơn Hàng" || typeNotification === "Khuyến Mãi") {
+      let success = false;
+      // Lặp qua từng thông báo trong notificationsList
+      for (let i = 0; i < notificationsList.length; i++) {
+        const item = notificationsList[i];        
+        let affectedRows = 0;
+    
+        // Xử lý từng thông báo và gọi câu lệnh UPDATE cho mỗi OrderID hoặc VoucherID
+        if (item.OrderID) {
+          const response = await pool.query(
+            `UPDATE Orders SET status_Orders = 'read' WHERE CustomerID = ? AND OrderID = ?`,
+            [customerID, item.OrderID]
+          );
+          affectedRows += response[0].affectedRows; // Lấy số dòng bị ảnh hưởng
+        }
+    
+        if (item.VoucherID) {
+          const response = await pool.query(
+            `UPDATE VoucherDetail SET status_voucherDetail = 'read' WHERE CustomerID = ? AND VoucherID = ?`,
+            [customerID, item.VoucherID]
+          );
+          affectedRows += response[0].affectedRows; // Lấy số dòng bị ảnh hưởng
+        }
+    
+        if (affectedRows > 0) {
+          success = true;  // Nếu có dòng nào bị ảnh hưởng thì coi như thành công
+          console.log(`Thông báo với ID ${item.OrderID || item.VoucherID} đã được cập nhật thành công.`);
+        } else {
+          console.log(`Không có thông báo nào được cập nhật cho ID ${item.OrderID || item.VoucherID}.`);
+        }
+      }
+      // Trả về thành công hay không
+      return { success: success };
+    }
   },
 };
 module.exports = Notifications;
