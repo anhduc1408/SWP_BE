@@ -4,8 +4,8 @@ const Blog = {
     getAllBlogs: async () => {
         const result = await pool.query(`
             SELECT Blog.*, 
-                (SELECT GROUP_CONCAT(BlogImages.ImageURL ORDER BY BlogImages.SortOrder) 
-                FROM BlogImages WHERE BlogImages.BlogID = Blog.BlogID) as Images
+                (SELECT GROUP_CONCAT(Blogimages.ImageURL ORDER BY Blogimages.SortOrder) 
+                FROM Blogimages WHERE Blogimages.BlogID = Blog.BlogID) as Images
             FROM Blog 
             ORDER BY CreatedAt DESC
         `);
@@ -26,7 +26,7 @@ const Blog = {
         blog.Sections = sectionsResult[0];
 
         const imagesResult = await pool.query(
-            `SELECT * FROM BlogImages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
+            `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
         blog.Images = imagesResult[0];
 
@@ -56,7 +56,7 @@ const Blog = {
         if (images && images.length > 0) {
             for (let i = 0; i < images.length; i++) {
                 await pool.query(
-                    `INSERT INTO BlogImages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
+                    `INSERT INTO Blogimages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
                     [BlogID, images[i], i + 1]
                 );
             }
@@ -84,10 +84,10 @@ const Blog = {
         }
 
         if (images && images.length > 0) {
-            await pool.query(`DELETE FROM BlogImages WHERE BlogID = ?`, [BlogID]); 
+            await pool.query(`DELETE FROM Blogimages WHERE BlogID = ?`, [BlogID]); 
             for (let i = 0; i < images.length; i++) {
                 await pool.query(
-                    `INSERT INTO BlogImages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`, 
+                    `INSERT INTO Blogimages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`, 
                     [BlogID, images[i], i + 1]
                 );
             }

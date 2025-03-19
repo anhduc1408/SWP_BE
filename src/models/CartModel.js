@@ -36,7 +36,7 @@ const Carts = {
 
     updateCartDetail: async (body) => {
         const {customerID, productID, quantity} = body
-        const cartCurrentRecord =  await pool.query(
+        const CartCurrentRecord =  await pool.query(
             "SELECT  * FROM Cart WHERE CustomerID = ? ORDER BY CartID desc", [customerID]
         );
 
@@ -50,7 +50,7 @@ const Carts = {
             currentCartID = resultCart.insertId;
         }
 
-        const cartDetailCurrentRecord =  await pool.query(
+        const CartDetailCurrentRecord =  await pool.query(
             "SELECT * FROM CartDetail WHERE CartID = ? AND ProductID = ? ORDER BY CartDetailID desc", [currentCartID, productID]
         );
 
@@ -58,7 +58,7 @@ const Carts = {
         
         if(currentCartdDetailID){
             await pool.query(
-                "UPDATE CartDetail SET Quantity = ? WHERE (CartDetailID = ? and ProductID = ?)", [ ((cartDetailCurrentRecord?.[0]?.[0]?.Quantity || 0) + quantity),currentCartdDetailID, productID]
+                "UPDATE CartDetail SET Quantity = ? WHERE (CartDetailID = ? and ProductID = ?)", [ ((CartDetailCurrentRecord?.[0]?.[0]?.Quantity || 0) + quantity),currentCartdDetailID, productID]
               );
             return
         }
