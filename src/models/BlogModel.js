@@ -4,8 +4,8 @@ const Blog = {
     getAllBlogs: async () => {
         const result = await pool.query(`
             SELECT Blog.*, 
-                (SELECT GROUP_CONCAT(BlogImages.ImageURL ORDER BY BlogImages.SortOrder) 
-                FROM BlogImages WHERE BlogImages.BlogID = Blog.BlogID) as Images
+                (SELECT GROUP_CONCAT(Blogimages.ImageURL ORDER BY Blogimages.SortOrder) 
+                FROM Blogimages WHERE Blogimages.BlogID = Blog.BlogID) as Images
             FROM Blog 
             ORDER BY CreatedAt DESC
         `);
@@ -28,7 +28,7 @@ const Blog = {
         console.log("Dữ liệu trả về từ API:", blog);
 
         const imagesResult = await pool.query(
-            `SELECT * FROM BlogImages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
+            `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
         blog.Images = imagesResult[0];
 
