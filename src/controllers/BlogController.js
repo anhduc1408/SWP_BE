@@ -29,8 +29,20 @@ const Blog = {
 
     createBlog: async (req, res) => {
         try {
-            const { title, categoryID, shortDescription, customerID, sections, images } = req.body;
-            const coverImage = req.file ? `uploads/${req.file.filename}` : null;
+            const { title, categoryID, shortDescription, customerID, sections, existingImages } = req.body;
+            let coverImage = req.file ? `uploads/${req.file.filename}` : null;
+
+            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
+
+            const parsedExistingImages = existingImages ? JSON.parse(existingImages) : [];
+
+            const newImages = req.files && req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
+
+            const allImages = [...parsedExistingImages, ...newImages];
+
+            if (!title || !categoryID || !shortDescription || !customerID) {
+                return res.status(400).json({ error: "Thiếu dữ liệu bắt buộc" });
+            }
 
             const blogData = {
                 Title: title,
@@ -38,9 +50,9 @@ const Blog = {
                 Slug: title.toLowerCase().replace(/\s+/g, "-"),
                 ShortDescription: shortDescription,
                 CustomerID: customerID,
-                Image: coverImage,
-                sections,
-                images
+                Image: coverImage || "",
+                sections: parsedSections,
+                images: allImages
             };
 
             const blog = await BlogService.createBlog(blogData);
@@ -55,16 +67,31 @@ const Blog = {
         try {
             const { blogID } = req.params;
             const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
-            
+
             let Image = existingCoverImage;
+
+            if (!existingCoverImage && (!req.files || !req.files.coverImage)) {
+                Image = null;
+            }
 
             if (req.files && req.files.coverImage) {
                 Image = `/uploads/${req.files.coverImage[0].filename}`;
             }
 
-            const newImages = req.files && req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
+            const newImages = req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
 
-            const allImages = [...(existingImages ? JSON.parse(existingImages) : []), ...newImages];
+            let oldImages = [];
+            if (existingImages) {
+                try {
+                    oldImages = JSON.parse(existingImages);
+                } catch (error) {
+                    console.error("Error parsing JSON string: ", error);
+                }
+            }
+
+            const validOldImages = oldImages.filter(img => img !== null && img !== undefined);
+
+            const allImages = [...validOldImages, ...newImages];
 
             await BlogService.updateBlog(blogID, {
                 Title: title,

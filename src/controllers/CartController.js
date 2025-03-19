@@ -81,6 +81,7 @@ const Cart = {
             res.status(200).json({ message: "Thêm sản phẩm thành công", status: 200 });
         } catch (error) {
             res.status(200).json({ message: "Thêm sản phẩm thất bại", status: 204 });
+            console.log(error);
         }
     }
 }
