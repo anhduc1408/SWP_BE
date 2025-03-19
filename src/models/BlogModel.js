@@ -25,6 +25,8 @@ const Blog = {
         );
         blog.Sections = sectionsResult[0];
 
+        console.log("Dữ liệu trả về từ API:", blog);
+
         const imagesResult = await pool.query(
             `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
@@ -33,13 +35,13 @@ const Blog = {
         return blog;
     },
 
-    createBlog: async (data, sections, images) => {
-        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image } = data;
+    createBlog: async (data) => {
+        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image, sections, images } = data;
 
         const result = await pool.query(
             `INSERT INTO Blog (Title, Slug, ShortDescription, CategoryID, CustomerID, Image, CreatedAt, UpdatedAt, Views, Likes)
             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), 0, 0)`,
-            [Title, Slug, ShortDescription, CategoryID, CustomerID]
+            [Title, Slug, ShortDescription, CategoryID, CustomerID, Image || ""]
         );
 
         const BlogID = result[0].insertId;
@@ -54,11 +56,15 @@ const Blog = {
         }
 
         if (images && images.length > 0) {
+            await pool.query(`DELETE FROM BlogImages WHERE BlogID = ?`, [BlogID]);
+            
             for (let i = 0; i < images.length; i++) {
-                await pool.query(
-                    `INSERT INTO Blogimages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
-                    [BlogID, images[i], i + 1]
-                );
+                if (images[i]) {  
+                    await pool.query(
+                        `INSERT INTO BlogImages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
+                        [BlogID, images[i], i + 1]
+                    );
+                }
             }
         }
 
@@ -84,14 +90,17 @@ const Blog = {
         }
 
         if (images && images.length > 0) {
-            await pool.query(`DELETE FROM Blogimages WHERE BlogID = ?`, [BlogID]); 
+            await pool.query(`DELETE FROM BlogImages WHERE BlogID = ?`, [BlogID]);
             for (let i = 0; i < images.length; i++) {
-                await pool.query(
-                    `INSERT INTO Blogimages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`, 
-                    [BlogID, images[i], i + 1]
-                );
+                if (images[i]) {
+                    await pool.query(
+                        `INSERT INTO BlogImages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
+                        [BlogID, images[i], i + 1]
+                    );
+                }
             }
         }
+        
 
         return { BlogID };
     },
