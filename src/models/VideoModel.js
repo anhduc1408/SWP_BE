@@ -33,7 +33,7 @@ const video = {
             await pool.execute('insert into LikeVideo  values(?,? ,"like")', [videoID,cusID]);
         }
         if(addDisLike ==1){
-            await pool.execute('insert into LikeVideovalues(?,? ,"dislike")', [videoID,cusID]);
+            await pool.execute('insert into LikeVideo values(?,? ,"dislike")', [videoID,cusID]);
         }
         
     },
