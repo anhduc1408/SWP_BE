@@ -6,8 +6,12 @@ require('dotenv').config();
 const Transaction = {
     callback: async(req,res)=>{
         const OrderID = JSON.parse(req.body.extraData);
-        await Order.changeStatusShip(OrderID);
+        const OrderInfor = JSON.parse(req.body.extraData);
+        const totalPayment = JSON.parse(req.body.extraData);
+        const cusID = JSON.parse(req.body.extraData);
+        await Order.changeStatusShip(OrderInfor, totalPayment, cusID, OrderID);
     },
+    
     checkPayment: async(req,res)=>{
         try {
             const orderId = req.body.orderId;

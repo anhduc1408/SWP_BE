@@ -3,6 +3,7 @@ const Voucher = require('./VoucherService')
 const Cart = require('./CartService')
 const Product = require('../models/ProductModel');
 const Notification = require('../models/NotificationstModel')
+const TransactionHistory = require('../models/TransactionHistoryModel')
 
 const OrderServices = {
     getAllOrder: async ()=>{
@@ -14,6 +15,7 @@ const OrderServices = {
     addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
         const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
         if(OrderInfor[0].CartDetailID){
+            console.log("Order: ", OrderInfor);
             await Cart.removeCartDetail(OrderInfor)
         }
         if(voucher){
@@ -85,8 +87,9 @@ const OrderServices = {
         }))   
         return result;  
     },
-    changeStatusShip: async(OrderID)=>{
+    changeStatusShip: async(OrderInfor, totalPayment, cusID, OrderID)=>{
         Orders.changeStatusShip(OrderID);
+        TransactionHistory.addOrder(OrderInfor, totalPayment, cusID, OrderID);
     }
 }
 module.exports = OrderServices;

@@ -1,7 +1,7 @@
 const pool = require("../config/Database");
 
 const Notifications = {
-  getAddNotifications: async (OrderInfor, voucher, totalPayment, cusID) => {
+  getAddNotifications: async (OrderInfor, voucher, cusID) => {
     try {
       // Kiểm tra xem thông báo đã tồn tại chưa
       const [existingRows] = await pool.query(
@@ -31,66 +31,44 @@ const Notifications = {
     }
   },
 
-  getAllNotifications: async (req, res) => {
+  getAllNotifications: async (customerID, typeNotification) => {
     try {
-      const customerID = req.query.customerID;
-      const type = req.query.typeNotification;
-
       if (!customerID) {
         return res.status(400).json({ message: "customerID is required" });
       }
+      if (!typeNotification) {
+        console.log(typeNotification);
+        return res
+          .status(400)
+          .json({ message: "typeNotification is required" });
+      }
+      if (typeNotification === "Cập Nhật Đơn Hàng") {
+        const [result] = await pool.query(
+          `SELECT DISTINCT 
+    n.customer_id,
+    o.OrderID,
+    od.Status,
+    od.DeliveryTime,
+    p.ProductImg,
+    p.Category,
+    o.TotalAmount,
+    p.ProductName,
+    o.address,
+    o.status_Orders
+FROM Notifications n
+LEFT JOIN Orders o ON o.OrderID = n.order_id
+LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
+LEFT JOIN Product p ON od.ProductID = p.ProductID
+WHERE n.customer_id = ?
+ORDER BY od.DeliveryTime DESC
+LIMIT 10;
 
-      if (type === "Tất Cả Thông Báo") {
-        const [result] = await pool.query(
-          `SELECT 
-              o.CustomerID,
-              o.OrderID,
-              od.Status,
-              od.DeliveryTime,
-              p.ProductImg,
-              v.VoucherID,
-              v.VoucherImg,
-              v.IsActive,
-              v.StartDate,
-              v.EndDate,
-              v.VoucherName,
-              v.VoucherTitle,
-              n.status as notification_status
-              FROM Orders o
-              Left JOIN Notifications n ON n.order_id = o.OrderID
-              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-              LEFT JOIN Product p ON od.ProductID = p.ProductID
-              LEFT JOIN VoucherDetail vd ON o.CustomerID = vd.CustomerID
-              LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
-              WHERE o.CustomerID = ?
-              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime, v.VoucherID, p.ProductImg, n.status
-              ORDER BY od.DeliveryTime DESC
-              LIMIT 10;`,
+
+`,
           [customerID]
         );
         return result;
-      } else if (type === "Cập Nhật Đơn Hàng") {
-        
-        const [result] = await pool.query(
-          `SELECT 
-              o.CustomerID,
-              o.OrderID,
-              od.Status,
-              od.DeliveryTime,
-              p.ProductImg AS ProductImgs,
-              n.status as notification_status
-              FROM Orders o
-              Left JOIN Notifications n ON n.order_id = o.OrderID
-              LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
-              LEFT JOIN Product p ON od.ProductID = p.ProductID
-              WHERE o.CustomerID = ?
-              GROUP BY o.CustomerID, o.OrderID, od.Status, od.DeliveryTime,p.ProductImg, n.status
-              ORDER BY od.DeliveryTime DESC
-              LIMIT 10;`,
-          [customerID]
-        );
-        return result;
-      } else if (type === "Khuyến Mãi") {
+      } else if (typeNotification === "Khuyến Mãi") {
         const [result] = await pool.query(
           `SELECT 
               v.VoucherImg,
@@ -99,12 +77,15 @@ const Notifications = {
               v.VoucherID,
               v.StartDate,
               v.EndDate,
+              v.Discount,
               v.VoucherName,
-              v.VoucherTitle
+              v.VoucherTitle,
+              vd.status_voucherDetail
               FROM VoucherDetail vd
-              LEFT JOIN Voucher v ON vd.VoucherID = v.VoucherID
+              LEFT JOIN Voucher v ON v.VoucherID = vd.VoucherID
+              LEFT JOIN Notifications n ON vd.VoucherID = n.voucher_id
               WHERE vd.CustomerID = ?
-              GROUP BY v.VoucherID
+              GROUP BY vd.VoucherID, vd.status_voucherDetail
               ORDER BY v.StartDate DESC
               LIMIT 10;`,
           [customerID]
@@ -118,26 +99,75 @@ const Notifications = {
     }
   },
 
-  getStatusNotifications: async (req, res) => {
+  getStatusNotifications: async (
+    customerID,
+    order_ID,
+    voucher_ID,
+    statusNotification
+  ) => {
     try {
-      const cusID = req.query.customer_ID;
-      const orderID = req.query.order_ID;
-      const voucherID = req.query.voucher_ID;
-      const status = req.query.statusNotification;
-
-      const [result] = await pool.query(
-        `UPDATE Notifications
-         SET status = ?
-         WHERE order_id = ? AND customer_id = ? AND voucher_id = ?;`,
-        [status, orderID, cusID, voucherID]
-      );
+      if(order_ID){
+        const [result] = await pool.query(
+          `UPDATE Orders
+           SET status_Orders = ?
+           WHERE OrderID = ?  AND CustomerID = ?;`,
+          [statusNotification, order_ID, customerID]
+        );
+      }else {
+        const [result] = await pool.query(
+          `UPDATE VoucherDetail
+           SET status_voucherDetail = ?
+           WHERE VoucherID = ?  AND CustomerID = ?;`,
+          [statusNotification, voucher_ID, customerID]
+        );
+      }
     } catch (error) {
       console.error("Error status notifications:", error);
       throw error;
     }
   },
-  addNotifications: async(cusID,OrderID)=>{
-    await pool.query('insert into Notifications (customer_id,order_id) values (? ,?)',[cusID,OrderID])
-  }
+  addNotifications: async (cusID, OrderID) => {
+    await pool.query(
+      "insert into Notifications (customer_id,order_id) values (? ,?)",
+      [cusID, OrderID]
+    );
+  },
+
+  postReadAll: async (notificationsList, typeNotification, customerID) => {
+    if (typeNotification === "Tất Cả Thông Báo" || typeNotification === "Cập Nhật Đơn Hàng" || typeNotification === "Khuyến Mãi") {
+      let success = false;
+      // Lặp qua từng thông báo trong notificationsList
+      for (let i = 0; i < notificationsList.length; i++) {
+        const item = notificationsList[i];        
+        let affectedRows = 0;
+    
+        // Xử lý từng thông báo và gọi câu lệnh UPDATE cho mỗi OrderID hoặc VoucherID
+        if (item.OrderID) {
+          const response = await pool.query(
+            `UPDATE Orders SET status_Orders = 'read' WHERE CustomerID = ? AND OrderID = ?`,
+            [customerID, item.OrderID]
+          );
+          affectedRows += response[0].affectedRows; // Lấy số dòng bị ảnh hưởng
+        }
+    
+        if (item.VoucherID) {
+          const response = await pool.query(
+            `UPDATE VoucherDetail SET status_voucherDetail = 'read' WHERE CustomerID = ? AND VoucherID = ?`,
+            [customerID, item.VoucherID]
+          );
+          affectedRows += response[0].affectedRows; // Lấy số dòng bị ảnh hưởng
+        }
+    
+        if (affectedRows > 0) {
+          success = true;  // Nếu có dòng nào bị ảnh hưởng thì coi như thành công
+          console.log(`Thông báo với ID ${item.OrderID || item.VoucherID} đã được cập nhật thành công.`);
+        } else {
+          console.log(`Không có thông báo nào được cập nhật cho ID ${item.OrderID || item.VoucherID}.`);
+        }
+      }
+      // Trả về thành công hay không
+      return { success: success };
+    }
+  },
 };
 module.exports = Notifications;
