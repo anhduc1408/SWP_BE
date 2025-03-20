@@ -35,8 +35,8 @@ const Blog = {
         return blog;
     },
 
-    createBlog: async (data) => {
-        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image, sections, images } = data;
+    createBlog: async (data, sections, images) => {
+        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image } = data;
 
         const result = await pool.query(
             `INSERT INTO Blog (Title, Slug, ShortDescription, CategoryID, CustomerID, Image, CreatedAt, UpdatedAt, Views, Likes)

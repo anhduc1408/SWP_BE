@@ -30,20 +30,19 @@ const Blog = {
     createBlog: async (req, res) => {
         try {
             const { title, categoryID, shortDescription, customerID, sections, existingImages } = req.body;
-            let coverImage = req.file ? `uploads/${req.file.filename}` : null;
-
-            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
-
-            const parsedExistingImages = existingImages ? JSON.parse(existingImages) : [];
-
-            const newImages = req.files && req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
-
-            const allImages = [...parsedExistingImages, ...newImages];
+            console.log("Received blog data: ", req.body); 
 
             if (!title || !categoryID || !shortDescription || !customerID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu bắt buộc" });
             }
-
+    
+            let coverImage = req.file ? req.file.path : null;
+            const images = req.files ? req.files.map(file => file.path) : [];
+    
+            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
+            const parsedExistingImages = existingImages ? JSON.parse(existingImages) : [];
+            const allImages = [...parsedExistingImages, ...images];
+    
             const blogData = {
                 Title: title,
                 CategoryID: categoryID,
@@ -54,32 +53,29 @@ const Blog = {
                 sections: parsedSections,
                 images: allImages
             };
-
+    
+            console.log("Blog Data before saving: ", blogData); 
+    
             const blog = await BlogService.createBlog(blogData);
             return res.status(200).json(blog);
         } catch (error) {
-            console.error(error);
+            console.error("Error during blog creation: ", error);
             res.status(500).json({ error: "Lỗi khi tạo blog!" });
         }
-    },
+    },    
 
     updateBlog: async (req, res) => {
         try {
             const { blogID } = req.params;
             const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
 
-            let Image = existingCoverImage;
-
-            if (!existingCoverImage && (!req.files || !req.files.coverImage)) {
-                Image = null;
-            }
-
+            let coverImage = existingCoverImage;
             if (req.files && req.files.coverImage) {
-                Image = `/uploads/${req.files.coverImage[0].filename}`;
+                coverImage = req.files.coverImage[0].path;
             }
 
-            const newImages = req.files.images ? req.files.images.map(file => `/uploads/${file.filename}`) : [];
-
+            const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
+            
             let oldImages = [];
             if (existingImages) {
                 try {
@@ -88,19 +84,19 @@ const Blog = {
                     console.error("Error parsing JSON string: ", error);
                 }
             }
+            const allImages = [...oldImages, ...newImages];
 
-            const validOldImages = oldImages.filter(img => img !== null && img !== undefined);
-
-            const allImages = [...validOldImages, ...newImages];
-
-            await BlogService.updateBlog(blogID, {
+            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
+            const blogData = { 
                 Title: title,
                 CategoryID: categoryID,
                 Slug: title.toLowerCase().replace(/\s+/g, "-"),
                 ShortDescription: shortDescription,
-                Image,
-            }, sections, allImages);
-            return res.status(200).json({ message: "Cập nhật blog thành công!" });
+                Image: coverImage || "",
+            };
+
+            const updatedBlog = await BlogService.updateBlog(blogID, blogData, parsedSections, allImages);
+            return res.status(200).json(updatedBlog);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Lỗi khi cập nhật blog!" });
