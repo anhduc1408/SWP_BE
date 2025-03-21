@@ -64,7 +64,6 @@ const OrderServices = {
     getOrderDetailByOrderID: async(OrderID)=>{
         const OderDetail = await Orders.getOrderDetailByOrderID(OrderID);
         const result  = await Promise.all(OderDetail.map(async(item)=>{
-            console.log(item)
             const query = await Product.getProductByProID(item.ProductID);
             const tmp = {
                 orderID : item.OrderID,

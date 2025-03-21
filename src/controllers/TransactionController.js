@@ -5,16 +5,18 @@ require('dotenv').config();
 
 const Transaction = {
     callback: async(req,res)=>{
-        const OrderID = JSON.parse(req.body.extraData);
-        const OrderInfor = JSON.parse(req.body.extraData);
-        const totalPayment = JSON.parse(req.body.extraData);
-        const cusID = JSON.parse(req.body.extraData);
+        
+        console.log("3564747: ", req.body.extraData);
+        console.log("OrderID: ", OrderID);
+        console.log("OrderInfor: ", OrderInfor);
+        console.log("totalPayment: ", totalPayment);
+        console.log("cusID: ", cusID);
         await Order.changeStatusShip(OrderInfor, totalPayment, cusID, OrderID);
     },
     
     checkPayment: async(req,res)=>{
         try {
-            const orderId = req.body.orderId;
+            const orderId = req.body.extra;
             const rawSignature = `accessKey=${process.env.MOMO_ACCESSKEY}&orderId=${orderId}&partnerCode=MOMO&requestId=${orderId}`;
             const signature = crypto.createHmac("sha256",process.env.MOMO_SECRETKEY).update(rawSignature).digest('hex');
             const requestBody = JSON.stringify({
