@@ -33,6 +33,9 @@ const LoyaltyRouter = require("./src/routers/LoyaltyRouter");
 const BlogRouter = require('./src/routers/BlogRouter');
 const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
 const ChatRoutes = require('./src/routers/ChatRouter');
+const PolicyRouter = require('./src/routers/PolicyRouter');
+
+
 const LoyaltyHistoryRouter = require("./src/routers/loyaltyHistoryRoutes");
 const AffiliateTrackingRouter = require("./src/routers/AffiliateTrackingRouter");
 
@@ -114,6 +117,9 @@ app.use('/api/Bills', BillsRouter);
 app.use('/api/Payments', TransactionHistoryRouter);
 app.use('/api/PayBills', PayBillsRouter);
 app.use('/api/chat', ChatRoutes);
+app.use('/api/policy', PolicyRouter);
+
+
 app.use("/api/loyalty-history", LoyaltyHistoryRouter);
 app.use("/api/affiliate", AffiliateTrackingRouter);
 
