@@ -21,7 +21,7 @@ const storageBlogImage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: "BlogImage", 
-        allowed_formats: ["jpg", "png", "gif"], 
+        allowed_formats: ["jpg", "png", "gif", "webp"], 
     },
 });
 

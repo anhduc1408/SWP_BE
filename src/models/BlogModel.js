@@ -25,12 +25,12 @@ const Blog = {
         );
         blog.Sections = sectionsResult[0];
 
-        console.log("Dữ liệu trả về từ API:", blog);
-
         const imagesResult = await pool.query(
             `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
         blog.Images = imagesResult[0];
+
+        console.log("Dữ liệu trả về từ API:", blog);
 
         return blog;
     },
