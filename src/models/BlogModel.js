@@ -25,18 +25,18 @@ const Blog = {
         );
         blog.Sections = sectionsResult[0];
 
-        console.log("Dữ liệu trả về từ API:", blog);
-
         const imagesResult = await pool.query(
             `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
         blog.Images = imagesResult[0];
 
+        console.log("Dữ liệu trả về từ API:", blog);
+
         return blog;
     },
 
-    createBlog: async (data) => {
-        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image, sections, images } = data;
+    createBlog: async (data, sections, images) => {
+        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image } = data;
 
         const result = await pool.query(
             `INSERT INTO Blog (Title, Slug, ShortDescription, CategoryID, CustomerID, Image, CreatedAt, UpdatedAt, Views, Likes)
