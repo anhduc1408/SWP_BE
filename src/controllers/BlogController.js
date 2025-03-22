@@ -1,3 +1,4 @@
+const { v2: cloudinary } = require("cloudinary");
 const BlogService = require("../services/BlogService");
 
 const Blog = {
@@ -31,6 +32,7 @@ const Blog = {
         try {
             const { title, categoryID, shortDescription, customerID, sections } = req.body;
             console.log("Received blog data: ", req.body);
+            console.log("Files nhận được:", req.files);
 
             if (!title || !categoryID || !shortDescription || !customerID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu bắt buộc" });
@@ -40,6 +42,10 @@ const Blog = {
             if (req.files && req.files.coverImage) {
                 const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
                 coverImage = cloudinaryResponse.secure_url;
+                console.log("Cover image URL: ", coverImage);
+            } else {
+                console.error("Lỗi khi upload ảnh bìa!");
+                return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
             }
 
                 const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
@@ -69,7 +75,14 @@ const Blog = {
 
                 let coverImage = existingCoverImage;
                 if (req.files && req.files.coverImage) {
-                    coverImage = req.files.coverImage[0].path;
+                    try {
+                        const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
+                        coverImage = cloudinaryResponse.secure_url;
+                        console.log("Cover image URL: ", coverImage);
+                    } catch (error) {
+                        console.error("Error uploading cover image: ", error);
+                        return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
+                    }
                 }
 
                 const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
