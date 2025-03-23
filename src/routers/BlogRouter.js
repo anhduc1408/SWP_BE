@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', BlogController.getAllBlogs);
 router.get('/:blogID', BlogController.getBlogById);
+router.get('/by-customer/:customerID', BlogController.getBlogByCustomer);
 router.post('/', 
     uploadBlogImage.fields([
         { name: 'coverImage', maxCount: 1 }, 

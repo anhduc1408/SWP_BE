@@ -28,6 +28,17 @@ const Blog = {
         }
     },
 
+    getBlogByCustomer: async (req, res) => {
+        try {
+            const { customerID } = req.params;
+            const blog = await BlogService.getBlogByCustomer(customerID);
+            return res.status(200).json(blog);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Lỗi khi lấy blog!" });
+        }
+    },
+
     createBlog: async (req, res) => {
         try {
             const { title, categoryID, shortDescription, customerID, sections } = req.body;

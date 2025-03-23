@@ -9,6 +9,10 @@ const Blog = {
         return await BlogModel.getBlogById(BlogID)
     },
 
+    getBlogByCustomer: async (customerID) => {
+        return await BlogModel.getBlogByCustomer(customerID)
+    },
+
     createBlog: async (data, sections, images) => {
         return await BlogModel.createBlog(data, sections, images)
     },

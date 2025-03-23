@@ -93,8 +93,8 @@ app.use('/api/Shipper', Shipper);
 app.use('/api/Cart', cartRouter);
 app.use('/api/Voucher', VoucherRouter);
 app.use('/api/Products', Products);
-app.use('/api/Blog', BlogRouter)
-app.use('/api/blogcategory', BlogCategoriesRouter)
+app.use('/api/blog', BlogRouter);
+app.use('/api/blogcategory', BlogCategoriesRouter);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);

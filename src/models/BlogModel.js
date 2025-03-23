@@ -35,6 +35,14 @@ const Blog = {
         return blog;
     },
 
+    getBlogByCustomer: async (customerID) => {
+        const [rows] = await pool.query(
+            `SELECT * FROM Blog WHERE CustomerID = ? ORDER BY CreatedAt DESC`, 
+            [customerID]
+        );
+        return rows;
+    },
+
     createBlog: async (data, sections, images) => {
         const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image } = data;
 
