@@ -1,17 +1,16 @@
 const Order = require('../services/OrderService')
+const TransactionHistoryService = require('../services/TransactionHistoryService')
 const crypto = require('crypto')
 const axios = require('axios')
 require('dotenv').config();
 
 const Transaction = {
     callback: async(req,res)=>{
+        const extraData = JSON.parse(req.body.extraData); // Giả sử extraData là một JSON string
+        const { OrderInfor,address,voucherChoose, cusID, totalPayment, OrderDetailID } = extraData;
         
-        console.log("3564747: ", req.body.extraData);
-        console.log("OrderID: ", OrderID);
-        console.log("OrderInfor: ", OrderInfor);
-        console.log("totalPayment: ", totalPayment);
-        console.log("cusID: ", cusID);
-        await Order.changeStatusShip(OrderInfor, totalPayment, cusID, OrderID);
+        await Order.changeStatusShip(OrderDetailID);
+        await TransactionHistoryService.addOrderPayment(OrderInfor,address,voucherChoose, cusID, totalPayment, OrderDetailID);
     },
     
     checkPayment: async(req,res)=>{

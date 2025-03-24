@@ -2,6 +2,8 @@ const TransactionHistoryModels = require("../models/TransactionHistoryModel");
 const Bills = require("../models/BillsModel");
 const Customers = require("../models/CustomerModel");
 const Order = require("../services/OrderService");
+const OrderModel = require("../models/OrderModel");
+const CustomerBehavior = require("../models/CustomerBehaviorModel");
 
 const TransactionHistory = {
   getTransactionHistory: async (customerID, typeTransactionHistory) => {
@@ -113,6 +115,30 @@ const TransactionHistory = {
     const result3 = Bills.updateStatusBills(item.bill_id, item.bill_type);
     return { result1, result2, result3 };
   },
+
+  addOrderPayment: async (OrderInfor, address, voucherChoose, cusID, totalPayment, OrderDetailID) => {
+    const results = [];  // Mảng để lưu kết quả cho từng sản phẩm
+
+    const OrderID = await OrderModel.getOrderByOrderDetailID(OrderDetailID);
+
+    // Duyệt qua từng sản phẩm trong OrderInfor
+    for (let item of OrderInfor) {
+        const productID = item.productID;
+        const category = item.category;
+        const type = "purchase";
+        const shopID = item.shopID;
+
+        // Gọi các hàm để xử lý mỗi sản phẩm
+        const result1 = await CustomerBehavior.addCustomerBehavior(cusID, productID, category, type, shopID);
+        const result2 = await TransactionHistoryModels.addOrder(item, totalPayment, cusID, OrderID); // Thực hiện với item hiện tại
+
+        // Lưu kết quả cho mỗi sản phẩm
+        results.push({ result1, result2});
+    }
+
+    return results;  // Trả về kết quả của tất cả các sản phẩm
+}
+
 };
 
 module.exports = TransactionHistory;

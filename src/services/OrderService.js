@@ -86,9 +86,9 @@ const OrderServices = {
         }))   
         return result;  
     },
-    changeStatusShip: async(OrderInfor, totalPayment, cusID, OrderID)=>{
-        Orders.changeStatusShip(OrderID);
-        TransactionHistory.addOrder(OrderInfor, totalPayment, cusID, OrderID);
+    changeStatusShip: async(OrderDetailID)=>{
+        
+        Orders.changeStatusShip(OrderDetailID);
     }
 }
 module.exports = OrderServices;

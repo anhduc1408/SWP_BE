@@ -1,4 +1,5 @@
 const pool = require("../config/Database");
+const productModel = require("../models/ProductModel");
 
 const Notifications = {
   getAddNotifications: async (OrderInfor, voucher, cusID) => {
@@ -54,16 +55,14 @@ const Notifications = {
     o.TotalAmount,
     p.ProductName,
     o.address,
-    o.status_Orders
+    od.statusRead 
 FROM Notifications n
 LEFT JOIN Orders o ON o.OrderID = n.order_id
 LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
 LEFT JOIN Product p ON od.ProductID = p.ProductID
-WHERE n.customer_id = ?
-ORDER BY od.DeliveryTime DESC
+WHERE n.customer_id = 2
+ORDER BY od.DeliveryTime DESC, o.OrderID DESC
 LIMIT 10;
-
-
 `,
           [customerID]
         );
@@ -103,16 +102,22 @@ LIMIT 10;
     customerID,
     order_ID,
     voucher_ID,
+    img,
     statusNotification
   ) => {
+
     try {
       if(order_ID){
-        const [result] = await pool.query(
-          `UPDATE Orders
-           SET status_Orders = ?
-           WHERE OrderID = ?  AND CustomerID = ?;`,
-          [statusNotification, order_ID, customerID]
-        );
+        const productID = await productModel.getProductID(img);
+        if(productID && productID.length > 0){
+          const ProductID = productID[0][0].ProductID; 
+          const [result] = await pool.query(
+            `UPDATE OrderDetail
+SET statusRead  = ?
+WHERE OrderID = ? AND ProductID = ?;`,
+            [statusNotification,order_ID, ProductID]
+          );
+        }
       }else {
         const [result] = await pool.query(
           `UPDATE VoucherDetail
@@ -144,8 +149,8 @@ LIMIT 10;
         // Xử lý từng thông báo và gọi câu lệnh UPDATE cho mỗi OrderID hoặc VoucherID
         if (item.OrderID) {
           const response = await pool.query(
-            `UPDATE Orders SET status_Orders = 'read' WHERE CustomerID = ? AND OrderID = ?`,
-            [customerID, item.OrderID]
+            `UPDATE OrderDetail SET statusRead = 'read' WHERE OrderID = ?`,
+            [item.OrderID]
           );
           affectedRows += response[0].affectedRows; // Lấy số dòng bị ảnh hưởng
         }
