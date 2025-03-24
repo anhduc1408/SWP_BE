@@ -7,6 +7,7 @@ const LoyaltyController = {
             const data = await LoyaltyService.getLoyaltyDetails(customerId);
             res.json(data);
         } catch (error) {
+            console.log(error)
             res.status(404).json({ message: error.message });
         }
     }
