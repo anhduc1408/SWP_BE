@@ -23,7 +23,11 @@ const Blog = {
 
     deleteBlog: async (blogID) => {
         return await BlogModel.deleteBlog(blogID)
-    }
+    },
+
+    likeBlog: async (blogID, action) => {
+        return await BlogModel.likeBlog(blogID, action)
+    },
 }
 
 module.exports = Blog

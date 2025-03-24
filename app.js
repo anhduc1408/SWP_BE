@@ -32,6 +32,7 @@ const SupportRoutes = require('./src/routers/supportRoutes');
 const LoyaltyRouter = require("./src/routers/LoyaltyRouter");
 const BlogRouter = require('./src/routers/BlogRouter');
 const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
+const CommentRouter = require('./src/routers/CommentRouter');
 const ChatRoutes = require('./src/routers/ChatRouter');
 const PolicyRouter = require('./src/routers/PolicyRouter');
 
@@ -95,6 +96,7 @@ app.use('/api/Voucher', VoucherRouter);
 app.use('/api/Products', Products);
 app.use('/api/blog', BlogRouter);
 app.use('/api/blogcategory', BlogCategoriesRouter);
+app.use('/api/comment', CommentRouter);
 app.use("/customers", CustomerRouter);
 app.use('/api/customers', customerApiRouter);
 app.use('/address', AddressRouter);

@@ -20,5 +20,6 @@ router.put('/:blogID',
     ]),
     BlogController.updateBlog);
 router.delete('/:blogID', BlogController.deleteBlog);
+router.post('/:blogID/like', BlogController.likeBlog);
 
 module.exports = router;

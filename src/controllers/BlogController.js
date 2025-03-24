@@ -59,82 +59,95 @@ const Blog = {
                 return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
             }
 
-                const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
-                const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
+            const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
+            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
 
-                const blogData = {
-                    Title: title,
-                    CategoryID: categoryID,
-                    Slug: title.toLowerCase().replace(/\s+/g, "-"),
-                    ShortDescription: shortDescription,
-                    CustomerID: customerID,
-                    Image: coverImage || "",
-                };
+            const blogData = {
+                Title: title,
+                CategoryID: categoryID,
+                Slug: title.toLowerCase().replace(/\s+/g, "-"),
+                ShortDescription: shortDescription,
+                CustomerID: customerID,
+                Image: coverImage || "",
+            };
 
-                const blog = await BlogService.createBlog(blogData, parsedSections, newImages);
-                return res.status(200).json(blog);
-            } catch (error) {
-                console.error("Error during blog creation: ", error);
-                res.status(500).json({ error: "Lỗi khi tạo blog!" });
-            }
-        },
+            const blog = await BlogService.createBlog(blogData, parsedSections, newImages);
+            return res.status(200).json(blog);
+        } catch (error) {
+            console.error("Error during blog creation: ", error);
+            res.status(500).json({ error: "Lỗi khi tạo blog!" });
+        }
+    },
 
-        updateBlog: async (req, res) => {
-            try {
-                const { blogID } = req.params;
-                const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
+    updateBlog: async (req, res) => {
+        try {
+            const { blogID } = req.params;
+            const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
 
-                let coverImage = existingCoverImage;
-                if (req.files && req.files.coverImage) {
-                    try {
-                        const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
-                        coverImage = cloudinaryResponse.secure_url;
-                        console.log("Cover image URL: ", coverImage);
-                    } catch (error) {
-                        console.error("Error uploading cover image: ", error);
-                        return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
-                    }
-                }
-
-                const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
-
-                let oldImages = [];
-                if (existingImages) {
-                    try {
-                        oldImages = JSON.parse(existingImages);
-                    } catch (error) {
-                        console.error("Error parsing JSON string: ", error);
-                    }
-                }
-                const allImages = [...oldImages, ...newImages];
-
-                const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
-                const blogData = {
-                    Title: title,
-                    CategoryID: categoryID,
-                    Slug: title.toLowerCase().replace(/\s+/g, "-"),
-                    ShortDescription: shortDescription,
-                    Image: coverImage || "",
-                };
-
-                const updatedBlog = await BlogService.updateBlog(blogID, blogData, parsedSections, allImages);
-                return res.status(200).json(updatedBlog);
-            } catch (error) {
-                console.error(error);
-                res.status(500).json({ error: "Lỗi khi cập nhật blog!" });
-            }
-        },
-
-            deleteBlog: async (req, res) => {
+            let coverImage = existingCoverImage;
+            if (req.files && req.files.coverImage) {
                 try {
-                    const { blogID } = req.params;
-                    const blog = await BlogService.deleteBlog(blogID);
-                    return res.status(200).json(blog);
+                    const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
+                    coverImage = cloudinaryResponse.secure_url;
+                    console.log("Cover image URL: ", coverImage);
                 } catch (error) {
-                    console.error(error);
-                    res.status(500).json({ error: "Lỗi khi xóa blog!" });
+                    console.error("Error uploading cover image: ", error);
+                    return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
                 }
             }
+
+            const newImages = req.files && req.files.images ? req.files.images.map(file => file.path) : [];
+
+            let oldImages = [];
+            if (existingImages) {
+                try {
+                    oldImages = JSON.parse(existingImages);
+                } catch (error) {
+                    console.error("Error parsing JSON string: ", error);
+                }
+            }
+            const allImages = [...oldImages, ...newImages];
+
+            const parsedSections = typeof sections === "string" ? JSON.parse(sections) : sections;
+            const blogData = {
+                Title: title,
+                CategoryID: categoryID,
+                Slug: title.toLowerCase().replace(/\s+/g, "-"),
+                ShortDescription: shortDescription,
+                Image: coverImage || "",
+            };
+
+            const updatedBlog = await BlogService.updateBlog(blogID, blogData, parsedSections, allImages);
+            return res.status(200).json(updatedBlog);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Lỗi khi cập nhật blog!" });
+        }
+    },
+
+    deleteBlog: async (req, res) => {
+        try {
+            const { blogID } = req.params;
+            const blog = await BlogService.deleteBlog(blogID);
+            return res.status(200).json(blog);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Lỗi khi xóa blog!" });
+        }
+    },
+
+    likeBlog: async (req, res) => {
+        try {
+            const { blogID } = req.params;
+            const { action } = req.body;
+
+            await BlogService.likeBlog(blogID, action);
+            return res.status(200).json({ message: `Đã ${action === "like" ? "thích" : "bỏ thích"}` });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Có lỗi rồi!" });
+        }
     }
+}
 
 module.exports = Blog

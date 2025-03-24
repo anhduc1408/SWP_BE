@@ -14,7 +14,7 @@ const Blog = {
 
     getBlogById: async (blogID) => {
         const result = await pool.query('SELECT * FROM Blog WHERE BlogID = ?', [blogID]);
-        
+
         if (result[0].length === 0) {
             return { error: "Blog not found" };
         }
@@ -37,7 +37,7 @@ const Blog = {
 
     getBlogByCustomer: async (customerID) => {
         const [rows] = await pool.query(
-            `SELECT * FROM Blog WHERE CustomerID = ? ORDER BY CreatedAt DESC`, 
+            `SELECT * FROM Blog WHERE CustomerID = ? ORDER BY CreatedAt DESC`,
             [customerID]
         );
         return rows;
@@ -65,9 +65,9 @@ const Blog = {
 
         if (images && images.length > 0) {
             await pool.query(`DELETE FROM BlogImages WHERE BlogID = ?`, [BlogID]);
-            
+
             for (let i = 0; i < images.length; i++) {
-                if (images[i]) {  
+                if (images[i]) {
                     await pool.query(
                         `INSERT INTO BlogImages (BlogID, ImageURL, SortOrder) VALUES (?, ?, ?)`,
                         [BlogID, images[i], i + 1]
@@ -108,13 +108,28 @@ const Blog = {
                 }
             }
         }
-        
+
 
         return { BlogID };
     },
 
     deleteBlog: async (blogID) => {
         await pool.query(`DELETE FROM Blog WHERE BlogID = ?`, [blogID]);
+    },
+
+    likeBlog: async (blogID, action) => {
+        const [rows] = await pool.query(`SELECT Likes FROM Blog WHERE BlogID = ?`, [blogID]);
+        const currentLikes = rows[0]?.Likes || 0;
+
+        if (action === "unlike" && currentLikes <= 0) {
+            throw new Error("Likes cannot be less than 0");
+        }
+
+        const [result] = await pool.query(
+            `UPDATE Blog SET Likes = Likes ${action === "like" ? "+" : "-"} 1 WHERE BlogID = ?`,
+            [blogID]
+        );
+        return result;
     }
 };
 
