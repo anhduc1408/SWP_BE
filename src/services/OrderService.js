@@ -44,6 +44,7 @@ const OrderServices = {
                 orderID : item.OrderID,
                 orderDetailID:item.OrderDetailID,
                 productID : item.ProductID,
+                stockQuantity:query[0].StockQuantity,
                 productCategory:query[0].Category,
                 status:item.Status,
                 productImg: query[0].ProductImg,
