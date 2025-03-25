@@ -25,8 +25,12 @@ const Blog = {
         return await BlogModel.deleteBlog(blogID)
     },
 
-    likeBlog: async (blogID, action) => {
-        return await BlogModel.likeBlog(blogID, action)
+    likeBlog: async (blogID, action, customerID) => {
+        return await BlogModel.likeBlog(blogID, action, customerID)
+    },
+
+    checkLikedBlog: async (blogID, customerID) => {
+        return await BlogModel.checkLikedBlog(blogID, customerID)
     },
 }
 
