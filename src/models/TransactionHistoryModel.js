@@ -3,7 +3,7 @@ const pool = require("../config/Database");
 const TransactionHistoryModels = {
   getOrderIDByCustomerID: async (customerID) => {
     const result = await pool.query(
-      "SELECT DISTINCT order_id FROM Payments WHERE customer_id = ?;",
+      "SELECT order_id FROM Payments WHERE customer_id = ? AND order_id IS NOT NULL GROUP BY order_id ORDER BY MAX(payment_date) DESC;",
       [customerID]
     );
     return result[0];
@@ -11,7 +11,10 @@ const TransactionHistoryModels = {
 
   addPaymentBill: async (inforFullUser, item) => {
     console.log(222);
-    const payment_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const payment_date = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
     const status = "Thành công";
 
     let result;
@@ -88,31 +91,31 @@ const TransactionHistoryModels = {
   },
 
   addOrder: async (OrderInfor, totalPayment, cusID, OrderID) => {
-    const payment_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const payment_date = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
     const status = "Thành công";
-    
-    // Lặp qua từng phần tử trong mảng OrderInfor
 
-      const order = OrderInfor[0]; 
-      
-      const result = await pool.query(
-        "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          null,
-          cusID,
-          totalPayment,  // Bạn có thể thay đổi nếu muốn tính toán giá trị khác cho mỗi phần tử
-          payment_date,
-          "Quét Mã QR",
-          status,
-          OrderID,
-          order.productImg,
-        ]
-      );
-      console.log(`Inserted payment for Order ${OrderID} with result:`, result[0]);
-  
-    return { message: 'Payments inserted successfully' };
+    console.log("OrderID: ", OrderID[0].OrderID);
+
+    // Lặp qua từng phần tử trong mảng OrderInfor
+    const result = await pool.query(
+      "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        null,
+        cusID,
+        totalPayment,
+        payment_date,
+        "Quét Mã QR",
+        status,
+        OrderID[0].OrderID,
+        OrderInfor.productImg,
+      ]
+    );
+
+    return result;
   },
-  
 };
 
 module.exports = TransactionHistoryModels;

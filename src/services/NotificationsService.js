@@ -20,9 +20,9 @@ const notificationsServices = {
     }
   },
 
-  getStatusNotifications : async (customerID, order_ID, voucher_ID, statusNotification) => {
+  getStatusNotifications : async (customerID, order_ID, voucher_ID, img, statusNotification) => {
     try {
-      const result = await Notifications.getStatusNotifications(customerID, order_ID, voucher_ID, statusNotification);
+      const result = await Notifications.getStatusNotifications(customerID, order_ID, voucher_ID, img, statusNotification);
       return result;
     } catch (err) {
       console.log(err);

@@ -66,7 +66,14 @@ const OrderControllers = {
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
       console.log(amount)
-      var extraData = JSON.stringify(OrderDetailID);
+      var extraData = JSON.stringify({
+        OrderInfor: OrderInfor,
+        address: address,
+        voucherChoose: voucherChoose,
+        cusID: cusID,
+        totalPayment: totalPayment,
+        OrderDetailID: OrderDetailID,
+    });
       var rawSignature ="accessKey=" +accessKey +"&amount=" +amount +"&extraData=" +extraData +"&ipnUrl=" +ipnUrl +"&orderId=" +orderId +"&orderInfo=" +orderInfo +
         "&partnerCode=" +partnerCode +"&redirectUrl=" +redirectUrl +"&requestId=" +requestId +"&requestType=" +requestType;
       const crypto = require("crypto");

@@ -1,20 +1,21 @@
 const Order = require('../services/OrderService')
+const TransactionHistoryService = require('../services/TransactionHistoryService')
 const crypto = require('crypto')
 const axios = require('axios')
 require('dotenv').config();
 
 const Transaction = {
     callback: async(req,res)=>{
-        const OrderID = JSON.parse(req.body.extraData);
-        const OrderInfor = JSON.parse(req.body.extraData);
-        const totalPayment = JSON.parse(req.body.extraData);
-        const cusID = JSON.parse(req.body.extraData);
-        await Order.changeStatusShip(OrderInfor, totalPayment, cusID, OrderID);
+        const extraData = JSON.parse(req.body.extraData); // Giả sử extraData là một JSON string
+        const { OrderInfor,address,voucherChoose, cusID, totalPayment, OrderDetailID } = extraData;
+        
+        await Order.changeStatusShip(OrderDetailID);
+        await TransactionHistoryService.addOrderPayment(OrderInfor,address,voucherChoose, cusID, totalPayment, OrderDetailID);
     },
     
     checkPayment: async(req,res)=>{
         try {
-            const orderId = req.body.orderId;
+            const orderId = req.body.extra;
             const rawSignature = `accessKey=${process.env.MOMO_ACCESSKEY}&orderId=${orderId}&partnerCode=MOMO&requestId=${orderId}`;
             const signature = crypto.createHmac("sha256",process.env.MOMO_SECRETKEY).update(rawSignature).digest('hex');
             const requestBody = JSON.stringify({

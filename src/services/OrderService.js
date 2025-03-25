@@ -64,7 +64,6 @@ const OrderServices = {
     getOrderDetailByOrderID: async(OrderID)=>{
         const OderDetail = await Orders.getOrderDetailByOrderID(OrderID);
         const result  = await Promise.all(OderDetail.map(async(item)=>{
-            console.log(item)
             const query = await Product.getProductByProID(item.ProductID);
             const tmp = {
                 orderID : item.OrderID,
@@ -87,9 +86,9 @@ const OrderServices = {
         }))   
         return result;  
     },
-    changeStatusShip: async(OrderInfor, totalPayment, cusID, OrderID)=>{
-        Orders.changeStatusShip(OrderID);
-        TransactionHistory.addOrder(OrderInfor, totalPayment, cusID, OrderID);
+    changeStatusShip: async(OrderDetailID)=>{
+        
+        Orders.changeStatusShip(OrderDetailID);
     }
 }
 module.exports = OrderServices;

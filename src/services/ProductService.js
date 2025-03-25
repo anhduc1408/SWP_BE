@@ -81,6 +81,7 @@ const productServices = {
     },
 
     getProductBehaviorShop: async (customerID, shopID) => {
+        console.log("Customer: ", customerID);
         let CategoryByShopCustomerBehavior = await CustomerBehaviorModel.getCategoryByShop(customerID, shopID);
         if (CategoryByShopCustomerBehavior.length === 0) {
             const result = await Products.getProductCheapestBehaviorShop(shopID);
@@ -88,7 +89,7 @@ const productServices = {
         }
             const result = await Promise.all(
             CategoryByShopCustomerBehavior.map(async (item) => {
-                const productBehavior = await Products.getProductCustomerBehaviorShop(shopID, item.category);
+                const productBehavior = await Products.getProductCustomerBehaviorShopReal(shopID, item.category);
     
                 return productBehavior[0].map((product) => ({
                     ProductID: product.ProductID,

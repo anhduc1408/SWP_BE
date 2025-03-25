@@ -474,7 +474,7 @@ const Products = {
     return result[0];
   },
 
-  getProductCustomerBehaviorShop: async (shopID, category) => {
+  getProductCustomerBehaviorShopReal: async (shopID, category) => {
     const result = await pool.query(
       `SELECT * FROM Product
        WHERE ShopID = ? and Category = ?
@@ -507,7 +507,14 @@ const Products = {
     return result;
   },
 
-  
-  
+  getProductID : async (img) => {
+    const result = await pool.query(
+      `SELECT ProductID
+       FROM Product
+       WHERE ProductImg = ?`,
+      [img]
+    );
+    return result;
+  },
 };
 module.exports = Products;

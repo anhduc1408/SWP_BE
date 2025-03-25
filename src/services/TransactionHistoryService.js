@@ -2,6 +2,8 @@ const TransactionHistoryModels = require("../models/TransactionHistoryModel");
 const Bills = require("../models/BillsModel");
 const Customers = require("../models/CustomerModel");
 const Order = require("../services/OrderService");
+const OrderModel = require("../models/OrderModel");
+const CustomerBehavior = require("../models/CustomerBehaviorModel");
 
 const TransactionHistory = {
   getTransactionHistory: async (customerID, typeTransactionHistory) => {
@@ -10,55 +12,60 @@ const TransactionHistory = {
     let allBillIDByCustomer =
       await TransactionHistoryModels.getBillIDByCustomerID(customerID);
 
-    const result = await Promise.all(
-      allBillIDByCustomer.map(async (item) => {
-        const paymentBills = await Bills.getAllBillByBillID(
-          item.bill_id,
-          typeTransactionHistory
-        );
+    if (typeTransactionHistory !== "Order") {
+      const result = await Promise.all(
+        allBillIDByCustomer.map(async (item) => {
+          const paymentBills = await Bills.getAllBillByBillID(
+            item.bill_id,
+            typeTransactionHistory
+          );
 
+          // Kiểm tra paymentBills có phải là mảng không và có ít nhất một phần tử
+          if (!Array.isArray(paymentBills) || paymentBills.length === 0) {
+            return []; // Nếu không có dữ liệu, trả về mảng rỗng
+          }
 
-        // Kiểm tra paymentBills có phải là mảng không và có ít nhất một phần tử
-        if (Array.isArray(paymentBills) && paymentBills.length > 0) {
           const inforPaymentBillID =
             await TransactionHistoryModels.getInforPaymentBillID(item.bill_id);
-            
 
           // Kiểm tra inforPaymentBillID có phải là mảng không và có ít nhất một phần tử
           if (
-            Array.isArray(inforPaymentBillID) &&
-            inforPaymentBillID.length > 0
+            !Array.isArray(inforPaymentBillID) ||
+            inforPaymentBillID.length === 0
           ) {
-            return paymentBills.map((paymentBills) => {
-              return inforPaymentBillID.map((inforPaymentBillID) => ({
-                payment_id: inforPaymentBillID.payment_id,
-                bill_id: inforPaymentBillID.bill_id,
-                customer_id: inforPaymentBillID.customer_id,
-                payment_amount: inforPaymentBillID.payment_amount,
-                payment_date: inforPaymentBillID.payment_date,
-                payment_method: inforPaymentBillID.payment_method,
-                status: inforPaymentBillID.status,
-                img: inforPaymentBillID.img,
-                bill_type: paymentBills.bill_type,
-                thang_nam: paymentBills.thang_nam,
-                created_at: paymentBills.created_at,
-                end_date: paymentBills.end_date,
-                updated_at: paymentBills.updated_at,
-              }));
-            });
-          } else {
-            return [];
+            return []; // Nếu không có dữ liệu, trả về mảng rỗng
           }
-        } else {
-          return [];
-        }
-      })
-    );
+
+          // Trả về một mảng phẳng từ hai mảng
+          return inforPaymentBillID.flatMap((paymentInfo) =>
+            paymentBills.map((billInfo) => ({
+              payment_id: paymentInfo.payment_id,
+              bill_id: paymentInfo.bill_id,
+              customer_id: paymentInfo.customer_id,
+              payment_amount: paymentInfo.payment_amount,
+              payment_date: paymentInfo.payment_date,
+              payment_method: paymentInfo.payment_method,
+              status: paymentInfo.status,
+              img: paymentInfo.img,
+              bill_type: billInfo.bill_type,
+              thang_nam: billInfo.thang_nam,
+              created_at: billInfo.created_at,
+              end_date: billInfo.end_date,
+              updated_at: billInfo.updated_at,
+            }))
+          );
+        })
+      );
+      // Dùng flat() để đảm bảo kết quả không chứa mảng lồng nhau
+      return result.flat(Infinity);
+    }
 
     const result2 = await Promise.all(
       allOrderIdByCustomer.map(async (item) => {
-        const paymentOrderID = await Order.getOrderDetailByOrderID(item.order_id);
-
+        const paymentOrderID = await Order.getOrderDetailByOrderID(
+          item.order_id
+        );
+        
         // Kiểm tra paymentOrderID có phải là mảng không và có ít nhất một phần tử
         if (Array.isArray(paymentOrderID) && paymentOrderID.length > 0) {
           const inforPaymentOrderID =
@@ -71,41 +78,67 @@ const TransactionHistory = {
             Array.isArray(inforPaymentOrderID) &&
             inforPaymentOrderID.length > 0
           ) {
-            return paymentOrderID.map((paymentOrderID) => {
-              return inforPaymentOrderID.map((inforPaymentOrderID) => ({
-                payment_id: inforPaymentOrderID.payment_id,
-                order_id: inforPaymentOrderID.order_id,
-                customer_id: inforPaymentOrderID.customer_id,
-                payment_amount: inforPaymentOrderID.payment_amount,
-                payment_date: inforPaymentOrderID.payment_date,
-                payment_method: inforPaymentOrderID.payment_method,
-                status: inforPaymentOrderID.status,
-                img: inforPaymentOrderID.img,
-                discount: paymentOrderID.discount,
-                TotalAmount: paymentOrderID.TotalAmount,
-                VoucherID: paymentOrderID.VoucherID,
-                created_at: paymentOrderID.CreateAt,
-                address: paymentOrderID.address,
-              }));
-            });
+            // Dùng flatMap để kết hợp các mảng mà không tạo các mảng con
+            return paymentOrderID.flatMap((paymentOrder) =>
+              inforPaymentOrderID.map((paymentInfo) => ({
+                payment_id: paymentInfo.payment_id,
+                order_id: paymentInfo.order_id,
+                customer_id: paymentInfo.customer_id,
+                payment_amountOrder: paymentInfo.payment_amount,
+                payment_date: paymentInfo.payment_date,
+                payment_method: paymentInfo.payment_method,
+                status: paymentInfo.status,
+                img: paymentOrder.productImg,
+                TotalAmount: paymentOrder.TotalAmount,
+                VoucherID: paymentOrder.VoucherID,
+                address: paymentOrder.address,
+              }))
+            );
           } else {
-            return [];
+            return []; // Trả về mảng rỗng nếu không có thông tin inforPaymentOrderID
           }
         } else {
-          return [];
+          return []; // Trả về mảng rỗng nếu không có paymentOrderID
         }
       })
     );
 
-    return [...result.flat(), ...result2.flat()];
+    return result2.flat(Infinity);
   },
 
   addBillPayment: async (inforFullUser, item) => {
     const result1 = Customers.addCoinCustomer(inforFullUser, item);
-    const result2 = TransactionHistoryModels.addPaymentBill(inforFullUser, item);
+    const result2 = TransactionHistoryModels.addPaymentBill(
+      inforFullUser,
+      item
+    );
     const result3 = Bills.updateStatusBills(item.bill_id, item.bill_type);
     return { result1, result2, result3 };
   },
+
+  addOrderPayment: async (OrderInfor, address, voucherChoose, cusID, totalPayment, OrderDetailID) => {
+    const results = [];  // Mảng để lưu kết quả cho từng sản phẩm
+
+    const OrderID = await OrderModel.getOrderByOrderDetailID(OrderDetailID);
+
+    // Duyệt qua từng sản phẩm trong OrderInfor
+    for (let item of OrderInfor) {
+        const productID = item.productID;
+        const category = item.category;
+        const type = "purchase";
+        const shopID = item.shopID;
+
+        // Gọi các hàm để xử lý mỗi sản phẩm
+        const result1 = await CustomerBehavior.addCustomerBehavior(cusID, productID, category, type, shopID);
+        const result2 = await TransactionHistoryModels.addOrder(item, totalPayment, cusID, OrderID); // Thực hiện với item hiện tại
+
+        // Lưu kết quả cho mỗi sản phẩm
+        results.push({ result1, result2});
+    }
+
+    return results;  // Trả về kết quả của tất cả các sản phẩm
+}
+
 };
 
 module.exports = TransactionHistory;
