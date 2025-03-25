@@ -13,7 +13,10 @@ const Blog = {
     },
 
     getBlogById: async (blogID) => {
-        const result = await pool.query('SELECT * FROM Blog WHERE BlogID = ?', [blogID]);
+        const result = await pool.query(
+            `SELECT b.*, c.FirstName, c.LastName FROM Blog b JOIN Customer c 
+                ON b.CustomerID = c.CustomerID WHERE b.BlogID = ?`,
+        [blogID]);
 
         if (result[0].length === 0) {
             return { error: "Blog not found" };
