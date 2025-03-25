@@ -130,7 +130,6 @@ app.use("/uploads", express.static("src/uploads"));
 app.use("/api/loyalty", LoyaltyRouter);
 
 
-
 // Khởi động server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

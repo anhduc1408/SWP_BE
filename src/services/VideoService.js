@@ -1,11 +1,18 @@
 const VideoModel = require('../models/VideoModel');
 const Customer = require('./customerService')
+const ShopModel = require('../models/ShopModel')
 const video = {
     getVideoByID: async (videoID,cusID) => {
         const video = await VideoModel.getVideoByID(videoID,cusID);
         const category = video[0].Category;
         const listVideo = await VideoModel.getVideoList(category,videoID,cusID);
-        const result = [video, listVideo];
+        const li = listVideo.map((item)=> item.ShopID)
+        const ShopList = await ShopModel.getShopListByID(video[0],li);
+        const video1 = {...video[0],ShopName:ShopList[0].ShopName,ShopAvatar:ShopList[0].ShopAvatar};
+        const listVideo1 = listVideo.map((item,index)=>{
+            return{...item,ShopName:ShopList[index +1].ShopName,ShopAvatar:ShopList[index + 1].ShopAvatar}
+        })
+        const result = [video1, ...listVideo1];
         return result;
     },
     likeVideo: async (videoID, addLike, addDisLike,cusID) => {

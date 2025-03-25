@@ -1,7 +1,7 @@
 const express = require('express');
 const VideoRouter = express.Router();
 const VideoController = require('../controllers/VideoController');
-const upload = require("../config/upload");
+const {upload} = require("../config/upload");
 
 VideoRouter.post('/getVideoByID', VideoController.getVideoByID);
 VideoRouter.post('/likeVideo', VideoController.likeVideo);
