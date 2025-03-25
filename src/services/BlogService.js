@@ -9,6 +9,10 @@ const Blog = {
         return await BlogModel.getBlogById(BlogID)
     },
 
+    getBlogByCustomer: async (customerID) => {
+        return await BlogModel.getBlogByCustomer(customerID)
+    },
+
     createBlog: async (data, sections, images) => {
         return await BlogModel.createBlog(data, sections, images)
     },
@@ -19,7 +23,11 @@ const Blog = {
 
     deleteBlog: async (blogID) => {
         return await BlogModel.deleteBlog(blogID)
-    }
+    },
+
+    likeBlog: async (blogID, action) => {
+        return await BlogModel.likeBlog(blogID, action)
+    },
 }
 
 module.exports = Blog
