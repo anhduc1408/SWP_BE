@@ -1,5 +1,10 @@
 const pool = require("../config/Database");
 const Products = {
+  decreament: async(OrderInfor)=>{
+    OrderInfor.map((item)=>{
+      pool.query('update Product   p set StockQuantity = p.StockQuantity - ?  where productID = ?' ,[item.Quantity,item.productID])
+    })
+  },
   getProductByShopID:async(ShopID)=>{
     const result = await pool.query('select * from Product where ShopID = ? order by Popularity limit 5',[ShopID]);
     return result[0];
