@@ -16,7 +16,7 @@ const Blog = {
         const result = await pool.query(
             `SELECT b.*, c.FirstName, c.LastName FROM Blog b JOIN Customer c 
                 ON b.CustomerID = c.CustomerID WHERE b.BlogID = ?`,
-        [blogID]);
+            [blogID]);
 
         if (result[0].length === 0) {
             return { error: "Blog not found" };
@@ -32,6 +32,11 @@ const Blog = {
             `SELECT * FROM Blogimages WHERE BlogID = ? ORDER BY SortOrder`, [blogID]
         );
         blog.Images = imagesResult[0];
+
+        const [likeResult] = await pool.query(
+            `SELECT COUNT(*) AS likeCount FROM BlogLikes WHERE BlogID = ?`, [blogID]
+        );
+        blog.Likes = likeResult[0].likeCount;
 
         console.log("Dữ liệu trả về từ API:", blog);
 
@@ -120,19 +125,40 @@ const Blog = {
         await pool.query(`DELETE FROM Blog WHERE BlogID = ?`, [blogID]);
     },
 
-    likeBlog: async (blogID, action) => {
-        const [rows] = await pool.query(`SELECT Likes FROM Blog WHERE BlogID = ?`, [blogID]);
+    likeBlog: async (blogID, action, customerID) => {
+        const [rows] = await pool.query(`SELECT * FROM Blog WHERE BlogID = ?`, [blogID]);
         const currentLikes = rows[0]?.Likes || 0;
 
         if (action === "unlike" && currentLikes <= 0) {
             throw new Error("Likes cannot be less than 0");
         }
 
-        const [result] = await pool.query(
-            `UPDATE Blog SET Likes = Likes ${action === "like" ? "+" : "-"} 1 WHERE BlogID = ?`,
-            [blogID]
-        );
-        return result;
+        if (action === "like") {
+            const [check] = await pool.query(`
+                SELECT * FROM BlogLikes WHERE BlogID = ? AND CustomerID = ?`, [blogID, customerID]);
+
+            if (check.length === 0) {
+                await pool.query(`INSERT IGNORE INTO BlogLikes (BlogID, CustomerID) VALUES (?, ?)`,
+                    [blogID, customerID]);
+
+                await pool.query(`UPDATE Blog SET Likes = Likes + 1 WHERE BlogID = ?`, [blogID]);
+            }
+        } else if (action === "unlike") {
+            const [check] = await pool.query(`
+                SELECT * FROM BlogLikes WHERE BlogID = ? AND CustomerID = ?`, [blogID, customerID]);
+
+            if (check.length > 0) {
+                await pool.query(`DELETE FROM BlogLikes WHERE BlogID = ? AND CustomerID = ?`,
+                    [blogID, customerID]);
+                await pool.query(`UPDATE Blog SET Likes = Likes - 1 WHERE BlogID = ? AND Likes > 0`, [blogID]);
+            }
+        }
+    },
+
+    checkLikedBlog: async (blogID, customerID) => {
+        const [rows] = await pool.query(`
+            SELECT * FROM BlogLikes WHERE BlogID = ? AND CustomerID = ?`, [blogID, customerID]);
+        return rows.length > 0;
     }
 };
 

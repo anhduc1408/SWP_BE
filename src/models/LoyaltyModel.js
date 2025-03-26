@@ -4,7 +4,7 @@ const LoyaltyModel = {
     getCustomerById: async (customerId) => {
         const [rows] = await pool.query(
             `SELECT CustomerID, FirstName, LastName, Email 
-             FROM G5_Customer.Customer WHERE CustomerID = ?`,
+             FROM Customer WHERE CustomerID = ?`,
             [customerId]
         );
         return rows[0] || null;
@@ -14,7 +14,7 @@ const LoyaltyModel = {
         const [rows] = await pool.query(
             `SELECT COUNT(*) AS totalOrders, 
                     COALESCE(SUM(TotalAmount), 0) AS totalSpent 
-             FROM G5_Customer.Orders WHERE CustomerID = ?`,
+             FROM Orders WHERE CustomerID = ?`,
             [customerId]
         );
         return rows[0] || { totalOrders: 0, totalSpent: 0 };

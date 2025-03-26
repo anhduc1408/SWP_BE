@@ -54,6 +54,7 @@ const Video ={
             const {videoID,selectedValue,textReport} = req.body;
             console.log(file)
             await VideoService.addReport(videoID,selectedValue,file,textReport);
+            res.status(200)
         } catch (error) {
             console.log(error)
         }

@@ -39,21 +39,21 @@ const Orders = {
       : 0;
     const addressT = `${address.houseAddress} ${address.area}`;
 
-    // Lấy thời gian hiện tại và định dạng theo mẫu "HH:MM:SS dd/mm/yyyy"
-
+    // Lấy thời gian hiện tại và định dạng theo mẫu "HH:MM:SS dd/mm/yyyy"  YYYY-MM-DD HH:MM:SS
     // Hòa thêm vào, KO Xóa nhé
     const now = new Date();
-    const formattedDate = now
-      .toLocaleString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
-      .replace(",", "");
-
+    const pad = (num) => num.toString().padStart(2, "0");
+    
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1); // Tháng bắt đầu từ 0 nên cần +1
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+    
+    const mysqlDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    
+    
     const result = await pool.query(
       "insert into Orders(CustomerID,TotalAmount,VoucherID,discount,address) values(?,?,?,?,?)",
       [cusID, totalPayment, voucherAllID, voucherAllDis, addressT]
@@ -63,7 +63,7 @@ const Orders = {
       const voucherID = voucher[index].voucher
         ? voucher[index].voucher.VoucherID
         : null;
-      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,'${formattedDate}',${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip}, 'unread')`;
+      return `(null, ${result[0].insertId}, ${item.productID},${item.Quantity},${voucherID},null,'${mysqlDateTime}',${item.distance},"Vận chuyển",${voucher[index].Discount},${item.feeShip}, 'unread')`;
     });
     query += values.join(",");
     await pool.query(query);

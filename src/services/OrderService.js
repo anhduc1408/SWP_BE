@@ -15,9 +15,10 @@ const OrderServices = {
     addOrder:async (address,OrderInfor,voucher,totalPayment,cusID)=>{
         const OrderID = await Orders.addOrder(address,cusID,totalPayment,OrderInfor,voucher);
         if(OrderInfor[0].CartDetailID){
-            console.log("Order: ", OrderInfor);
             await Cart.removeCartDetail(OrderInfor)
         }
+        console.log(OrderInfor)
+        await Product.decreament(OrderInfor);
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
         }
@@ -43,6 +44,7 @@ const OrderServices = {
                 orderID : item.OrderID,
                 orderDetailID:item.OrderDetailID,
                 productID : item.ProductID,
+                stockQuantity:query[0].StockQuantity,
                 productCategory:query[0].Category,
                 status:item.Status,
                 productImg: query[0].ProductImg,

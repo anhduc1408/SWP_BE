@@ -139,15 +139,28 @@ const Blog = {
     likeBlog: async (req, res) => {
         try {
             const { blogID } = req.params;
-            const { action } = req.body;
+            const { action, customerID } = req.body;
 
-            await BlogService.likeBlog(blogID, action);
-            return res.status(200).json({ message: `Đã ${action === "like" ? "thích" : "bỏ thích"}` });
+            await BlogService.likeBlog(blogID, action, customerID);
+            return res.status(200).json({ message: `Đã ${action === "like" ? "Thích" : "Bỏ thích"}` });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Có lỗi rồi!" });
         }
-    }
+    },
+
+    checkLikedBlog: async (req, res) => {
+        try {
+            const { blogID } = req.params;
+            const { customerID } = req.query;
+
+            const isliked = await BlogService.checkLikedBlog(blogID, customerID);
+            res.json({ isliked });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Có lỗi rồi!" });
+        }
+    },
 }
 
 module.exports = Blog
