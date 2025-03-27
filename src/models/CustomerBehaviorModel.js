@@ -3,9 +3,24 @@ const pool = require("../config/Database");
 const CustomerBehaviorModel = {
   addCustomerBehavior: async (cusID, productID, category, type, shopID) => {
     if (cusID) {
+
+      const payment_date = new Date();
+      const options = {
+        timeZone: "Asia/Ho_Chi_Minh",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      };
+      const formatted_date = new Intl.DateTimeFormat("en-GB", options).format(payment_date).replace(",", "");
+      const formatted_result = formatted_date.replace(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/, "$3-$2-$1 $4:$5:$6");  
+
       const query = `
       INSERT INTO CustomerBehavior (customer_id, product_id, category, action_type, created_at, shop_ID) 
-      VALUES (?, ?, ?, ?, NOW(), ?)
+      VALUES (?, ?, ?, ?, '${formatted_result}', ?)
   `;
 
       const result = await pool.query(query, [

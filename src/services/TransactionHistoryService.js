@@ -4,6 +4,7 @@ const Customers = require("../models/CustomerModel");
 const Order = require("../services/OrderService");
 const OrderModel = require("../models/OrderModel");
 const CustomerBehavior = require("../models/CustomerBehaviorModel");
+const productModel = require("../models/ProductModel");
 
 const TransactionHistory = {
   getTransactionHistory: async (customerID, typeTransactionHistory) => {
@@ -124,16 +125,20 @@ const TransactionHistory = {
     // Duyệt qua từng sản phẩm trong OrderInfor
     for (let item of OrderInfor) {
         const productID = item.productID;
-        const category = item.category;
+        const category = item.productCategory;
+        const Quantity = item.Quantity;
         const type = "purchase";
-        const shopID = item.shopID;
+        const shopID = (await productModel.getProductShopID(productID))[0].ShopID;
+
+        console.log("gdjskkskkd: ", item);
+        console.log("shopID: ", shopID);
 
         // Gọi các hàm để xử lý mỗi sản phẩm
         const result1 = await CustomerBehavior.addCustomerBehavior(cusID, productID, category, type, shopID);
         const result2 = await TransactionHistoryModels.addOrder(item, totalPayment, cusID, OrderID); // Thực hiện với item hiện tại
-
+        const result3 = await productModel.updateProductStockQuantity(productID, Quantity);
         // Lưu kết quả cho mỗi sản phẩm
-        results.push({ result1, result2});
+        results.push({ result1, result2, result3});
     }
 
     return results;  // Trả về kết quả của tất cả các sản phẩm
