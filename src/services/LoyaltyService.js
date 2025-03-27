@@ -10,14 +10,23 @@ const determineLoyaltyTier = (totalOrders, totalSpent) => {
 const LoyaltyService = {
     getLoyaltyDetails: async (customerId) => {
         const customer = await LoyaltyModel.getCustomerById(customerId);
-        if (!customer) {
-            throw new Error("Khách hàng không tồn tại");
-        }
+        if (!customer) throw new Error("Khách hàng không tồn tại");
 
         const { totalOrders, totalSpent } = await LoyaltyModel.getOrderStatsByCustomerId(customerId);
-        const currentTier = determineLoyaltyTier(totalOrders, totalSpent);
+        const tierThresholds = await LoyaltyModel.getTierThresholds();
 
-        // Lấy danh sách phần thưởng theo hạng
+        // Hàm xác định tier hiện tại dựa trên data từ DB
+        const determineTier = () => {
+            const sortedTiers = tierThresholds.sort((a, b) => b.required_orders - a.required_orders);
+            for (const tier of sortedTiers) {
+                if (totalOrders >= tier.required_orders || totalSpent >= tier.required_spent) {
+                    return tier.tier;
+                }
+            }
+            return "Bronze";
+        };
+
+        const currentTier = determineTier();
         const rewards = await LoyaltyModel.getRewardsByTier(currentTier);
 
         return {
@@ -26,9 +35,12 @@ const LoyaltyService = {
             totalOrders,
             totalSpent,
             currentTier,
-            rewards
+            rewards,
+            tierThresholds // gửi về frontend
         };
     }
+
 };
+
 
 module.exports = LoyaltyService;
