@@ -52,12 +52,12 @@ const Blog = {
     },
 
     createBlog: async (data, sections, images) => {
-        const { Title, Slug, ShortDescription, CategoryID, CustomerID, Image } = data;
+        const { Title, ShortDescription, CategoryID, CustomerID, Image } = data;
 
         const result = await pool.query(
-            `INSERT INTO Blog (Title, Slug, ShortDescription, CategoryID, CustomerID, Image, CreatedAt, UpdatedAt, Views, Likes)
-            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), 0, 0)`,
-            [Title, Slug, ShortDescription, CategoryID, CustomerID, Image || ""]
+            `INSERT INTO Blog (Title, ShortDescription, CategoryID, CustomerID, Image, CreatedAt, UpdatedAt, Views, Likes)
+            VALUES (?, ?, ?, ?, ?, NOW(), NOW(), 0, 0)`,
+            [Title, ShortDescription, CategoryID, CustomerID, Image || ""]
         );
 
         const BlogID = result[0].insertId;
@@ -88,11 +88,11 @@ const Blog = {
     },
 
     updateBlog: async (BlogID, data, sections, images) => {
-        const { Title, Slug, ShortDescription, CategoryID, Image } = data;
+        const { Title, ShortDescription, CategoryID, Image } = data;
 
         await pool.query(
-            `UPDATE Blog SET Title = ?, Slug = ?, ShortDescription = ?, CategoryID = ?, Image = ?, UpdatedAt = NOW() WHERE BlogID = ?`,
-            [Title, Slug, ShortDescription, CategoryID, Image, BlogID]
+            `UPDATE Blog SET Title = ?, ShortDescription = ?, CategoryID = ?, Image = ?, UpdatedAt = NOW() WHERE BlogID = ?`,
+            [Title, ShortDescription, CategoryID, Image, BlogID]
         );
 
         if (sections && sections.length > 0) {
