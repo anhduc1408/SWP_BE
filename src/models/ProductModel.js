@@ -235,6 +235,37 @@ const Products = {
     return result;
   },
 
+  getProductCategory: async (ProductID) => {
+    const result = await pool.query(
+      "SELECT Category Product WHERE ProductID = ?",
+      [ProductID]
+    );
+
+    return result;
+  },
+
+  updateProductStockQuantity: async (ProductID, Quantity) => {
+    const result = await pool.query(
+      "UPDATE Product SET StockQuantity = StockQuantity - ? WHERE ProductID = ?;",
+      [Quantity, ProductID]
+    );
+  
+    return result;
+  },
+
+  getProductShopID: async (ProductID) => {
+    const result = await pool.query(
+      "SELECT ShopID FROM Product WHERE ProductID = ?",
+      [ProductID]
+    );
+    if (result.length > 0) {
+      return result[0];  // Trả về giá trị ShopID
+    } else {
+      console.log("No product found with the given ProductID");
+      return null;  // Trả về null nếu không có kết quả
+    }
+  },
+
   getProductDetail: async (ProductID) => {
     const result = await pool.query(
       "SELECT * FROM Product p JOIN Shop s ON s.ShopID = p.ShopID WHERE ProductID = ? ",

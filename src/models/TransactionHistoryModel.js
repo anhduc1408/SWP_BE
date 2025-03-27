@@ -10,11 +10,26 @@ const TransactionHistoryModels = {
   },
 
   addPaymentBill: async (inforFullUser, item) => {
-    console.log(222);
-    const payment_date = new Date()
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
+    const payment_date = new Date();
+    const options = {
+      timeZone: "Asia/Ho_Chi_Minh",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+    const formatted_date = new Intl.DateTimeFormat("en-GB", options)
+      .format(payment_date)
+      .replace(",", "");
+    const formatted_result = formatted_date.replace(
+      /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/,
+      "$3-$2-$1 $4:$5:$6"
+    );
+
+    console.log("Giowf giowf: ", formatted_date);
     const status = "Thành công";
 
     let result;
@@ -26,7 +41,7 @@ const TransactionHistoryModels = {
           item.bill_id,
           item.customer_id,
           item.bill_amount,
-          payment_date,
+          formatted_result,
           "Quét Mã QR",
           status,
           null,
@@ -40,7 +55,7 @@ const TransactionHistoryModels = {
           item.bill_id,
           item.customer_id,
           item.bill_amount,
-          payment_date,
+          formatted_result,
           "Quét Mã QR",
           status,
           null,
@@ -54,7 +69,7 @@ const TransactionHistoryModels = {
           item.bill_id,
           item.customer_id,
           item.bill_amount,
-          payment_date,
+          formatted_result,
           "Quét Mã QR",
           status,
           null,
@@ -91,14 +106,27 @@ const TransactionHistoryModels = {
   },
 
   addOrder: async (OrderInfor, totalPayment, cusID, OrderID) => {
-    const payment_date = new Date()
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
+    const payment_date = new Date();
+    const options = {
+      timeZone: "Asia/Ho_Chi_Minh",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+    const formatted_date = new Intl.DateTimeFormat("en-GB", options)
+      .format(payment_date)
+      .replace(",", "");
+    const formatted_result = formatted_date.replace(
+      /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/,
+      "$3-$2-$1 $4:$5:$6"
+    );
     const status = "Thành công";
 
     console.log("OrderID: ", OrderID[0].OrderID);
-
     // Lặp qua từng phần tử trong mảng OrderInfor
     const result = await pool.query(
       "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -106,7 +134,7 @@ const TransactionHistoryModels = {
         null,
         cusID,
         totalPayment,
-        payment_date,
+        formatted_result,
         "Quét Mã QR",
         status,
         OrderID[0].OrderID,
