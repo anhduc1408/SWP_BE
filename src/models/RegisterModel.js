@@ -16,13 +16,13 @@ const Register = {
         } = body;
 
         try {
-            const [existingCustomer] = await pool.query("SELECT * FROM customer WHERE Email = ?", [Email]);
+            const [existingCustomer] = await pool.query("SELECT * FROM Customer WHERE Email = ?", [Email]);
             if (existingCustomer.length > 0) {
                 return { success: false, message: "Email đã tồn tại!" };
             }
 
             const sql = `
-                INSERT INTO customer
+                INSERT INTO Customer
                 (FirstName, LastName, Email, password, DateOfBirth, BankAccountNumber, PhoneNumber, Gender, Avatar, Xu) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
