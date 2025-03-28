@@ -1,7 +1,6 @@
 const express = require('express');
 const BlogController = require('../controllers/BlogController');
 const { uploadBlogImage } = require('../config/upload');
-const authenticateUser = require('../middlewares/authenticateUser');
 
 const router = express.Router();
 
@@ -19,7 +18,7 @@ router.put('/:blogID',
         { name: 'coverImage', maxCount: 1 }, 
         { name: 'images', maxCount: 20 }
     ]),
-    authenticateUser, BlogController.updateBlog);
+    BlogController.updateBlog);
 router.delete('/:blogID', BlogController.deleteBlog);
 router.post('/:blogID/like', BlogController.likeBlog);
 router.get('/:blogID/isLiked', BlogController.checkLikedBlog);
