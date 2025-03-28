@@ -35,7 +35,7 @@ const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
 const CommentRouter = require('./src/routers/CommentRouter');
 const ChatRoutes = require('./src/routers/ChatRouter');
 const PolicyRouter = require('./src/routers/PolicyRouter');
-
+const RegisterRouter = require('./src/routers/RegisterRouter');
 
 const LoyaltyHistoryRouter = require("./src/routers/loyaltyHistoryRoutes");
 const AffiliateTrackingRouter = require("./src/routers/AffiliateTrackingRouter");
@@ -43,6 +43,7 @@ const AffiliateTrackingRouter = require("./src/routers/AffiliateTrackingRouter")
 
 const Shop = require("./src/routers/ShopRouter")
 const VideoRouter = require("./src/routers/VideoRouter")
+
 
 const app = express();
 const port = 3001;
@@ -121,7 +122,7 @@ app.use('/api/Payments', TransactionHistoryRouter);
 app.use('/api/PayBills', PayBillsRouter);
 app.use('/api/chat', ChatRoutes);
 app.use('/api/policy', PolicyRouter);
-
+app.use('/api/register',RegisterRouter);
 
 app.use("/api/loyalty-history", LoyaltyHistoryRouter);
 app.use("/api/affiliate", AffiliateTrackingRouter);
