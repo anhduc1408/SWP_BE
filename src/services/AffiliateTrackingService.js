@@ -1,33 +1,75 @@
 const AffiliateTrackingModel = require("../models/AffiliateTrackingModel");
 
 const AffiliateTrackingService = {
-    // Lấy dữ liệu tiếp thị theo CustomerID
+    // Lấy thống kê tiếp thị (CustomCode, Clicks, xu)
     getAffiliateStats: async (customerId) => {
-        return await AffiliateTrackingModel.getAffiliateStatsByCustomer(customerId);
+        const trackingData = await AffiliateTrackingModel.getAffiliateTrackingByCustomer(customerId);
+        const xu = await AffiliateTrackingModel.getCustomerXuById(customerId);
+
+        return trackingData.map(data => ({
+            CustomCode: data.CustomCode,
+            Clicks: data.Clicks,
+            xu
+        }));
     },
 
-    // Lấy lịch sử tiếp thị theo CustomerID
+    // Lấy lịch sử tiếp thị đầy đủ thông tin khách hàng
     getAffiliateHistory: async (customerId) => {
-        return await AffiliateTrackingModel.getAffiliateHistory(customerId);
+        const historyData = await AffiliateTrackingModel.getAffiliateHistoryByReferrerId(customerId);
+
+        // Lấy tên khách hàng được giới thiệu (map async)
+        const historyWithNames = await Promise.all(
+            historyData.map(async item => {
+                const customer = await AffiliateTrackingModel.getCustomerById(item.ReferredUserID);
+                return {
+                    FirstName: customer?.FirstName || 'Unknown',
+                    LastName: customer?.LastName || '',
+                    CustomCode: item.CustomCode,
+                    CreatedAt: item.CreatedAt
+                };
+            })
+        );
+
+        return historyWithNames;
     },
 
     // Xử lý nhập mã tiếp thị
     trackAffiliateClick: async (customCode, referredUserId) => {
-        const referrerId = await AffiliateTrackingModel.getReferrerByCode(customCode);
-        if (!referrerId) {
-            console.error("❌ Mã tiếp thị không hợp lệ:", customCode);
-            return null;
+        // Check mã tồn tại
+        const tracking = await AffiliateTrackingModel.getAffiliateTrackingByCode(customCode);
+        if (!tracking) {
+            throw new Error("Mã tiếp thị không tồn tại.");
         }
 
-        // Cập nhật lượt click và xu cho người giới thiệu
-        await AffiliateTrackingModel.increaseClickCount(customCode);
-        await AffiliateTrackingModel.addRewardsToReferrer(referrerId, 100);
-        await AffiliateTrackingModel.saveAffiliateHistory(customCode, referredUserId);
+        const referrerId = tracking.ReferrerID;
 
-        // Lấy tên người giới thiệu
-        const referrerName = await AffiliateTrackingModel.getCustomerNameById(referrerId);
-        return { referrerName, amount: 100 };
-    }
+        // Kiểm tra không cho phép dùng mã của chính mình
+        const isOwnCode = await AffiliateTrackingModel.isOwnAffiliateCode(referredUserId, customCode);
+        if (isOwnCode) {
+            throw new Error("Bạn không thể nhập mã tiếp thị của chính mình.");
+        }
+
+        // Kiểm tra mã đã nhập trước đây chưa
+        const alreadyUsed = await AffiliateTrackingModel.checkCodeAlreadyUsedByCustomer(referredUserId, customCode);
+        if (alreadyUsed) {
+            throw new Error("Bạn đã nhập mã này trước đó rồi.");
+        }
+
+        // Xử lý cộng xu và tăng lượt click
+        await AffiliateTrackingModel.increaseClickCount(customCode);
+        const rewardAmount = 100; // có thể điều chỉnh linh động nếu cần
+        await AffiliateTrackingModel.addXuToCustomer(referrerId, rewardAmount);
+        await AffiliateTrackingModel.addAffiliateHistory(referredUserId, customCode);
+
+        // Lưu lịch sử nhập mã
+        await AffiliateTrackingModel.saveCodeUsage(referredUserId, customCode);
+
+        const referrer = await AffiliateTrackingModel.getCustomerById(referrerId);
+        const referrerName = referrer ? `${referrer.FirstName} ${referrer.LastName}` : "Unknown";
+
+        return { referrerName, amount: rewardAmount };
+    },
+
 };
 
 module.exports = AffiliateTrackingService;

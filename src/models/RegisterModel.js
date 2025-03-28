@@ -11,8 +11,8 @@ const Register = {
             BankAccountNumber,
             PhoneNumber,
             Gender,
-            Avatar = null,  // Giá trị mặc định là null
-            Xu = 0          // Giá trị mặc định là 0
+            Avatar = null,  
+            Xu = 0          
         } = body;
 
         try {

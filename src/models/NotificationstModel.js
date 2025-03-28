@@ -49,7 +49,7 @@ const Notifications = {
     n.customer_id,
     o.OrderID,
     od.Status,
-    od.DeliveryTime,
+    o.CreateAt,
     p.ProductImg,
     p.Category,
     o.TotalAmount,
@@ -61,7 +61,7 @@ LEFT JOIN Orders o ON o.OrderID = n.order_id
 LEFT JOIN OrderDetail od ON o.OrderID = od.OrderID
 LEFT JOIN Product p ON od.ProductID = p.ProductID
 WHERE n.customer_id = 2
-ORDER BY od.DeliveryTime DESC, o.OrderID DESC
+ORDER BY o.CreateAt DESC, o.OrderID DESC
 LIMIT 10;
 `,
           [customerID]

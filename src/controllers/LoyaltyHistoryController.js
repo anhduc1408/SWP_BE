@@ -9,8 +9,6 @@ const LoyaltyHistoryController = {
                 return res.status(400).json({ message: "customerId không hợp lệ!" });
             }
 
-            console.log(`📌 Nhận request lấy lịch sử loyalty của customerId: ${customerId}`);
-
             const history = await LoyaltyHistoryService.getLoyaltyHistory(customerId);
 
             if (!history || history.orderHistory.length === 0) {
@@ -19,8 +17,16 @@ const LoyaltyHistoryController = {
 
             res.json(history);
         } catch (error) {
-            console.error("❌ Lỗi khi lấy lịch sử loyalty:", error);
-            res.status(500).json({ message: "Lỗi máy chủ khi lấy lịch sử loyalty." });
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getAllTiers: async (req, res) => {
+        try {
+            const tiers = await LoyaltyHistoryService.getAllLoyaltyTiers();
+            res.json(tiers);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
     }
 };

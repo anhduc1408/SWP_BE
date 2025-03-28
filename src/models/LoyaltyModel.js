@@ -26,7 +26,16 @@ const LoyaltyModel = {
             [tier]
         );
         return rows;
-    }
+    },
+    getTierThresholds: async () => {
+        const [rows] = await pool.query(`
+            SELECT * FROM LoyaltyTierThresholds
+            ORDER BY required_orders ASC
+        `);
+        return rows;
+    },
+
+
 };
 
 module.exports = LoyaltyModel;
