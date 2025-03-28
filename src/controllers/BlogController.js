@@ -85,10 +85,6 @@ const Blog = {
 
             const blog = await BlogService.getBlogById(blogID);
 
-            if (blog.CustomerID !== req.user.CustomerID) {
-                return res.status(403).json({ error: "Bạn không có quyền sửa bài blog này" });
-            }
-
             let coverImage = existingCoverImage;
             if (req.files && req.files.coverImage) {
                 try {
