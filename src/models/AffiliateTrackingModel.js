@@ -1,35 +1,54 @@
 const pool = require("../config/Database");
 
 const AffiliateTrackingModel = {
-    // Lấy dữ liệu tiếp thị theo CustomerID từ AffiliateTracking & Customer (JOIN để lấy `xu`)
-    // Lấy dữ liệu tiếp thị từ AffiliateTracking + Lấy xu từ Customer (JOIN)
-    getAffiliateStatsByCustomer: async (customerId) => {
+    // Lấy thống kê tiếp thị theo CustomerID từ AffiliateTracking
+    getAffiliateTrackingByCustomer: async (customerId) => {
         const [rows] = await pool.query(
-            `SELECT a.CustomCode, a.Clicks, c.xu 
-         FROM AffiliateTracking a
-         JOIN Customer c ON a.ReferrerID = c.CustomerID
-         WHERE a.ReferrerID = ?`,
+            `SELECT CustomCode, Clicks FROM AffiliateTracking WHERE ReferrerID = ?`,
             [customerId]
         );
-
         return rows;
+    },
+
+    // Lấy xu từ Customer
+    getCustomerXuById: async (customerId) => {
+        const [rows] = await pool.query(
+            `SELECT xu FROM Customer WHERE CustomerID = ?`,
+            [customerId]
+        );
+        return rows.length ? rows[0].xu : 0;
     },
 
     // Lấy lịch sử tiếp thị từ AffiliateHistory
-    getAffiliateHistory: async (customerId) => {
+    getAffiliateHistoryByReferrerId: async (referrerId) => {
         const [rows] = await pool.query(
-            `SELECT c.FirstName, c.LastName, h.CustomCode, h.CreatedAt
-             FROM AffiliateHistory h
-             JOIN Customer c ON h.ReferredUserID = c.CustomerID
-             JOIN AffiliateTracking a ON h.CustomCode = a.CustomCode
-             WHERE a.ReferrerID = ?
-             ORDER BY h.CreatedAt DESC`,
-            [customerId]
+            `SELECT ReferredUserID, CustomCode, CreatedAt FROM AffiliateHistory WHERE CustomCode IN (
+                SELECT CustomCode FROM AffiliateTracking WHERE ReferrerID = ?
+            ) ORDER BY CreatedAt DESC`,
+            [referrerId]
         );
         return rows;
     },
 
-    // Tăng số lượt click khi nhập mã
+    // Lấy thông tin khách hàng theo ID
+    getCustomerById: async (customerId) => {
+        const [rows] = await pool.query(
+            `SELECT FirstName, LastName FROM Customer WHERE CustomerID = ?`,
+            [customerId]
+        );
+        return rows.length ? rows[0] : null;
+    },
+
+    // Kiểm tra CustomCode tồn tại
+    getAffiliateTrackingByCode: async (customCode) => {
+        const [rows] = await pool.query(
+            `SELECT ReferrerID FROM AffiliateTracking WHERE CustomCode = ?`,
+            [customCode]
+        );
+        return rows.length ? rows[0] : null;
+    },
+
+    // Tăng số lượt click của mã giới thiệu
     increaseClickCount: async (customCode) => {
         await pool.query(
             `UPDATE AffiliateTracking SET Clicks = Clicks + 1 WHERE CustomCode = ?`,
@@ -37,39 +56,47 @@ const AffiliateTrackingModel = {
         );
     },
 
-    // Lấy ID người giới thiệu từ CustomCode
-    getReferrerByCode: async (customCode) => {
-        const [rows] = await pool.query(
-            `SELECT ReferrerID FROM AffiliateTracking WHERE CustomCode = ?`,
-            [customCode]
-        );
-        return rows.length > 0 ? rows[0].ReferrerID : null;
-    },
-
-    // Lấy tên khách hàng từ CustomerID
-    getCustomerNameById: async (customerId) => {
-        const [rows] = await pool.query(
-            `SELECT FirstName, LastName FROM Customer WHERE CustomerID = ?`,
-            [customerId]
-        );
-        return rows.length > 0 ? `${rows[0].FirstName} ${rows[0].LastName}` : "Unknown";
-    },
-
-    // Cộng xu cho người giới thiệu
-    addRewardsToReferrer: async (referrerId, amount) => {
+    // Cộng xu vào tài khoản Customer
+    addXuToCustomer: async (customerId, xu) => {
         await pool.query(
             `UPDATE Customer SET xu = xu + ? WHERE CustomerID = ?`,
-            [amount, referrerId]
+            [xu, customerId]
         );
     },
 
-    // Lưu lịch sử tiếp thị khi nhập mã
-    saveAffiliateHistory: async (customCode, referredUserId) => {
+    // Thêm lịch sử affiliate
+    addAffiliateHistory: async (referredUserId, customCode) => {
         await pool.query(
             `INSERT INTO AffiliateHistory (ReferredUserID, CustomCode) VALUES (?, ?)`,
             [referredUserId, customCode]
         );
-    }
+    },
+    // Kiểm tra mã này khách hàng đã dùng chưa
+    checkCodeAlreadyUsedByCustomer: async (customerId, customCode) => {
+        const [rows] = await pool.query(
+            `SELECT * FROM AffiliateCodeUsage WHERE customerId = ? AND customCode = ?`,
+            [customerId, customCode]
+        );
+        return rows.length > 0;
+    },
+
+    // Kiểm tra mã thuộc về khách hàng (để tránh nhập mã của chính mình)
+    isOwnAffiliateCode: async (customerId, customCode) => {
+        const [rows] = await pool.query(
+            `SELECT * FROM AffiliateTracking WHERE CustomCode = ? AND ReferrerID = ?`,
+            [customCode, customerId]
+        );
+        return rows.length > 0;
+    },
+
+    // Lưu lịch sử sử dụng mã
+    saveCodeUsage: async (customerId, customCode) => {
+        await pool.query(
+            `INSERT INTO AffiliateCodeUsage (customerId, customCode) VALUES (?, ?)`,
+            [customerId, customCode]
+        );
+    },
+
 };
 
 module.exports = AffiliateTrackingModel;
