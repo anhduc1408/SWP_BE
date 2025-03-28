@@ -58,7 +58,6 @@ const Customers = {
     },
 
     addCoinCustomer: async (inforFullUser, item) => {
-        console.log(111);
                 const addCoin = Math.ceil((item.bill_amount / 1000) * 0.1);
     
         // Cập nhật số xu của khách hàng
@@ -70,7 +69,6 @@ const Customers = {
         // Kiểm tra kết quả
         if (result.affectedRows > 0) {
             // Trả về thông tin đã cập nhật
-            console.log("success: true, message: 'Coins updated successfully!")
             return { success: true, message: 'Coins updated successfully!' };
         } else {
             // Trường hợp không tìm thấy CustomerID

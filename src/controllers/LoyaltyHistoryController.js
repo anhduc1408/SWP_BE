@@ -9,7 +9,6 @@ const LoyaltyHistoryController = {
                 return res.status(400).json({ message: "customerId không hợp lệ!" });
             }
 
-            console.log(`📌 Nhận request lấy lịch sử loyalty của customerId: ${customerId}`);
 
             const history = await LoyaltyHistoryService.getLoyaltyHistory(customerId);
 

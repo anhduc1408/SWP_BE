@@ -65,7 +65,6 @@ const OrderControllers = {
       var ipnUrl = `${process.env.MOMO_IPNURL}/api/Transaction/callback`;
       var amount = `${totalPayment}`;
       var requestType = "captureWallet";
-      console.log(amount)
       var extraData = JSON.stringify({
         OrderInfor: OrderInfor,
         address: address,
@@ -106,7 +105,6 @@ const OrderControllers = {
         data:requestBody
     }
       const result = await axios(options)
-      console.log(result.data)
       res.status(200).json({ payUrl: result.data.payUrl });
     } catch (error) {
       console.log(error);

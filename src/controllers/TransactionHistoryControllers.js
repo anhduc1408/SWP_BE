@@ -18,7 +18,6 @@ const TransactionHistory = {
   addBillPayment: async (req, res) => {
     const  inforFullUser  = JSON.parse(req.body.extraData)[0];
     const  item   = JSON.parse(req.body.extraData)[1];
-    console.log("Controller");
     await TransactionHistoryService.addBillPayment(inforFullUser, item);
   },
 };

@@ -81,7 +81,6 @@ const productServices = {
     },
 
     getProductBehaviorShop: async (customerID, shopID) => {
-        console.log("Customer: ", customerID);
         let CategoryByShopCustomerBehavior = await CustomerBehaviorModel.getCategoryByShop(customerID, shopID);
         if (CategoryByShopCustomerBehavior.length === 0) {
             const result = await Products.getProductCheapestBehaviorShop(shopID);
@@ -103,7 +102,6 @@ const productServices = {
                 }));
             })
         );    
-        // console.log("list all: ", result[0]);
         return result.flat();
     },
 

@@ -38,7 +38,6 @@ const Notifications = {
         return res.status(400).json({ message: "customerID is required" });
       }
       if (!typeNotification) {
-        console.log(typeNotification);
         return res
           .status(400)
           .json({ message: "typeNotification is required" });
@@ -165,7 +164,6 @@ WHERE OrderID = ? AND ProductID = ?;`,
     
         if (affectedRows > 0) {
           success = true;  // Nếu có dòng nào bị ảnh hưởng thì coi như thành công
-          console.log(`Thông báo với ID ${item.OrderID || item.VoucherID} đã được cập nhật thành công.`);
         } else {
           console.log(`Không có thông báo nào được cập nhật cho ID ${item.OrderID || item.VoucherID}.`);
         }
