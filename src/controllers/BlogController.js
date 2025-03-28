@@ -61,7 +61,6 @@ const Blog = {
             const blogData = {
                 Title: title,
                 CategoryID: categoryID,
-                Slug: title.toLowerCase().replace(/\s+/g, "-"),
                 ShortDescription: shortDescription,
                 CustomerID: customerID,
                 Image: coverImage || "",
@@ -79,6 +78,12 @@ const Blog = {
         try {
             const { blogID } = req.params;
             const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
+
+            const blog = await BlogService.getBlogById(blogID);
+
+            if (blog.CustomerID !== req.user.CustomerID) {
+                return res.status(403).json({ error: "Bạn không có quyền sửa bài blog này" });
+            }
 
             let coverImage = existingCoverImage;
             if (req.files && req.files.coverImage) {
@@ -107,7 +112,6 @@ const Blog = {
             const blogData = {
                 Title: title,
                 CategoryID: categoryID,
-                Slug: title.toLowerCase().replace(/\s+/g, "-"),
                 ShortDescription: shortDescription,
                 Image: coverImage || "",
             };

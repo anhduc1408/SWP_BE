@@ -10,6 +10,10 @@ const video = {
         }));
         return result;
     },
+    getVideo: async () => {
+        const [rows] = await pool.execute('SELECT * FROM Video LIMIT 4', );
+        return rows;
+    },
     getVideoList: async (category,videoID,cusID) => {
         const [rows] = await pool.execute('SELECT * FROM Video where Category = ? and VideoID != ?', [category, videoID]);
         const result = Promise.all(rows.map(async video => {

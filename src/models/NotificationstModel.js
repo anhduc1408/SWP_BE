@@ -165,7 +165,6 @@ WHERE OrderID = ? AND ProductID = ?;`,
         if (affectedRows > 0) {
           success = true;  // Nếu có dòng nào bị ảnh hưởng thì coi như thành công
         } else {
-          console.log(`Không có thông báo nào được cập nhật cho ID ${item.OrderID || item.VoucherID}.`);
         }
       }
       // Trả về thành công hay không

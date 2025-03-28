@@ -245,13 +245,32 @@ const Products = {
   },
 
   updateProductStockQuantity: async (ProductID, Quantity) => {
-    const result = await pool.query(
-      "UPDATE Product SET StockQuantity = StockQuantity - ? WHERE ProductID = ?;",
-      [Quantity, ProductID]
-    );
+    try {
+      const result = await pool.query(
+        "UPDATE Product SET SoldQuantity = SoldQuantity + ? WHERE ProductID = ?;",
+        [Quantity, ProductID]
+      );
   
-    return result;
+      if (result.affectedRows === 0) {
+        throw new Error("Product not found or update failed for SoldQuantity");
+      }
+  
+      const result2 = await pool.query(
+        "UPDATE Product SET StockQuantity = StockQuantity - ? WHERE ProductID = ?;",
+        [Quantity, ProductID]
+      );
+  
+      if (result2.affectedRows === 0) {
+        throw new Error("Product not found or update failed for StockQuantity");
+      }
+  
+      return { success: true }; // Cả hai câu truy vấn thành công
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: error.message }; // Xử lý lỗi nếu có
+    }
   },
+  
 
   getProductShopID: async (ProductID) => {
     const result = await pool.query(
@@ -261,7 +280,6 @@ const Products = {
     if (result.length > 0) {
       return result[0];  // Trả về giá trị ShopID
     } else {
-      console.log("No product found with the given ProductID");
       return null;  // Trả về null nếu không có kết quả
     }
   },

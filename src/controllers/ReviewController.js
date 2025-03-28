@@ -23,7 +23,6 @@ const review={
     getReview: async(req,res)=>{
         try {
             const rs =  await Review.getReview(req.body.form);
-            console.log(rs)
             res.status(200).json(rs)
         } catch (error) {
             console.log(error)

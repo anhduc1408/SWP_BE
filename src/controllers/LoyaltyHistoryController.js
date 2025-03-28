@@ -18,8 +18,16 @@ const LoyaltyHistoryController = {
 
             res.json(history);
         } catch (error) {
-            console.error("❌ Lỗi khi lấy lịch sử loyalty:", error);
-            res.status(500).json({ message: "Lỗi máy chủ khi lấy lịch sử loyalty." });
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getAllTiers: async (req, res) => {
+        try {
+            const tiers = await LoyaltyHistoryService.getAllLoyaltyTiers();
+            res.json(tiers);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
     }
 };

@@ -29,6 +29,15 @@ const Video ={
         }
         
     },
+    getVideo: async (req, res) => {
+        try {
+            const video = await VideoService.getVideo();
+            res.json(video);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Lỗi lấy video!" });
+        }
+    },
     getVideoByID: async (req, res) => {
         try {
             const { videoID,cusID } = req.body;
@@ -52,7 +61,6 @@ const Video ={
         try {
             const file  = req.file.path;
             const {videoID,selectedValue,textReport} = req.body;
-            console.log(file)
             await VideoService.addReport(videoID,selectedValue,file,textReport);
             res.status(200)
         } catch (error) {

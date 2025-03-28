@@ -3,7 +3,6 @@ const pool = require('../config/Database');
 const BlogCategories = {
     getBlogCategories: async () => {
         const [result] = await pool.query('SELECT * FROM BlogCategories');
-        console.log(result)
         return result;
     },
 

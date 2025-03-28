@@ -10,6 +10,13 @@ const LoyaltyHistoryModel = {
             [customerId]
         );
         return rows;
+    },
+
+    getAllLoyaltyTiers: async () => {
+        const [rows] = await pool.query(
+            `SELECT tier, required_spent as spent, icon FROM LoyaltyTierThresholds ORDER BY required_spent ASC`
+        );
+        return rows;
     }
 };
 
