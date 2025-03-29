@@ -17,7 +17,7 @@ const storage = new CloudinaryStorage({
     },
 });
 
-const storageBlogImage = new CloudinaryStorage({
+const storageBlogImage = new CloudinaryStorage({    
     cloudinary: cloudinary,
     params: {
         folder: "BlogImage", 

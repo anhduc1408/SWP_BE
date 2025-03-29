@@ -32,7 +32,7 @@ const TransactionHistoryModels = {
     const status = "Thành công";
 
     let result;
-
+    console.log(item)
     if (item.bill_type === "Điện") {
       const result = await pool.query(
         "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

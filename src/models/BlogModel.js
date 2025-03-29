@@ -115,11 +115,8 @@ const Blog = {
                 }
             }
         }
-
-
         return { BlogID };
     },
-
     deleteBlog: async (blogID) => {
         await pool.query(`DELETE FROM Blog WHERE BlogID = ?`, [blogID]);
     },

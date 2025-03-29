@@ -76,18 +76,16 @@ const Blog = {
 
     updateBlog: async (req, res) => {
         try {
+            console.log(123)
             const { blogID } = req.params;
             const { title, categoryID, shortDescription, sections, existingImages, existingCoverImage } = req.body;
-
-            const blog = await BlogService.getBlogById(blogID);
-
             let coverImage = existingCoverImage;
             if (req.files && req.files.coverImage) {
                 try {
                     const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
                     coverImage = cloudinaryResponse.secure_url;
                 } catch (error) {
-                    console.error("Error uploading cover image: ", error);
+                    console.log("Error uploading cover image: ", error);
                     return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
                 }
             }
@@ -115,7 +113,7 @@ const Blog = {
             const updatedBlog = await BlogService.updateBlog(blogID, blogData, parsedSections, allImages);
             return res.status(200).json(updatedBlog);
         } catch (error) {
-            console.error(error);
+            console.error(123,error);
             res.status(500).json({ error: "Lỗi khi cập nhật blog!" });
         }
     },
