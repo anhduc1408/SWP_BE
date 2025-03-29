@@ -15,12 +15,12 @@ const Shop = {
     try {
       const shopID = req.query.shopID;
 
-      // ✅ Kiểm tra nếu `shopID` bị thiếu
+      //  Kiểm tra nếu `shopID` bị thiếu
       if (!shopID) {
         return res.status(400).json({ error: "Thiếu shopID" });
       }
 
-      // ✅ Truy vấn dữ liệu từ MySQL
+      //  Truy vấn dữ liệu từ MySQL
       const [rows] = await pool.query(`
         SELECT s.*, 
                COUNT(p.ProductID) AS total_products
@@ -31,12 +31,12 @@ const Shop = {
     `, [shopID]);
     
 
-      // ✅ Kiểm tra nếu không tìm thấy dữ liệu
+      //  Kiểm tra nếu không tìm thấy dữ liệu
       if (rows.length === 0) {
         return res.status(404).json({ error: "Không tìm thấy cửa hàng" });
       }
 
-      // ✅ Trả về dữ liệu đúng format JSON
+      //  Trả về dữ liệu đúng format JSON
       return rows;
       
 

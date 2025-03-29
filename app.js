@@ -50,7 +50,6 @@ const port = 3001;
 app.use(express.json());
 app.use(cors());
 
-// API gửi OTP đến email mới
 app.post("/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -60,8 +59,6 @@ app.post("/send-otp", async (req, res) => {
     res.status(500).json({ error: "Lỗi gửi OTP!" });
   }
 });
-
-// API xác minh OTP
 app.post("/verify-otp", (req, res) => {
   const { email, otp } = req.body;
   if (verifyOTP(email, otp)) {
@@ -77,7 +74,6 @@ app.use('/api/Voucher', VoucherRouter)
 app.use('/api/Products', Products)
 app.use('/api/Review', Review)
 
-// Cấu hình CORS
 app.use(
   cors({
     origin: "*", // Chấp nhận tất cả các domain (không an toàn)
@@ -129,13 +125,11 @@ app.use("/api/affiliate", AffiliateTrackingRouter);
 app.use("/api/loyalty-history", LoyaltyHistoryRouter);
 
 app.use(errorHandler);
-app.use("/api/support", SupportRouter); // API hỗ trợ khách hàng
-// Cấu hình upload file
+app.use("/api/support", SupportRouter); 
 app.use("/uploads", express.static("src/uploads"));
 app.use("/api/loyalty", LoyaltyRouter);
 
 
-// Khởi động server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

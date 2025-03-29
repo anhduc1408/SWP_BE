@@ -17,7 +17,7 @@ const VoucherDetailModel = {
 
     deleteVoucherID: async (customerID, deleteVoucherID) => {
         try {
-            // ✅ Kiểm tra xem voucher có tồn tại trong VoucherDetail không
+            //  Kiểm tra xem voucher có tồn tại trong VoucherDetail không
             const [existingRows] = await pool.query(`
                 SELECT * FROM VoucherDetail 
                 WHERE CustomerID = ? AND VoucherID = ?
@@ -26,8 +26,8 @@ const VoucherDetailModel = {
             if (existingRows.length === 0) {
                 return { success: false, message: 'Voucher not found for this customer!' };
             }
-    
-            // ✅ Nếu tồn tại, thực hiện xóa voucher
+
+            //  Nếu tồn tại, thực hiện xóa voucher
             const [deleteResult] = await pool.query(`
                 DELETE FROM VoucherDetail 
                 WHERE CustomerID = ? AND VoucherID = ?
@@ -43,7 +43,7 @@ const VoucherDetailModel = {
 
     getListVoucherByCustomerID: async (customerID) => {
         try {
-            // ✅ Lấy tất cả voucher của khách hàng theo CustomerID
+            //  Lấy tất cả voucher của khách hàng theo CustomerID
             const [rows] = await pool.query(`
                 SELECT * 
                 FROM VoucherDetail

@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const Transaction = {
     callback: async(req,res)=>{
-        const extraData = JSON.parse(req.body.extraData); // Giả sử extraData là một JSON string
+        const extraData = JSON.parse(req.body.extraData); 
         const { OrderInfor,address,voucherChoose, cusID, totalPayment, OrderDetailID } = extraData;
         
         await Order.changeStatusShip(OrderDetailID);
@@ -15,7 +15,7 @@ const Transaction = {
     
     checkPayment: async(req,res)=>{
         try {
-            const orderId = req.body.extra;
+            const orderId = req.body.orderId;
             const rawSignature = `accessKey=${process.env.MOMO_ACCESSKEY}&orderId=${orderId}&partnerCode=MOMO&requestId=${orderId}`;
             const signature = crypto.createHmac("sha256",process.env.MOMO_SECRETKEY).update(rawSignature).digest('hex');
             const requestBody = JSON.stringify({

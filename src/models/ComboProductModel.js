@@ -63,7 +63,6 @@ const ComboProduct = {
       pool.query(queryCount, params.slice(0, params.length - 2)),
     ]);
 
-    // product 
     let whereClause2 = "";
     let params2 = [];
 
@@ -92,7 +91,6 @@ const ComboProduct = {
     const [docs2] = await Promise.all([
       pool.query(queryDocs2, params2),
     ]);
-    //
     
     const rs = docs[0]?.map(combo =>{
       const products = docs2[0]?.filter(product => product.ComboID === combo.ComboID)

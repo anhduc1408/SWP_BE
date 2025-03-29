@@ -12,7 +12,7 @@ const AffiliateTrackingController = {
 
             res.json(stats);
         } catch (error) {
-            console.error("❌ Lỗi lấy dữ liệu tiếp thị:", error);
+            console.error(" Lỗi lấy dữ liệu tiếp thị:", error);
             res.status(500).json({ message: "Lỗi máy chủ." });
         }
     },
@@ -28,7 +28,7 @@ const AffiliateTrackingController = {
 
             res.json(history);
         } catch (error) {
-            console.error("❌ Lỗi lấy lịch sử tiếp thị:", error);
+            console.error(" Lỗi lấy lịch sử tiếp thị:", error);
             res.status(500).json({ message: "Lỗi máy chủ." });
         }
     },
@@ -44,7 +44,7 @@ const AffiliateTrackingController = {
             const result = await AffiliateTrackingService.trackAffiliateClick(customCode, customerId);
             res.json({ message: `Bạn đã giúp ${result.referrerName} nhận ${result.amount} xu!` });
         } catch (error) {
-            console.error("❌ Lỗi nhập mã tiếp thị:", error.message);
+            console.error(" Lỗi nhập mã tiếp thị:", error.message);
             res.status(400).json({ message: error.message });
         }
     },

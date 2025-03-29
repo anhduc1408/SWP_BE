@@ -3,7 +3,7 @@ const pool = require("../config/Database");
 const ProductFavoriteModel = {
     postAddProductIDTym: async (customerID, categoryLove, productIDTym) => {
         try {
-            // ✅ Kiểm tra xem dữ liệu đã tồn tại chưa
+            //  Kiểm tra xem dữ liệu đã tồn tại chưa
             const [existingRows] = await pool.query(`
                 SELECT * FROM ProductFavorite
                 WHERE CustomerID = ? AND CategoryFavorite = ? AND ProductID = ?
@@ -13,7 +13,7 @@ const ProductFavoriteModel = {
                 return { message: "Sản phẩm đã có trong danh sách yêu thích." };
             }
 
-            // ✅ Nếu chưa có thì thêm mới
+            //  Nếu chưa có thì thêm mới
             const [result] = await pool.query(`
                 INSERT INTO ProductFavorite (CustomerID, CategoryFavorite, ProductID, AddedDate)
                 VALUES (?, ?, ?, NOW())
@@ -30,7 +30,7 @@ const ProductFavoriteModel = {
 
     deleteProductIDTym: async (customerID, deleteCategoryLove, deleteProductIDTym) => {
         try {
-            // ✅ Kiểm tra xem dữ liệu có tồn tại không
+            //  Kiểm tra xem dữ liệu có tồn tại không
             const [existingRows] = await pool.query(`
                 SELECT * FROM ProductFavorite
                 WHERE CustomerID = ? AND CategoryFavorite = ? AND ProductID = ?
@@ -40,7 +40,7 @@ const ProductFavoriteModel = {
                 return { message: "Sản phẩm không tồn tại trong danh sách yêu thích." };
             }
     
-            // ✅ Nếu tồn tại, thực hiện DELETE
+            //  Nếu tồn tại, thực hiện DELETE
             const [deleteResult] = await pool.query(`
                 DELETE FROM ProductFavorite 
                 WHERE CustomerID = ? AND CategoryFavorite = ? AND ProductID = ?
@@ -56,7 +56,7 @@ const ProductFavoriteModel = {
 
     getAllProductFavorite: async (customerID) => {
         try {
-            // ✅ Lấy tất cả các sản phẩm yêu thích của khách hàng theo CustomerID
+            //  Lấy tất cả các sản phẩm yêu thích của khách hàng theo CustomerID
             const [rows] = await pool.query(`
                 SELECT * 
                 FROM ProductFavorite

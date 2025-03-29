@@ -17,7 +17,7 @@ const CustomerShopFollowModel = {
 
     deleteCustomerShopFollow: async (customerID, shopID) => {
         try {
-            // ✅ Kiểm tra xem voucher có tồn tại trong VoucherDetail không
+            //  Kiểm tra xem voucher có tồn tại trong VoucherDetail không
             const [existingRows] = await pool.query(`
                 SELECT * FROM Customer_Shop_Follow 
                 WHERE CustomerID = ? AND ShopID = ?
@@ -27,7 +27,7 @@ const CustomerShopFollowModel = {
                 return { success: false, message: 'Follow not found for this customer!' };
             }
     
-            // ✅ Nếu tồn tại, thực hiện xóa voucher
+            //  Nếu tồn tại, thực hiện xóa voucher
             const [deleteResult] = await pool.query(`
                 DELETE FROM Customer_Shop_Follow 
                 WHERE CustomerID = ? AND ShopID = ?
@@ -43,7 +43,7 @@ const CustomerShopFollowModel = {
 
     getListCustomerShopFollow: async (customerID) => {
         try {
-            // ✅ Lấy tất cả Follow của khách hàng theo CustomerID
+            //Lấy tất cả Follow của khách hàng theo CustomerID
             const [rows] = await pool.query(`
                 SELECT * 
                 FROM Customer_Shop_Follow
