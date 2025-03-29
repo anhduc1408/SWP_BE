@@ -35,6 +35,7 @@ const BlogCategoriesRouter = require('./src/routers/BlogCategoriesRouter');
 const CommentRouter = require('./src/routers/CommentRouter');
 const ChatRoutes = require('./src/routers/ChatRouter');
 const PolicyRouter = require('./src/routers/PolicyRouter');
+const uploadRouter = require("./src/routers/UploadRouter");
 const RegisterRouter = require('./src/routers/RegisterRouter');
 
 const LoyaltyHistoryRouter = require("./src/routers/loyaltyHistoryRoutes");
@@ -91,6 +92,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 // Định tuyến API
+app.use("/api", uploadRouter);
 app.use('/api/Order', orderRouter);
 app.use('/api/Shipper', Shipper);
 app.use('/api/Cart', cartRouter);
