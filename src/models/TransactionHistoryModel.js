@@ -29,7 +29,6 @@ const TransactionHistoryModels = {
       "$3-$2-$1 $4:$5:$6"
     );
 
-    console.log("Giowf giowf: ", formatted_date);
     const status = "Thành công";
 
     let result;
@@ -126,7 +125,6 @@ const TransactionHistoryModels = {
     );
     const status = "Thành công";
 
-    console.log("OrderID: ", OrderID[0].OrderID);
     // Lặp qua từng phần tử trong mảng OrderInfor
     const result = await pool.query(
       "INSERT INTO Payments (bill_id, customer_id, payment_amount, payment_date, payment_method, status, order_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

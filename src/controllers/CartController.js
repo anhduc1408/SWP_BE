@@ -43,7 +43,6 @@ const Cart = {
             }
 
             if (newQuantity <= 0) {
-                console.log(`Số lượng = 0, tiến hành xóa sản phẩm cartID=${cartID}`);
                 await CartService.removeCartDetail(cartID);
                 return res.status(200).json({ message: "Xóa sản phẩm thành công" });
             }

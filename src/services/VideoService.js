@@ -15,6 +15,10 @@ const video = {
         const result = [video1, ...listVideo1];
         return result;
     },
+    getVideo: async () => {
+        const video = await VideoModel.getVideo();
+        return video;
+    },
     likeVideo: async (videoID, addLike, addDisLike,cusID) => {
         await VideoModel.likeVideo(videoID, addLike, addDisLike,cusID);
     },

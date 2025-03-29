@@ -130,8 +130,6 @@ const TransactionHistory = {
         const type = "purchase";
         const shopID = (await productModel.getProductShopID(productID))[0].ShopID;
 
-        console.log("gdjskkskkd: ", item);
-        console.log("shopID: ", shopID);
 
         // Gọi các hàm để xử lý mỗi sản phẩm
         const result1 = await CustomerBehavior.addCustomerBehavior(cusID, productID, category, type, shopID);

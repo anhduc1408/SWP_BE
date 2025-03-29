@@ -29,8 +29,6 @@ const Orders = {
   },
 
   addOrder: async (address, cusID, totalPayment, OrderInfor, voucher) => {
-    console.log(address);
-    console.log(voucher[voucher.length - 1]);
     const voucherAllID = voucher[voucher.length - 1].voucher
       ? voucher[voucher.length - 1].voucher.VoucherID
       : null;
@@ -119,7 +117,6 @@ const Orders = {
       throw new Error("OrderDetailID phải là một mảng");
     }
 
-    console.log("OrderDetailID: ", OrderDetailID);
     let query =
       'update OrderDetail set status = "Vận chuyển" where OrderDetailID in (';
     let values = OrderDetailID.map((item, index) => {

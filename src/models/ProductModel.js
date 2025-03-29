@@ -280,7 +280,6 @@ const Products = {
     if (result.length > 0) {
       return result[0];  // Trả về giá trị ShopID
     } else {
-      console.log("No product found with the given ProductID");
       return null;  // Trả về null nếu không có kết quả
     }
   },

@@ -9,6 +9,7 @@ const LoyaltyHistoryController = {
                 return res.status(400).json({ message: "customerId không hợp lệ!" });
             }
 
+
             const history = await LoyaltyHistoryService.getLoyaltyHistory(customerId);
 
             if (!history || history.orderHistory.length === 0) {

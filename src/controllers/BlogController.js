@@ -42,9 +42,6 @@ const Blog = {
     createBlog: async (req, res) => {
         try {
             const { title, categoryID, shortDescription, customerID, sections } = req.body;
-            console.log("Received blog data: ", req.body);
-            console.log("Files nhận được:", req.files);
-
             if (!title || !categoryID || !shortDescription || !customerID) {
                 return res.status(400).json({ error: "Thiếu dữ liệu bắt buộc" });
             }
@@ -53,7 +50,6 @@ const Blog = {
             if (req.files && req.files.coverImage) {
                 const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
                 coverImage = cloudinaryResponse.secure_url;
-                console.log("Cover image URL: ", coverImage);
             } else {
                 console.error("Lỗi khi upload ảnh bìa!");
                 return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });
@@ -85,16 +81,11 @@ const Blog = {
 
             const blog = await BlogService.getBlogById(blogID);
 
-            if (blog.CustomerID !== req.user.CustomerID) {
-                return res.status(403).json({ error: "Bạn không có quyền sửa bài blog này" });
-            }
-
             let coverImage = existingCoverImage;
             if (req.files && req.files.coverImage) {
                 try {
                     const cloudinaryResponse = await cloudinary.uploader.upload(req.files.coverImage[0].path);
                     coverImage = cloudinaryResponse.secure_url;
-                    console.log("Cover image URL: ", coverImage);
                 } catch (error) {
                     console.error("Error uploading cover image: ", error);
                     return res.status(500).json({ error: "Lỗi khi upload ảnh bìa!" });

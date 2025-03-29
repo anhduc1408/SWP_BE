@@ -17,7 +17,6 @@ const OrderServices = {
         if(OrderInfor[0].CartDetailID){
             await Cart.removeCartDetail(OrderInfor)
         }
-        console.log(OrderInfor)
         await Product.decreament(OrderInfor);
         if(voucher){
             await Voucher.removeVoucherDetail(cusID,voucher);
