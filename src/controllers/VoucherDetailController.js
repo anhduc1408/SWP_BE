@@ -9,6 +9,7 @@ const VoucherDetailController = {
         customerID,
         saveVoucherID
       );
+      console.log(result)
       res.status(200).json(result);
     } catch (error) {
       console.log(error);

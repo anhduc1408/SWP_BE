@@ -7,7 +7,7 @@ const AddressController = {
             const result = await AddressService.getAddressByCustomerId(customerID);
             res.json(result);
         } catch (error) {
-            res.status(500).json({ error: "Lỗi khi lấy địa chỉ" });
+            res.status(500).json({ error: "Lỗi quá tải kkhi có a chung" });
         }
     },
     addAddress: async (req, res) => {

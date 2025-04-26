@@ -38,7 +38,9 @@ const CustomerControllers = {
   updateCustomerById: async (req, res) => {
     try {
       const { CustomerID } = req.params;
-      const filePath = req.file.path;
+      if(req.file){
+        const filePath = req.file.path;
+      }
       const customerData = req.body;
       const { oldPassword, newPassword } = req.body;
 
@@ -71,6 +73,7 @@ const CustomerControllers = {
       const result = await CustomerServices.updateCustomerById(CustomerID, customerData);
       res.status(200).json({ message: "Customer updated successfully", result });
     } catch (error) {
+      console.log(error)
       res.status(500).json(error);
     }
   },

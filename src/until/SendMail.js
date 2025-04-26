@@ -20,7 +20,7 @@ export const sendOTP = async (email) => {
     if (!email) throw new Error("Email không hợp lệ!");
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStorage.set(email, otp); // Lưu OTP
+    otpStorage.set(email, otp);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
